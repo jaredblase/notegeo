@@ -8,4 +8,13 @@
     <color name="dark_category">#66FFFFFF</color>
     <color name="dark_border">#33FFFFFF</color>
     <color name="dark_status_bar">#121212</color>
+    
+    <!--  Note Colors  -->
+    <color name="white">#FFF</color>
+    <color name="royal_blue">#3369FF</color>
+    <color name="dark_blue">#171C26</color>
+    <color name="yellow">#FFDA47</color>
+    <color name="spring_green">#0AEBAF</color>
+    <color name="coral">#FF7746</color>
+    <color name="magenta">#CB3783</color>
 </resources>
