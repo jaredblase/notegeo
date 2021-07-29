@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">NoteGeo</string>
+    <string name="search_hint">Search your notes</string>
+
+
+    <!--  Content Descriptions  -->
+    <string name="desc.menu">menu</string>
+    <string name="desc.add_note">add note</string>
+    <string name="desc.change_layout">change list layout</string>
 </resources>
