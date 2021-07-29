@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/notes_menu_btn"
+            android:icon="@drawable/ic_notes"
+            android:title="@string/menu.notes" />
+        <item
+            android:id="@+id/reminders_menu_btn"
+            android:icon="@drawable/ic_reminders"
+            android:title="@string/menu.reminders" />
+        <item
+            android:id="@+id/labels_menu_btn"
+            android:icon="@drawable/ic_label"
+            android:title="@string/menu.labels" />
+        <item
+            android:id="@+id/deleted_menu_btn"
+            android:icon="@drawable/ic_trash"
+            android:title="@string/menu.deleted" />
+    </group>
+
+</menu>
