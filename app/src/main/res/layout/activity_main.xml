@@ -18,14 +18,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:layout_marginTop="40dp"
-            android:text="@string/app_name"
+            android:text="@string/menu.notes"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="48dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
@@ -38,8 +38,8 @@
             <EditText
                 android:id="@+id/search_et"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
                 android:ems="13"
                 android:hint="@string/search_hint"
                 android:importantForAutofill="no"
@@ -47,31 +47,40 @@
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/side_menu_btn"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="TextContrastCheck" />
 
             <ImageButton
                 android:id="@+id/side_menu_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_width="48dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
                 android:background="@null"
                 android:contentDescription="@string/desc.menu"
+                android:scaleX=".8"
+                android:scaleY=".8"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_menu" />
+                app:srcCompat="@drawable/ic_menu"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/change_layout_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="4dp"
                 android:background="@null"
                 android:contentDescription="@string/desc.change_layout"
+                android:scaleX=".8"
+                android:scaleY=".8"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/search_et"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_tile_view" />
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_tile_view"
+                tools:ignore="TouchTargetSizeCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
