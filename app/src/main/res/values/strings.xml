@@ -9,10 +9,19 @@
     <string name="desc.menu">menu</string>
     <string name="desc.add_note">add note</string>
     <string name="desc.change_layout">change list layout</string>
+    <string name="desc.set_pin">pin this note to the top</string>
+    <string name="desc.set_alarm">set time-based reminder</string>
+    <string name="desc.set_location">set location-based reminder</string>
+    <string name="desc.add_more">add note component</string>
+    <string name="desc.more_options">more note options</string>
 
     <!--  Drawer Menu  -->
     <string name="menu.notes">Notes</string>
     <string name="menu.reminders">Reminders</string>
     <string name="menu.labels">Labels</string>
     <string name="menu.deleted">Deleted</string>
+
+    <!--  Placeholders  -->
+    <string name="title">Title</string>
+    <string name="note">Note</string>
 </resources>
