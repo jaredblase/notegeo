@@ -18,7 +18,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
     ): View {
         binding = FragmentEditorMenuBinding.inflate(inflater, container, false)
 
-        binding.navigationView.setNavigationItemSelectedListener {
+        binding.editorMnu.setNavigationItemSelectedListener {
             val result = when (it.itemId) {
                 R.id.editor_delete_btn -> {
                     // TODO: Delete note

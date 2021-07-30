@@ -7,12 +7,15 @@
     tools:context=".EditorMenuFragment">
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
+        android:id="@+id/editor_mnu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/dark_foreground"
+        app:itemHorizontalPadding="25dp"
+        app:itemIconPadding="25dp"
         app:itemIconTint="@color/dark_headers"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Body1"
         app:itemTextColor="@color/dark_headers"
         app:menu="@menu/editor_menu" />
 </FrameLayout>
