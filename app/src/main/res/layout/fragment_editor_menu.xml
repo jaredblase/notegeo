@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditorMenuFragment">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/editor_mnu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/dark_foreground"
+        app:itemHorizontalPadding="25dp"
+        app:itemIconPadding="25dp"
+        app:itemIconTint="@color/dark_headers"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:itemTextColor="@color/dark_headers"
+        app:menu="@menu/editor_menu" />
+</FrameLayout>

@@ -1,5 +1,6 @@
 package com.mobdeve.s15.group5.notegeo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
@@ -15,6 +16,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.sideMenuBtn.setOnClickListener {
             view.open()
+        }
+
+        binding.addNoteFab.setOnClickListener { 
+            startActivity(Intent(this, EditNoteActivity::class.java))
         }
     }
 }
