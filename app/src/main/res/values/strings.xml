@@ -15,11 +15,18 @@
     <string name="desc.add_more">add note component</string>
     <string name="desc.more_options">more note options</string>
 
-    <!--  Drawer Menu  -->
+    <!--  Main Nav Menu  -->
     <string name="menu.notes">Notes</string>
     <string name="menu.reminders">Reminders</string>
     <string name="menu.labels">Labels</string>
     <string name="menu.deleted">Deleted</string>
+
+    <!--  Editor Menu  -->
+    <string name="editor_menu.delete">Delete note</string>
+    <string name="editor_menu.copy">Make a copy</string>
+    <string name="editor_menu.labels">Labels</string>
+    <string name="editor_menu.add">Add</string>
+    <string name="editor_menu.options">More</string>
 
     <!--  Placeholders  -->
     <string name="title">Title</string>
