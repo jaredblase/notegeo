@@ -121,6 +121,6 @@
         app:itemIconSize="20dp"
         app:itemIconTint="@color/dark_headers"
         app:itemTextColor="@color/dark_headers"
-        app:menu="@menu/drawer_menu" />
+        app:menu="@menu/main_nav" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
