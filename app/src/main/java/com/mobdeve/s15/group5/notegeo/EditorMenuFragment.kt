@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.children
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
+import com.mobdeve.s15.group5.notegeo.model.NoteEditorModel
 import com.mobdeve.s15.group5.notegeo.views.PaletteHolder
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
+    private val model: NoteEditorModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,12 +49,16 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
             result
         }
 
+        // color palette configuration
         val colorSelectionView = binding.editorMnu.getHeaderView(0) as ViewGroup
-
         colorSelectionView.children.forEach { paletteHolder ->
-            paletteHolder.setOnClickListener {
+            paletteHolder.setOnClickListener { model.select((it as PaletteHolder).backgroundColor) }
+        }
+
+        model.selected.observe(this) { backgroundColor ->
+            colorSelectionView.children.forEach {
                 it as PaletteHolder
-                it.isPaletteSelected.value = true
+                it.isPaletteSelected = it.backgroundColor == backgroundColor
             }
         }
 

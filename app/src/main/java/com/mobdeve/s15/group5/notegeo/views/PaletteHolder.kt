@@ -6,15 +6,18 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import androidx.lifecycle.MutableLiveData
 import com.mobdeve.s15.group5.notegeo.R
 
 class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, attrs) {
 
     val backgroundColor: Int
-    val isPaletteSelected: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>(false)
-    }
+    var isPaletteSelected = false
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
 
     private val foregroundColor: Int
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -29,9 +32,6 @@ class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, at
             foregroundColor = getColor(R.styleable.PaletteHolder_note_foreground_color, Color.BLACK)
             recycle()
         }
-
-        // re-renders the value changes
-        isPaletteSelected.observeForever { invalidate() }
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -53,7 +53,7 @@ class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, at
         }
 
         // draw checkmark
-        if (isPaletteSelected.value == true) {
+        if (isPaletteSelected) {
             paint.apply {
                 strokeWidth = 2F
                 color = foregroundColor
