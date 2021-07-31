@@ -5,8 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import com.mobdeve.s15.group5.notegeo.R
 
 class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, attrs) {
@@ -23,13 +23,15 @@ class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, at
     private val center = innerRadius + borderWidth
 
     init {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PaletteHolder)
-        // get values of custom attributes from xml
-        paletteColor = typedArray.getColor(R.styleable.PaletteHolder_palette_color, Color.WHITE)
-        Log.d("COLOR", paletteColor.toString())
-        isPaletteSelected = typedArray.getBoolean(R.styleable.PaletteHolder_is_selected, false)
+        context.obtainStyledAttributes(attrs, R.styleable.PaletteHolder).apply {
+            // get values of custom attributes from xml
+            backgroundColor = getColor(R.styleable.PaletteHolder_note_background_color, Color.WHITE)
+            foregroundColor = getColor(R.styleable.PaletteHolder_note_foreground_color, Color.BLACK)
+            recycle()
+        }
 
-        typedArray.recycle()
+        // re-renders the value changes
+        isPaletteSelected.observeForever { invalidate() }
     }
 
     override fun onDraw(canvas: Canvas?) {

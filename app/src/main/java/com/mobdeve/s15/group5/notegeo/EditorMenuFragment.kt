@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.children
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
+import com.mobdeve.s15.group5.notegeo.views.PaletteHolder
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
@@ -42,6 +44,15 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
 
             dismiss()
             result
+        }
+
+        val colorSelectionView = binding.editorMnu.getHeaderView(0) as ViewGroup
+
+        colorSelectionView.children.forEach { paletteHolder ->
+            paletteHolder.setOnClickListener {
+                it as PaletteHolder
+                it.isPaletteSelected.value = true
+            }
         }
 
         return binding.root
