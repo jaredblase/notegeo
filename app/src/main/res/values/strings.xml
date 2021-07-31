@@ -28,6 +28,15 @@
     <string name="editor_menu.add">Add</string>
     <string name="editor_menu.options">More</string>
 
+    <!--  Note Colors  -->
+    <string name="color.white">White</string>
+    <string name="color.royal_blue">Royal Blue</string>
+    <string name="color.dark_blue">Dark Blue</string>
+    <string name="color.yellow">Yellow</string>
+    <string name="color.spring_green">Spring Green</string>
+    <string name="color.coral">Coral</string>
+    <string name="color.magenta">Magenta</string>
+
     <!--  Placeholders  -->
     <string name="title">Title</string>
     <string name="note">Note</string>

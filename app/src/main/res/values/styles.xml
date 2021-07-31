@@ -8,4 +8,9 @@
     <style name="placeholder" parent="Widget.AppCompat.TextView">
         <item name="android:textColorHint">#CCFFFFFF</item>
     </style>
+
+    <style name="palette_holder">
+        <item name="android:layout_marginLeft">9dp</item>
+        <item name="android:layout_marginRight">9dp</item>
+    </style>
 </resources>
