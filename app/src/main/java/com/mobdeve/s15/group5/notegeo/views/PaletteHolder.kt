@@ -1,11 +1,13 @@
-package com.mobdeve.s15.group5.notegeo
+package com.mobdeve.s15.group5.notegeo.views
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
+import com.mobdeve.s15.group5.notegeo.R
 
 class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, attrs) {
 
@@ -17,9 +19,9 @@ class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, at
 
     init {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PaletteHolder)
-
         // get values of custom attributes from xml
         paletteColor = typedArray.getColor(R.styleable.PaletteHolder_palette_color, Color.WHITE)
+        Log.d("COLOR", paletteColor.toString())
         isPaletteSelected = typedArray.getBoolean(R.styleable.PaletteHolder_is_selected, false)
 
         typedArray.recycle()
