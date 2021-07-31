@@ -17,5 +17,7 @@
         app:itemIconTint="@color/dark_headers"
         app:itemTextAppearance="@style/TextAppearance.AppCompat.Body1"
         app:itemTextColor="@color/dark_headers"
-        app:menu="@menu/editor_menu" />
+        app:menu="@menu/editor_menu"
+        android:paddingTop="10dp"
+        app:headerLayout="@layout/color_palette"/>
 </FrameLayout>

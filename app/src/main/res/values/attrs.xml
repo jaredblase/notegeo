@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PaletteHolder">
+        <attr name="palette_color" format="color" />
+        <attr name="is_selected" format="boolean" />
+    </declare-styleable>
+</resources>
