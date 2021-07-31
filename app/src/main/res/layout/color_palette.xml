@@ -2,57 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center"
     android:layout_marginTop="10dp"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:gravity="center">
 
     <com.mobdeve.s15.group5.notegeo.views.PaletteHolder
-        style="@style/palette_holder"
+        style="@style/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:palette_color="@color/white"
+        android:layout_marginLeft="@dimen/palette_holder_margin"
+        android:layout_marginRight="@dimen/palette_holder_margin"
         android:contentDescription="@string/color.white" />
 
     <com.mobdeve.s15.group5.notegeo.views.PaletteHolder
-        style="@style/palette_holder"
+        style="@style/royal_blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:palette_color="@color/royal_blue"
-        android:contentDescription="@string/color.royal_blue"/>
+        android:layout_marginLeft="@dimen/palette_holder_margin"
+        android:layout_marginRight="@dimen/palette_holder_margin"
+        android:contentDescription="@string/color.royal_blue" />
 
     <com.mobdeve.s15.group5.notegeo.views.PaletteHolder
-        style="@style/palette_holder"
+        style="@style/dark_blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:palette_color="@color/dark_blue"
-        android:contentDescription="@string/color.dark_blue"/>
+        android:layout_marginLeft="@dimen/palette_holder_margin"
+        android:layout_marginRight="@dimen/palette_holder_margin"
+        android:contentDescription="@string/color.dark_blue" />
 
     <com.mobdeve.s15.group5.notegeo.views.PaletteHolder
-        style="@style/palette_holder"
+        style="@style/yellow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:palette_color="@color/yellow"
-        android:contentDescription="@string/color.yellow"/>
+        android:layout_marginLeft="@dimen/palette_holder_margin"
+        android:layout_marginRight="@dimen/palette_holder_margin"
+        android:contentDescription="@string/color.yellow" />
 
     <com.mobdeve.s15.group5.notegeo.views.PaletteHolder
-        style="@style/palette_holder"
+        style="@style/spring_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:palette_color="@color/spring_green"
-        android:contentDescription="@string/color.spring_green"/>
+        android:layout_marginLeft="@dimen/palette_holder_margin"
+        android:layout_marginRight="@dimen/palette_holder_margin"
+        android:contentDescription="@string/color.spring_green" />
 
     <com.mobdeve.s15.group5.notegeo.views.PaletteHolder
-        style="@style/palette_holder"
+        style="@style/coral"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:palette_color="@color/coral"
-        android:contentDescription="@string/color.coral"/>
+        android:layout_marginLeft="@dimen/palette_holder_margin"
+        android:layout_marginRight="@dimen/palette_holder_margin"
+        android:contentDescription="@string/color.coral" />
 
     <com.mobdeve.s15.group5.notegeo.views.PaletteHolder
-        style="@style/palette_holder"
+        style="@style/magenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:palette_color="@color/magenta"
-        android:contentDescription="@string/color.magenta"/>
+        android:layout_marginLeft="@dimen/palette_holder_margin"
+        android:layout_marginRight="@dimen/palette_holder_margin"
+        android:contentDescription="@string/color.magenta" />
 </LinearLayout>

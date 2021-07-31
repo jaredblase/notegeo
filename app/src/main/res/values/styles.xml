@@ -9,8 +9,39 @@
         <item name="android:textColorHint">#CCFFFFFF</item>
     </style>
 
-    <style name="palette_holder">
-        <item name="android:layout_marginLeft">9dp</item>
-        <item name="android:layout_marginRight">9dp</item>
+    <!--  Notes  -->
+    <style name="white">
+        <item name="note_background_color">@color/white</item>
+        <item name="note_foreground_color">@color/black</item>
+    </style>
+
+    <style name="royal_blue">
+        <item name="note_background_color">@color/royal_blue</item>
+        <item name="note_foreground_color">@color/white</item>
+    </style>
+
+    <style name="dark_blue">
+        <item name="note_background_color">@color/dark_blue</item>
+        <item name="note_foreground_color">@color/white</item>
+    </style>
+
+    <style name="yellow">
+        <item name="note_background_color">@color/yellow</item>
+        <item name="note_foreground_color">@color/black</item>
+    </style>
+
+    <style name="spring_green">
+        <item name="note_background_color">@color/spring_green</item>
+        <item name="note_foreground_color">@color/black</item>
+    </style>
+
+    <style name="coral">
+        <item name="note_background_color">@color/coral</item>
+        <item name="note_foreground_color">@color/black</item>
+    </style>
+
+    <style name="magenta">
+        <item name="note_background_color">@color/magenta</item>
+        <item name="note_foreground_color">@color/black</item>
     </style>
 </resources>
