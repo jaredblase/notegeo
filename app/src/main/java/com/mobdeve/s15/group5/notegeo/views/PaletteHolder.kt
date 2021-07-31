@@ -11,11 +11,16 @@ import com.mobdeve.s15.group5.notegeo.R
 
 class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, attrs) {
 
-    private var paletteColor: Int
-    private var isPaletteSelected: Boolean
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { strokeWidth = 8F }
+    val backgroundColor: Int
+    val isPaletteSelected: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>(false)
+    }
+
+    private val foregroundColor: Int
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val borderWidth = 8F
     private val innerRadius = 40F
-    private val center = innerRadius + paint.strokeWidth
+    private val center = innerRadius + borderWidth
 
     init {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PaletteHolder)
@@ -30,13 +35,30 @@ class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, at
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        paint.style = Paint.Style.FILL
-        paint.color = paletteColor
-        canvas?.drawCircle(center, center, innerRadius, paint)
+        // inner circle
+        paint.apply {
+            style = Paint.Style.FILL
+            color = backgroundColor
+            canvas?.drawCircle(center, center, innerRadius, this)
+        }
 
-        paint.style = Paint.Style.STROKE
-        paint.color = Color.parseColor("#8F8F8F")
-        canvas?.drawCircle(center, center, innerRadius, paint)
+        // border
+        paint.apply {
+            style = Paint.Style.STROKE
+            strokeWidth = borderWidth
+            color = Color.parseColor("#8F8F8F")
+            canvas?.drawCircle(center, center, innerRadius, this)
+        }
+
+        // draw checkmark
+        if (isPaletteSelected.value == true) {
+            paint.apply {
+                strokeWidth = 2F
+                color = foregroundColor
+                canvas?.drawLine(41F, 48F, 49F, 60F, this)
+                canvas?.drawLine(49F, 60F, 61F, 38F, this)
+            }
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) =
