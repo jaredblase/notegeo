@@ -13,7 +13,14 @@ class EditNoteActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.editorMoreOptions.setOnClickListener {
-            EditorMenuFragment().show(supportFragmentManager, "Editor Menu")
+            // assures only menu will appear even with multiple clicks
+            if (supportFragmentManager.findFragmentByTag(FRAGMENT_TAG) == null) {
+                EditorMenuFragment().show(supportFragmentManager, FRAGMENT_TAG)
+            }
         }
+    }
+
+    companion object {
+        private const val FRAGMENT_TAG = "Editor Menu"
     }
 }
