@@ -57,8 +57,8 @@ class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, at
             paint.apply {
                 strokeWidth = 2F
                 color = foregroundColor
-                canvas?.drawLine(41F, 48F, 49F, 60F, this)
-                canvas?.drawLine(49F, 60F, 61F, 38F, this)
+                canvas?.drawLine(39F, 48F, 47F, 60F, this)
+                canvas?.drawLine(47F, 60F, 59F, 38F, this)
             }
         }
     }
