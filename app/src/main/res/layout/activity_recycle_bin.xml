@@ -59,4 +59,15 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/recycle_bin_mnu_btn"
+        style="@style/popup_btn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@null"
+        android:contentDescription="@string/desc.more_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_snowman" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,10 @@
     <string name="editor_menu.add">Add</string>
     <string name="editor_menu.options">More</string>
 
+    <!-- Recycle Bin Menu -->
+    <string name="rb_menu.delete">Empty Recycle Bin</string>
+    <string name="rb_menu.restore">Restore all</string>
+
     <!--  Note Colors  -->
     <string name="color.white">White</string>
     <string name="color.royal_blue">Royal Blue</string>

@@ -14,6 +14,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="popup_btn">
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
     <!--  Notes  -->
     <style name="white">
         <item name="note_background_color">@color/white</item>

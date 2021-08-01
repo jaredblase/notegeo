@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".RecycleBinActivity">
+
+    <item
+        android:id="@+id/delete_all_btn"
+        android:title="@string/rb_menu.delete" />
+    <item
+        android:id="@+id/restore_all_btn"
+        android:title="@string/rb_menu.restore" />
+</menu>
