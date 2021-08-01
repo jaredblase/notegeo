@@ -18,6 +18,24 @@ class MainActivity : AppCompatActivity() {
             view.open()
         }
 
+        binding.drawerMenu.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.reminders_menu_btn -> {
+
+                }
+
+                R.id.deleted_menu_btn -> {
+                    startActivity(Intent(this, RecycleBinActivity::class.java))
+                }
+
+                R.id.labels_menu_btn -> {
+
+                }
+
+            }
+            true
+        }
+
         binding.addNoteFab.setOnClickListener { 
             startActivity(Intent(this, EditNoteActivity::class.java))
         }

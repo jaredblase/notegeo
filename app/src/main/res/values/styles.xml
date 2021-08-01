@@ -9,6 +9,11 @@
         <item name="android:textColorHint">#CCFFFFFF</item>
     </style>
 
+    <style name="activity_label">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!--  Notes  -->
     <style name="white">
         <item name="note_background_color">@color/white</item>
