@@ -17,4 +17,6 @@
     <color name="spring_green">#0AEBAF</color>
     <color name="coral">#FF7746</color>
     <color name="magenta">#CB3783</color>
+
+    <color name="black">#000</color>
 </resources>

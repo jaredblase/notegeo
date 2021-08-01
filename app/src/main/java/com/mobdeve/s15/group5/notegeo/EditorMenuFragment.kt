@@ -1,16 +1,20 @@
 package com.mobdeve.s15.group5.notegeo
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.children
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
+import com.mobdeve.s15.group5.notegeo.model.NoteEditorModel
+import com.mobdeve.s15.group5.notegeo.views.PaletteHolder
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
+    private val model: NoteEditorModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +47,25 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
 
             dismiss()
             result
+        }
+
+        // color palette configuration
+        val colorSelectionView = binding.editorMnu.getHeaderView(0) as ViewGroup
+        colorSelectionView.children.forEach { paletteHolder ->
+            paletteHolder as PaletteHolder
+            paletteHolder.isSelected = paletteHolder.backgroundColor == model.selectedBackgroundColor.value
+
+            paletteHolder.setOnClickListener {
+                it as PaletteHolder
+                model.select(it.backgroundColor)
+            }
+        }
+
+        model.selectedBackgroundColor.observe(this) { backgroundColor ->
+            colorSelectionView.children.forEach {
+                it as PaletteHolder
+                it.isPaletteSelected = it.backgroundColor == backgroundColor
+            }
         }
 
         return binding.root
