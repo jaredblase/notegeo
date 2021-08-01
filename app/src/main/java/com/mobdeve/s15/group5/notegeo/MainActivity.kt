@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
+
+            view.closeDrawers()
             true
         }
 
