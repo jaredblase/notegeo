@@ -52,10 +52,16 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
         // color palette configuration
         val colorSelectionView = binding.editorMnu.getHeaderView(0) as ViewGroup
         colorSelectionView.children.forEach { paletteHolder ->
-            paletteHolder.setOnClickListener { model.select((it as PaletteHolder).backgroundColor) }
+            paletteHolder as PaletteHolder
+            paletteHolder.isSelected = paletteHolder.backgroundColor == model.selectedBackgroundColor.value
+
+            paletteHolder.setOnClickListener {
+                it as PaletteHolder
+                model.select(it.backgroundColor)
+            }
         }
 
-        model.selected.observe(this) { backgroundColor ->
+        model.selectedBackgroundColor.observe(this) { backgroundColor ->
             colorSelectionView.children.forEach {
                 it as PaletteHolder
                 it.isPaletteSelected = it.backgroundColor == backgroundColor

@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class NoteEditorModel: ViewModel() {
-    val selected = MutableLiveData<Int>()
+    val selectedBackgroundColor = MutableLiveData<Int>()
 
-    fun select(styleId: Int) {
-        selected.value = styleId
+    fun select(backgroundColor: Int) {
+        selectedBackgroundColor.value = backgroundColor
     }
 }
