@@ -4,6 +4,7 @@
     <string name="app_name.geo">Geo</string>
 
     <string name="search_hint">Search your notes</string>
+    <string name="empty_message">It\'s so clean here…</string>
 
     <!--  Content Descriptions  -->
     <string name="desc.menu">menu</string>
@@ -14,6 +15,7 @@
     <string name="desc.set_location">set location-based reminder</string>
     <string name="desc.add_more">add note component</string>
     <string name="desc.more_options">more note options</string>
+    <string name="desc.empty">This section is empty</string>
 
     <!--  Main Nav Menu  -->
     <string name="menu.notes">Notes</string>
@@ -40,4 +42,7 @@
     <!--  Placeholders  -->
     <string name="title">Title</string>
     <string name="note">Note</string>
+
+    <!-- Activity Labels -->
+    <string name="recycle_bin">Recycle Bin</string>
 </resources>

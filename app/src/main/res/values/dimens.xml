@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="palette_holder_margin">9dp</dimen>
+    <dimen name="root_padding">20dp</dimen>
 </resources>
