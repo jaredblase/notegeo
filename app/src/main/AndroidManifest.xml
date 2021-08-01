@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteGeo">
         <activity
+            android:name=".RecycleBinActivity"
+            android:exported="true" />
+        <activity
             android:name=".EditNoteActivity"
             android:exported="true" />
         <activity
