@@ -18,7 +18,7 @@ class RecycleBinActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (data.isEmpty()) {
-            binding.reycleBinEmptyLl.visibility = View.VISIBLE
+            binding.emptyIv.visibility = View.VISIBLE
 //            binding.recycleBinMnuBtn.visibility = View.GONE
 //            return
         }

@@ -2,4 +2,7 @@
 <resources>
     <dimen name="palette_holder_margin">9dp</dimen>
     <dimen name="root_padding">20dp</dimen>
+    <dimen name="note_padding">20dp</dimen>
+    <dimen name="notes_offset">8dp</dimen>
+    <dimen name="leaf_img_size">140dp</dimen>
 </resources>
