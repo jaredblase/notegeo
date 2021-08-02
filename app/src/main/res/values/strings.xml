@@ -5,6 +5,7 @@
 
     <string name="search_hint">Search your notes</string>
     <string name="empty_message">It\'s so clean here…</string>
+    <string name="add_label">Add new label</string>
 
     <!--  Content Descriptions  -->
     <string name="desc.menu">menu</string>
@@ -34,6 +35,10 @@
     <string name="rb_menu.delete">Empty Recycle Bin</string>
     <string name="rb_menu.restore">Restore all</string>
 
+    <!--  Labels Menu  -->
+    <string name="label_menu.delete_selected">Delete selected</string>
+    <string name="label_menu.delete_all">Delete all labels</string>
+
     <!--  Note Colors  -->
     <string name="color.white">White</string>
     <string name="color.royal_blue">Royal Blue</string>
@@ -49,4 +54,5 @@
 
     <!-- Activity Labels -->
     <string name="recycle_bin">Recycle Bin</string>
+    <string name="labels">Labels</string>
 </resources>
