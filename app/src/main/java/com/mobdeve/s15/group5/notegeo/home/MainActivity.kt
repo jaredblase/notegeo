@@ -1,8 +1,12 @@
-package com.mobdeve.s15.group5.notegeo
+package com.mobdeve.s15.group5.notegeo.home
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
+import com.mobdeve.s15.group5.notegeo.label.LabelActivity
+import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

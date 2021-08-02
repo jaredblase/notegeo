@@ -1,4 +1,4 @@
-package com.mobdeve.s15.group5.notegeo.views
+package com.mobdeve.s15.group5.notegeo.editor
 
 import android.content.Context
 import android.graphics.Canvas

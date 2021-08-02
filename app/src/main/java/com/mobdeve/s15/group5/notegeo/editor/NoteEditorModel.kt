@@ -1,4 +1,4 @@
-package com.mobdeve.s15.group5.notegeo.model
+package com.mobdeve.s15.group5.notegeo.editor
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

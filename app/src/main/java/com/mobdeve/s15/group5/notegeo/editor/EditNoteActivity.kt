@@ -1,10 +1,10 @@
-package com.mobdeve.s15.group5.notegeo
+package com.mobdeve.s15.group5.notegeo.editor
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
-import com.mobdeve.s15.group5.notegeo.model.NoteEditorModel
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding

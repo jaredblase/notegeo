@@ -1,9 +1,10 @@
-package com.mobdeve.s15.group5.notegeo
+package com.mobdeve.s15.group5.notegeo.recyclebin
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityRecycleBinBinding
 
 class RecycleBinActivity : AppCompatActivity() {

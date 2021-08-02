@@ -10,16 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteGeo">
         <activity
-            android:name=".LabelActivity"
+            android:name=".label.LabelActivity"
             android:exported="true" />
         <activity
-            android:name=".RecycleBinActivity"
+            android:name=".recyclebin.RecycleBinActivity"
             android:exported="true" />
         <activity
-            android:name=".EditNoteActivity"
+            android:name=".editor.EditNoteActivity"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".home.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,9 +1,10 @@
-package com.mobdeve.s15.group5.notegeo
+package com.mobdeve.s15.group5.notegeo.label
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
 
 class LabelActivity : AppCompatActivity() {
@@ -31,9 +32,9 @@ class LabelActivity : AppCompatActivity() {
         popup.setOnMenuItemClickListener {
             // TODO: Implement
             when (it.itemId) {
-                R.id.delete_selected_label_btn-> {
+                R.id.delete_selected_label_btn -> {
                 }
-                R.id.delete_all_label_btn-> {
+                R.id.delete_all_label_btn -> {
                 }
             }
 
