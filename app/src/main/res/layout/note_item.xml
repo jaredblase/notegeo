@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/less_rounded_layout"
-        android:paddingBottom="@dimen/note_padding">
+        android:paddingBottom="@dimen/note_padding"
+        android:backgroundTint="@{ note.color }">
 
         <TextView
             android:id="@+id/note_title_tv"
