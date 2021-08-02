@@ -1,47 +1,60 @@
 package com.mobdeve.s15.group5.notegeo.label
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.widget.PopupMenu
+import androidx.databinding.ObservableArrayList
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.mobdeve.s15.group5.notegeo.DataHelper
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
+import com.mobdeve.s15.group5.notegeo.models.LabelEntry
 
 class LabelActivity : AppCompatActivity() {
-    private val data = intArrayOf()
+    private val data = ObservableArrayList<LabelEntry>()
     private lateinit var binding: ActivityLabelBinding
     private lateinit var popup: PopupMenu
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLabelBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.addLabelLl.setOnClickListener {
-            // TODO: Add a component to recycler view
-            binding.labelsMnuBtn.visibility = View.VISIBLE
-        }
+        // TODO: get data from db
+        data.addAll(DataHelper.loadLabelEntries())
+        binding.labels = data
 
-        if (data.isEmpty()) {
-            binding.labelsEmptyLl.visibility = View.VISIBLE
-//            binding.labelsMnuBtn.visibility = View.GONE
-        }
+        // setup recycler view
+        binding.labelsRv.adapter = LabelAdapter(data)
+        binding.labelsRv.layoutManager = LinearLayoutManager(this)
 
+        // setup popup menu
         popup = PopupMenu(this, binding.labelsMnuBtn)
         menuInflater.inflate(R.menu.labels_menu, popup.menu)
-        popup.setOnMenuItemClickListener {
-            // TODO: Implement
-            when (it.itemId) {
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
                 R.id.delete_selected_label_btn -> {
+                    data.removeAll(data.filter { it.isChecked.get() })
+                    binding.labelsRv.adapter?.notifyDataSetChanged()
                 }
                 R.id.delete_all_label_btn -> {
+                    val len = data.size
+                    data.clear()
+                    binding.labelsRv.adapter?.notifyItemRangeRemoved(0, len)
                 }
             }
 
             true
         }
 
-        binding.labelsMnuBtn.setOnClickListener { popup.show() }
-    }
+        binding.addLabelLl.setOnClickListener {
+            data.add(LabelEntry())
+            binding.labelsRv.adapter?.notifyItemInserted(data.size)
+        }
 
+        binding.labelsMnuBtn.setOnClickListener { popup.show() }
+        binding.executePendingBindings()
+    }
 }
