@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
         <import type="androidx.databinding.ObservableArrayList" />
         <import type="android.view.View" />
@@ -9,8 +11,7 @@
             type="ObservableArrayList&lt;LabelEntry&gt;" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false">
@@ -34,36 +35,9 @@
             android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_label_ll" />
+            app:layout_constraintTop_toBottomOf="@+id/add_label_ll">
 
-        <LinearLayout
-            android:id="@+id/labels_empty_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="@{labels.isEmpty() ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/labels_rv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="98dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/desc.empty"
-                app:srcCompat="@drawable/ic_leaf" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/empty_message"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-                android:textColor="@color/dark_body"
-                android:textSize="18sp" />
-        </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
         <ImageButton
             android:id="@+id/labels_mnu_btn"
@@ -72,10 +46,22 @@
             android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@string/desc.more_options"
+            android:visibility="@{ labels.isEmpty() ? View.GONE : View.VISIBLE }"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_snowman"
-            android:visibility="@{ labels.isEmpty() ? View.GONE: View.VISIBLE }"/>
+            app:srcCompat="@drawable/ic_snowman" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/leaf_img_size"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/desc.empty"
+            android:visibility="@{ labels.isEmpty() ? View.VISIBLE : View.GONE }"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_leaf" />
 
         <LinearLayout
             android:id="@+id/add_label_ll"

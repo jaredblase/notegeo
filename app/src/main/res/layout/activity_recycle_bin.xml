@@ -27,37 +27,9 @@
         android:layout_marginEnd="@dimen/root_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" >
 
-    <LinearLayout
-        android:id="@+id/reycle_bin_empty_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/recycle_bin_rv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="98dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/desc.empty"
-            app:srcCompat="@drawable/ic_leaf" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/empty_message"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-            android:textColor="@color/dark_body"
-            android:textSize="18sp" />
-    </LinearLayout>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <ImageButton
         android:id="@+id/recycle_bin_mnu_btn"
@@ -69,5 +41,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_snowman" />
+
+    <ImageView
+        android:id="@+id/empty_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/leaf_img_size"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/desc.empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_leaf" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
