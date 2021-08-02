@@ -5,11 +5,23 @@
 
     <data>
         <import type="androidx.databinding.ObservableArrayList" />
+        <import type="androidx.recyclerview.widget.StaggeredGridLayoutManager" />
+        <import type="androidx.databinding.ObservableBoolean" />
+        <import type="androidx.recyclerview.widget.LinearLayoutManager" />
         <import type="android.view.View" />
         <import type="com.mobdeve.s15.group5.notegeo.models.Note" />
         <variable
             name="notes"
             type="ObservableArrayList&lt;Note&gt;" />
+        <variable
+            name="isGrid"
+            type="ObservableBoolean" />
+        <variable
+            name="gridLayout"
+            type="StaggeredGridLayoutManager" />
+        <variable
+            name="linearLayout"
+            type="LinearLayoutManager" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -76,7 +88,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_menu"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
                 <ImageButton
                     android:id="@+id/change_layout_btn"
@@ -91,7 +103,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/ic_tile_view"
+                    android:src="@{ isGrid ? @drawable/ic_tile_view : @drawable/ic_card }"
                     tools:ignore="TouchTargetSizeCheck" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -118,7 +130,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                app:layoutManager="@{ isGrid ? gridLayout : linearLayout }"/>
 
             <ImageView
                 android:layout_width="@dimen/leaf_img_size"
