@@ -9,12 +9,13 @@ class DataHelper {
             arrayListOf(LabelEntry("Sample"), LabelEntry("Hello World"), LabelEntry("Another One"))
 
         fun loadNotes() = arrayListOf(
-            Note("Sample", "Lorem Ipsum Brodie"),
+            Note("Sample", "Lorem Ipsum Brodie", -16061521),
             Note(
                 "Hello!",
-                "Just some random text to wee wee. Need to make this note a bit more longer so we can see a difference in the layout"
+                "Just some random text to wee wee. Need to make this note a bit more longer so we can see a difference in the layout",
+                -35002
             ),
-            Note("Test try...", "Is this cool or what? Kotlin master race OwO")
+            Note("Test try...", "Is this cool or what? Kotlin master race OwO", -15262682)
         )
     }
 }
