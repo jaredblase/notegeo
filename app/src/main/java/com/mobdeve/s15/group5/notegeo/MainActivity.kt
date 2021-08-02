@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.labels_menu_btn -> {
-
+                    startActivity(Intent(this, LabelActivity::class.java))
                 }
 
             }
