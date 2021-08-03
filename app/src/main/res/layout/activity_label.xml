@@ -5,10 +5,10 @@
     <data>
         <import type="androidx.databinding.ObservableArrayList" />
         <import type="android.view.View" />
-        <import type="com.mobdeve.s15.group5.notegeo.models.LabelEntry" />
+        <import type="com.mobdeve.s15.group5.notegeo.models.Label" />
         <variable
             name="labels"
-            type="ObservableArrayList&lt;LabelEntry&gt;" />
+            type="ObservableArrayList&lt;Label&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,13 +1,10 @@
 package com.mobdeve.s15.group5.notegeo
 
-import com.mobdeve.s15.group5.notegeo.models.LabelEntry
+import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.Note
 
 class DataHelper {
     companion object {
-        fun loadLabelEntries() =
-            arrayListOf(LabelEntry("Sample"), LabelEntry("Hello World"), LabelEntry("Another One"))
-
         fun loadNotes() = arrayListOf(
             Note("Sample", "Lorem Ipsum Brodie", -16061521),
             Note(

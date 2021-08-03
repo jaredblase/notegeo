@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s15.group5.notegeo.databinding.LabelItemBinding
-import com.mobdeve.s15.group5.notegeo.models.LabelEntry
+import com.mobdeve.s15.group5.notegeo.models.Label
 
-class LabelAdapter(private val data: ObservableArrayList<LabelEntry>) : RecyclerView.Adapter<LabelAdapter.ViewHolder>() {
+class LabelAdapter(private val data: ObservableArrayList<Label>) : RecyclerView.Adapter<LabelAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LabelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -18,7 +18,7 @@ class LabelAdapter(private val data: ObservableArrayList<LabelEntry>) : Recycler
     override fun getItemCount() = data.size
 
     inner class ViewHolder(private val binding: LabelItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: LabelEntry) {
+        fun bind(item: Label) {
             binding.item = item
             binding.executePendingBindings()
         }

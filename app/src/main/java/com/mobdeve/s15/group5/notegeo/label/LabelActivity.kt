@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s15.group5.notegeo.DataHelper
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
-import com.mobdeve.s15.group5.notegeo.models.LabelEntry
+import com.mobdeve.s15.group5.notegeo.models.Label
 
 class LabelActivity : AppCompatActivity() {
-    private val data = ObservableArrayList<LabelEntry>()
+    private val data = ObservableArrayList<Label>()
     private lateinit var binding: ActivityLabelBinding
     private lateinit var popup: PopupMenu
 
@@ -23,7 +23,6 @@ class LabelActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // TODO: get data from db
-        data.addAll(DataHelper.loadLabelEntries())
         binding.labels = data
 
         // setup recycler view
@@ -50,7 +49,7 @@ class LabelActivity : AppCompatActivity() {
         }
 
         binding.addLabelLl.setOnClickListener {
-            data.add(LabelEntry())
+            data.add(Label())
             binding.labelsRv.adapter?.notifyItemInserted(data.size)
         }
 
