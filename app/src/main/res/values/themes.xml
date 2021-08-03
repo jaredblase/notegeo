@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.NoteGeo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.NoteGeo" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/dark_foreground</item>
         <item name="colorPrimaryVariant">@color/dark_status_bar</item>
@@ -15,6 +15,11 @@
         <item name="android:textColorHint">@color/dark_category</item>
 
         <item name="android:editTextBackground">@null</item>
+        <item name="popupMenuStyle">@style/PopupMenu</item>
     </style>
 
+    <style name="PopupMenu" parent="@style/Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@color/dark_foreground</item>
+        <item name="android:textColor">@color/dark_headers</item>
+    </style>
 </resources>
