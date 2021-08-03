@@ -18,5 +18,6 @@
     <color name="coral">#FF7746</color>
     <color name="magenta">#CB3783</color>
 
+    <color name="action_blue">#3369FF</color>
     <color name="black">#000</color>
 </resources>

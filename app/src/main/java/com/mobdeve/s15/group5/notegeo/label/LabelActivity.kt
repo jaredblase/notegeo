@@ -30,23 +30,22 @@ class LabelActivity : AppCompatActivity() {
         binding.labelsRv.layoutManager = LinearLayoutManager(this)
 
         // setup popup menu
-        popup = PopupMenu(this, binding.labelsMnuBtn)
-        menuInflater.inflate(R.menu.labels_menu, popup.menu)
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.delete_selected_label_btn -> {
-                    data.removeAll(data.filter { it.isChecked.get() })
-                    binding.labelsRv.adapter?.notifyDataSetChanged()
+        popup = PopupMenu(this, binding.labelsMnuBtn).apply {
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.delete_selected_label_btn -> {
+                        data.removeAll(data.filter { it.isChecked.get() })
+                        binding.labelsRv.adapter?.notifyDataSetChanged()
+                    }
+                    R.id.delete_all_label_btn -> {
+                        val len = data.size
+                        data.clear()
+                        binding.labelsRv.adapter?.notifyItemRangeRemoved(0, len)
+                    }
                 }
-                R.id.delete_all_label_btn -> {
-                    val len = data.size
-                    data.clear()
-                    binding.labelsRv.adapter?.notifyItemRangeRemoved(0, len)
-                }
+                true
             }
-
-            true
-        }
+        }.also { menuInflater.inflate(R.menu.labels_menu, it.menu) }
 
         binding.addLabelLl.setOnClickListener {
             data.add(Label())
