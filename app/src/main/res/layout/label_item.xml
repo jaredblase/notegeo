@@ -17,10 +17,12 @@
             android:id="@+id/label_item_cb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@{ item.isChecked ? @color/action_blue : @color/dark_body }"
+            android:checked="@={ item.isChecked }"
             android:textColor="@color/dark_headers"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:checked="@={item.isChecked}"/>
+            tools:checked="true" />
 
         <EditText
             android:id="@+id/label_name_et"
@@ -28,12 +30,12 @@
             android:layout_height="0dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@{item.label}"
+            android:text="@{ item.label }"
             android:textColor="@color/dark_headers"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/label_item_cb"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="Autofill,LabelFor" />
+            tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
