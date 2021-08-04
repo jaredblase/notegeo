@@ -4,12 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="androidx.databinding.ObservableArrayList" />
         <import type="android.view.View" />
-        <import type="com.mobdeve.s15.group5.notegeo.models.LabelEntry" />
         <variable
-            name="labels"
-            type="ObservableArrayList&lt;LabelEntry&gt;" />
+            name="isEmpty"
+            type="androidx.databinding.ObservableBoolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,17 +45,18 @@
             android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@string/desc.more_options"
-            android:visibility="@{ labels.isEmpty() ? View.GONE : View.VISIBLE }"
+            android:visibility="@{ isEmpty ? View.GONE : View.VISIBLE }"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_snowman" />
 
         <ImageView
+            android:id="@+id/empty_iv"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/leaf_img_size"
             android:adjustViewBounds="true"
             android:contentDescription="@string/desc.empty"
-            android:visibility="@{ labels.isEmpty() ? View.VISIBLE : View.GONE }"
+            android:visibility="@{ isEmpty ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +93,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="28dp"
