@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["label"], unique = true)])
 data class Label(
-    @PrimaryKey(autoGenerate = true) val _id: Int = 0,
-    val label: String = "",
-    @Ignore val isChecked: ObservableBoolean = ObservableBoolean()
+    @PrimaryKey(autoGenerate = true) var _id: Int = 0,
+    var label: String = "",
+    /** Used for the label activity */
+    @Ignore var isChecked: ObservableBoolean = ObservableBoolean()
 )
