@@ -2,25 +2,41 @@ package com.mobdeve.s15.group5.notegeo.label
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.ObservableArrayList
+import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s15.group5.notegeo.databinding.LabelItemBinding
 import com.mobdeve.s15.group5.notegeo.models.Label
 
-class LabelAdapter(private val data: ObservableArrayList<Label>) : RecyclerView.Adapter<LabelAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+class LabelAdapter :
+    ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelComparator()) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelViewHolder {
         val binding = LabelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        val holder = LabelViewHolder(binding)
+
+        // update text on change
+        binding.labelNameEt.doOnTextChanged { text, _, _, _ ->
+            getItem(holder.bindingAdapterPosition).label = text.toString()
+        }
+
+        return holder
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(data[position])
+    override fun onBindViewHolder(holder: LabelViewHolder, position: Int) =
+        holder.bind(getItem(position))
 
-    override fun getItemCount() = data.size
-
-    inner class ViewHolder(private val binding: LabelItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class LabelViewHolder(private val binding: LabelItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Label) {
             binding.item = item
-            binding.executePendingBindings()
         }
+    }
+
+    class LabelComparator : DiffUtil.ItemCallback<Label>() {
+        override fun areItemsTheSame(oldItem: Label, newItem: Label) = oldItem === newItem
+        override fun areContentsTheSame(oldItem: Label, newItem: Label) =
+            oldItem.label == newItem.label
     }
 }
