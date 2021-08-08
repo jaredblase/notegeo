@@ -56,13 +56,3 @@ class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
         listIsEmpty.set(false)
     }
 }
-
-class LabelViewModelFactory(private val repository: NoteGeoRepository): ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LabelViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return LabelViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
