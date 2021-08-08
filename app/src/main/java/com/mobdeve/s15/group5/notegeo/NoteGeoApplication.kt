@@ -9,5 +9,5 @@ import kotlinx.coroutines.SupervisorJob
 class NoteGeoApplication : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob())
     private val db by lazy { AppDatabase.getDatabase(this, applicationScope) }
-    val repo by lazy { NoteGeoRepository(db.labelDao()) }
+    val repo by lazy { NoteGeoRepository(db.labelDao(), db.noteDao()) }
 }

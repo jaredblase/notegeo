@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Label::class], version = 1)
+@Database(entities = [Note::class, Label::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun labelDao(): LabelDao
+    abstract fun noteDao(): NoteDao
 
     // singleton implementation for the database
     companion object {
@@ -43,13 +46,22 @@ abstract class AppDatabase : RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let {
-                scope.launch { populateDatabase(it.labelDao()) }
+                scope.launch { populateDatabase(it.labelDao(), it.noteDao()) }
             }
         }
 
-        suspend fun populateDatabase(labelDao: LabelDao) {
-            labelDao.clearTable()
+        suspend fun populateDatabase(labelDao: LabelDao, noteDao: NoteDao) {
             // add data
+            noteDao.insert(
+                Note(0, "Sample", "Lorem Ipsum Brodie", -16061521),
+                Note(
+                    0,
+                    "Hello!",
+                    "Just some random text to wee wee. Need to make this note a bit more longer so we can see a difference in the layout",
+                    -35002
+                ),
+                Note(0, "Test try...", "Is this cool or what? Kotlin master race OwO", -15262682)
+            )
             labelDao.insert(Label(0, "For home"), Label(0, "Exercise"), Label(0, "Academics"))
         }
     }

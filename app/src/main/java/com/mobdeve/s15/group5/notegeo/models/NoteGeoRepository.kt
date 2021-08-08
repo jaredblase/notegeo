@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Central repository for the whole application
  */
-class NoteGeoRepository(private val labelDao: LabelDao) {
+class NoteGeoRepository(private val labelDao: LabelDao, private val noteDao: NoteDao) {
+    val savedNotes: Flow<MutableList<Note>> = noteDao.getSavedNotes()
+    val deletedNotes: Flow<MutableList<Note>> = noteDao.getDeletedNotes()
     val allLabels: Flow<MutableList<Label>> = labelDao.getAll()
 
     @WorkerThread
