@@ -28,6 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "notegeo_db"
                 )
+                    .fallbackToDestructiveMigration()   // for development purposes
                     .addCallback(AppDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
