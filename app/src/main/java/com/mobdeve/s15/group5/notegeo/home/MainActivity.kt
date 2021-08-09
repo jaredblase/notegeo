@@ -83,6 +83,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * get saved layout style
+     */
     override fun onResume() {
         super.onResume()
 
@@ -91,6 +94,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * write preferred layout style
+     */
     override fun onStop() {
         super.onStop()
 
