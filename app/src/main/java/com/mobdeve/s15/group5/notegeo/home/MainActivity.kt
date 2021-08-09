@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
@@ -80,5 +81,26 @@ class MainActivity : AppCompatActivity() {
 
             executePendingBindings()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        with(PreferenceManager.getDefaultSharedPreferences(this)) {
+            model.isGridView.set(getBoolean(IS_GRID_VIEW, true))
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        with(PreferenceManager.getDefaultSharedPreferences(this).edit()) {
+            putBoolean(IS_GRID_VIEW, model.isGridView.get())
+            apply()
+        }
+    }
+
+    companion object {
+        private const val IS_GRID_VIEW = "IS GRID VIEW"
     }
 }
