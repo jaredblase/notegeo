@@ -4,9 +4,15 @@
     tools:context=".recyclebin.RecycleBinActivity">
 
     <item
-        android:id="@+id/delete_all_btn"
-        android:title="@string/rb_menu.delete" />
+        android:id="@+id/rb_restore_selected_btn"
+        android:title="@string/rb_menu.res_select" />
     <item
         android:id="@+id/restore_all_btn"
         android:title="@string/rb_menu.restore" />
+    <item
+        android:id="@+id/rb_delete_selected_btn"
+        android:title="@string/rb_menu.del_select" />
+    <item
+        android:id="@+id/delete_all_btn"
+        android:title="@string/rb_menu.delete" />
 </menu>

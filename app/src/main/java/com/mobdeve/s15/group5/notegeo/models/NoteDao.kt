@@ -17,8 +17,8 @@ interface NoteDao {
     @Update
     suspend fun update(vararg note: Note)
 
-    @Delete
-    suspend fun delete(note: Note)
+    @Query("DELETE FROM note WHERE _id IN (:ids)")
+    suspend fun delete(ids: List<Long>)
 
     @Query("DELETE FROM note WHERE dateDeleted IS NOT NULL")
     suspend fun emptyTrash()

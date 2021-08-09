@@ -67,6 +67,8 @@ class RecycleBinActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.recycle_bin_menu, popup.menu)
         popup.setOnMenuItemClickListener {
             when (it.itemId) {
+                R.id.rb_delete_selected_btn -> model.delete(adapter.tracker?.selection?.toList())
+                R.id.rb_restore_selected_btn -> model.restore(adapter.tracker?.selection?.toList())
                 R.id.delete_all_btn -> model.deleteAll()
                 R.id.restore_all_btn -> model.restoreAll()
             }
@@ -78,9 +80,10 @@ class RecycleBinActivity : AppCompatActivity() {
                 override fun onSelectionChanged() {
                     super.onSelectionChanged()
 
-                    val items = selection.size()
-                    if (items > 0) {
-                        println("MORE THAN 1 SELECTED YOU HOE")
+                    with(popup.menu) {
+                        val value = !selection.isEmpty
+                        findItem(R.id.rb_delete_selected_btn).isVisible = value
+                        findItem(R.id.rb_restore_selected_btn).isVisible = value
                     }
                 }
             })
