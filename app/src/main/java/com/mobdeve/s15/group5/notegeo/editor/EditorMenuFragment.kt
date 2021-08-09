@@ -56,7 +56,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
 
             paletteHolder.setOnClickListener {
                 it as PaletteHolder
-                model.select(it.backgroundColor)
+                model.setBgColor(it.backgroundColor)
             }
         }
 

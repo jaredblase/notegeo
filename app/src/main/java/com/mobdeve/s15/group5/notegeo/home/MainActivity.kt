@@ -24,7 +24,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = NoteAdapter()
+        val adapter = NoteAdapter {
+            // go to editor when a note is clicked
+            startActivity(Intent(this, EditNoteActivity::class.java).apply {
+                putExtra(EditNoteActivity.NOTE, it)
+            })
+        }
 
         // get data from db once
         model.savedNotes.observe(this) {
