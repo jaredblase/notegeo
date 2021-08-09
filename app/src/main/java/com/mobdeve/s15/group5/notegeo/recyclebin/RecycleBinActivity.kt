@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityRecycleBinBinding
-import com.mobdeve.s15.group5.notegeo.home.HomeViewModel
-import com.mobdeve.s15.group5.notegeo.home.ItemOffsetDecoration
-import com.mobdeve.s15.group5.notegeo.home.NoteAdapter
+import com.mobdeve.s15.group5.notegeo.home.*
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.toast
 
@@ -44,11 +45,22 @@ class RecycleBinActivity : AppCompatActivity() {
         // setup recycler view
         binding.recycleBinRv.apply {
             this.adapter = adapter
-            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
-                gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-            }
+            layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
+                    gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+                }
             addItemDecoration(ItemOffsetDecoration(this.context, R.dimen.notes_offset))
         }
+
+        val tracker = SelectionTracker.Builder(
+            "mySelection",
+            binding.recycleBinRv,
+            NoteKeyProvider(adapter),
+            NoteDetailsLookup(binding.recycleBinRv),
+            StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(
+            SelectionPredicates.createSelectAnything()
+        ).build()
 
         // setup popup menu
         val popup = PopupMenu(this, binding.recycleBinMnuBtn)
@@ -59,6 +71,19 @@ class RecycleBinActivity : AppCompatActivity() {
                 R.id.restore_all_btn -> model.restoreAll()
             }
             true
+        }
+
+        adapter.tracker = tracker.apply {
+            addObserver(object: SelectionTracker.SelectionObserver<Long>() {
+                override fun onSelectionChanged() {
+                    super.onSelectionChanged()
+
+                    val items = selection.size()
+                    if (items > 0) {
+                        println("MORE THAN 1 SELECTED YOU HOE")
+                    }
+                }
+            })
         }
 
         binding.recycleBinMnuBtn.setOnClickListener { popup.show() }
