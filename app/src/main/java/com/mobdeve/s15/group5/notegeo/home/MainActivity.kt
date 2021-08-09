@@ -3,6 +3,7 @@ package com.mobdeve.s15.group5.notegeo.home
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,11 +34,28 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
-        // get data from db once
+        // get data from db
         model.savedNotes.observe(this) {
             adapter.submitList(it)
-            model.isListEmpty.set(it.isEmpty())
-            model.savedNotes.removeObservers(this)
+            binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+        }
+
+        // setup layout managers
+        val gridLayout = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
+            gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        }
+        val linearLayout = LinearLayoutManager(this)
+
+        model.isGridView.observe(this) {
+            with(binding) {
+                if (it) {
+                    notesListRv.layoutManager = gridLayout
+                    changeLayoutBtn.setImageResource(R.drawable.ic_tile_view)
+                } else {
+                    notesListRv.layoutManager = linearLayout
+                    changeLayoutBtn.setImageResource(R.drawable.ic_card)
+                }
+            }
         }
 
         // setup recycler view
@@ -71,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val context = this
+
         with(binding) {
             // set click listeners
             sideMenuBtn.setOnClickListener { mainDl.open() }
@@ -78,15 +97,6 @@ class MainActivity : AppCompatActivity() {
             addNoteFab.setOnClickListener {
                 startActivity(Intent(context, EditNoteActivity::class.java))
             }
-
-            // data binding
-            model = context.model
-            gridLayout = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
-                gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-            }
-            linearLayout = LinearLayoutManager(context)
-
-            executePendingBindings()
         }
     }
 
@@ -97,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         with(PreferenceManager.getDefaultSharedPreferences(this)) {
-            model.isGridView.set(getBoolean(IS_GRID_VIEW, true))
+            model.isGridView.value = getBoolean(IS_GRID_VIEW, true)
         }
     }
 
@@ -108,8 +118,10 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
 
         with(PreferenceManager.getDefaultSharedPreferences(this).edit()) {
-            putBoolean(IS_GRID_VIEW, model.isGridView.get())
-            apply()
+            model.isGridView.value?.let {
+                putBoolean(IS_GRID_VIEW, it)
+                apply()
+            }
         }
     }
 
