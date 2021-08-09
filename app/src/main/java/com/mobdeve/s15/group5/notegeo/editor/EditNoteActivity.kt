@@ -3,8 +3,8 @@ package com.mobdeve.s15.group5.notegeo.editor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
+import com.mobdeve.s15.group5.notegeo.models.Note
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
@@ -15,11 +15,18 @@ class EditNoteActivity : AppCompatActivity() {
         binding = ActivityEditNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TODO: Retrieve color from note
-        model.select(getColor(R.color.dark_blue))
+        // set note to view model, if no note was passed, create a new note
+        model.note = intent.getParcelableExtra(NOTE) ?: Note()
 
-        model.selectedBackgroundColor.observe(this) {
-            binding.root.setBackgroundColor(model.selectedBackgroundColor.value!!)
+        // bind model with layout using observers
+        model.selectedBackgroundColor.observe(this) { binding.root.setBackgroundColor(it) }
+        model.dateEdited.observe(this) { binding.editorDateEditedTv.text = it }
+
+        with(binding) {
+            with(model.note) {
+                editorTitleEt.setText(title)
+                editorBodyEt.setText(body)
+            }
         }
 
         binding.editorMoreOptions.setOnClickListener {
@@ -32,5 +39,6 @@ class EditNoteActivity : AppCompatActivity() {
 
     companion object {
         private const val FRAGMENT_TAG = "Editor Menu"
+        const val NOTE = "Note"
     }
 }
