@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
@@ -17,22 +20,23 @@ import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
 import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
+import com.mobdeve.s15.group5.notegeo.noteview.NoteDetailsLookup
+import com.mobdeve.s15.group5.notegeo.noteview.NoteKeyProvider
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val model by viewModels<HomeViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
+    private val adapter = NoteAdapter {
+        // go to editor when a note is clicked
+        startActivity(Intent(this, EditNoteActivity::class.java).apply {
+            putExtra(EditNoteActivity.NOTE, it)
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val adapter = NoteAdapter {
-            // go to editor when a note is clicked
-            startActivity(Intent(this, EditNoteActivity::class.java).apply {
-                putExtra(EditNoteActivity.NOTE, it)
-            })
-        }
 
         // get data from db
         model.savedNotes.observe(this) {
@@ -59,9 +63,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         // setup recycler view
-        binding.notesListRv.apply {
-            this.adapter = adapter
-            addItemDecoration(ItemOffsetDecoration(this.context, R.dimen.notes_offset))
+        binding.notesListRv.let {
+            it.adapter = adapter
+            it.addItemDecoration(ItemOffsetDecoration(this, R.dimen.notes_offset))
+        }
+
+        val tracker = SelectionTracker.Builder(
+            "myHomeSelection",
+            binding.notesListRv,
+            NoteKeyProvider(adapter),
+            NoteDetailsLookup(binding.notesListRv),
+            StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(
+            SelectionPredicates.createSelectAnything()
+        ).build()
+
+        adapter.tracker = tracker.apply {
+            addObserver(object: SelectionTracker.SelectionObserver<Long>() {
+                override fun onSelectionChanged() {
+                    super.onSelectionChanged()
+                    binding.homeDeleteBtn.visibility = if (selection.isEmpty) View.GONE else View.VISIBLE
+                }
+            })
         }
 
         // setup menu
@@ -92,11 +115,20 @@ class MainActivity : AppCompatActivity() {
 
         with(binding) {
             // set click listeners
+            homeDeleteBtn.setOnClickListener { model.recycleNotes(adapter.tracker?.selection?.toList()) }
             sideMenuBtn.setOnClickListener { mainDl.open() }
-            changeLayoutBtn.setOnClickListener { context.model.toggleView() }
+            changeLayoutBtn.setOnClickListener { model.toggleView() }
             addNoteFab.setOnClickListener {
                 startActivity(Intent(context, EditNoteActivity::class.java))
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (adapter.tracker?.hasSelection() == true) {
+            adapter.tracker?.clearSelection()
+        } else {
+            super.onBackPressed()
         }
     }
 

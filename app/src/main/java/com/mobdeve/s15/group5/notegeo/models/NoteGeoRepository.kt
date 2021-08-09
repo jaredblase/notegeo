@@ -2,6 +2,7 @@ package com.mobdeve.s15.group5.notegeo.models
 
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 /**
  * Central repository for the whole application
@@ -15,6 +16,11 @@ class NoteGeoRepository(private val labelDao: LabelDao, private val noteDao: Not
     suspend fun updateLabels(labels: List<Label>) {
         labelDao.clearTable()
         labelDao.insert(*labels.toTypedArray())
+    }
+
+    @WorkerThread
+    suspend fun recycleNotes(ids: List<Long>) {
+        noteDao.recycleNotes(ids, Date())
     }
 
     @WorkerThread

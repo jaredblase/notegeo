@@ -24,6 +24,7 @@
     <string name="menu.reminders">Reminders</string>
     <string name="menu.labels">Labels</string>
     <string name="menu.deleted">Deleted</string>
+    <string name="recycle">Recycle Notes</string>
 
     <!--  Editor Menu  -->
     <string name="editor_menu.delete">Delete note</string>
