@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityRecycleBinBinding
-import com.mobdeve.s15.group5.notegeo.home.*
+import com.mobdeve.s15.group5.notegeo.noteview.*
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.toast
 

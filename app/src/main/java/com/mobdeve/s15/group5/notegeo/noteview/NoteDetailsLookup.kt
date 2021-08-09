@@ -1,4 +1,4 @@
-package com.mobdeve.s15.group5.notegeo.home
+package com.mobdeve.s15.group5.notegeo.noteview
 
 import android.view.MotionEvent
 import androidx.recyclerview.selection.ItemDetailsLookup

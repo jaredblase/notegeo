@@ -14,6 +14,8 @@ import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
+import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
+import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
