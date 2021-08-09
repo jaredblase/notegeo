@@ -15,8 +15,8 @@ class EditNoteActivity : AppCompatActivity() {
         binding = ActivityEditNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // set note to view model
-        intent.getParcelableExtra<Note>(NOTE)?.let { model.note = it }
+        // set note to view model, if no note was passed, create a new note
+        model.note = intent.getParcelableExtra(NOTE) ?: Note()
 
         // bind model with layout using observers
         model.selectedBackgroundColor.observe(this) { binding.root.setBackgroundColor(it) }
