@@ -19,13 +19,12 @@ import com.mobdeve.s15.group5.notegeo.toast
 class RecycleBinActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecycleBinBinding
     private val model by viewModels<RecycleBinViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
+    private val adapter = NoteAdapter { this.toast("NOTE SELECTED") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecycleBinBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val adapter = NoteAdapter { this.toast("NOTE SELECTED") }
 
         // everytime the list is updated
         model.deletedNotes.observe(this) {
@@ -43,13 +42,13 @@ class RecycleBinActivity : AppCompatActivity() {
         }
 
         // setup recycler view
-        binding.recycleBinRv.apply {
-            this.adapter = adapter
-            layoutManager =
+        binding.recycleBinRv.let {
+            it.adapter = adapter
+            it.layoutManager =
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
                     gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
                 }
-            addItemDecoration(ItemOffsetDecoration(this.context, R.dimen.notes_offset))
+            it.addItemDecoration(ItemOffsetDecoration(this, R.dimen.notes_offset))
         }
 
         val tracker = SelectionTracker.Builder(
@@ -72,6 +71,7 @@ class RecycleBinActivity : AppCompatActivity() {
                 R.id.delete_all_btn -> model.deleteAll()
                 R.id.restore_all_btn -> model.restoreAll()
             }
+            tracker.clearSelection()
             true
         }
 
@@ -90,5 +90,13 @@ class RecycleBinActivity : AppCompatActivity() {
         }
 
         binding.recycleBinMnuBtn.setOnClickListener { popup.show() }
+    }
+
+    override fun onBackPressed() {
+        if (adapter.tracker?.hasSelection() == true) {
+            adapter.tracker?.clearSelection()
+        } else {
+            super.onBackPressed()
+        }
     }
 }
