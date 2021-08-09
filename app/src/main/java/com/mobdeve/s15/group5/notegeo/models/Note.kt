@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity
 data class Note(
-    @PrimaryKey(autoGenerate = true) var _id: Int = 0,
+    @PrimaryKey(autoGenerate = true) var _id: Long = 0,
     var title: String = "",
     var body: String = "",
     var color: Int = DEFAULT_COLOR,
@@ -16,7 +16,7 @@ data class Note(
     var dateDeleted: Date? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readInt(),
+        parcel.readLong(),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readInt(),
@@ -25,7 +25,7 @@ data class Note(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(_id)
+        parcel.writeLong(_id)
         parcel.writeString(title)
         parcel.writeString(body)
         parcel.writeInt(color)

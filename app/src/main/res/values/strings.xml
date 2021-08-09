@@ -24,6 +24,7 @@
     <string name="menu.reminders">Reminders</string>
     <string name="menu.labels">Labels</string>
     <string name="menu.deleted">Deleted</string>
+    <string name="recycle">Recycle Notes</string>
 
     <!--  Editor Menu  -->
     <string name="editor_menu.delete">Delete note</string>
@@ -33,7 +34,9 @@
     <string name="editor_menu.options">More</string>
 
     <!-- Recycle Bin Menu -->
+    <string name="rb_menu.del_select">Delete selected</string>
     <string name="rb_menu.delete">Empty Recycle Bin</string>
+    <string name="rb_menu.res_select">Restore selected</string>
     <string name="rb_menu.restore">Restore all</string>
 
     <!--  Labels Menu  -->

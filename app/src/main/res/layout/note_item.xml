@@ -9,11 +9,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/holder_cl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/less_rounded_layout"
-        android:paddingBottom="@dimen/note_padding"
-        android:backgroundTint="@{ note.color }">
+        android:paddingBottom="@dimen/note_padding">
 
         <TextView
             android:id="@+id/note_title_tv"

@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Database(entities = [Note::class, Label::class], version = 1)
 @TypeConverters(Converters::class)
@@ -60,7 +61,24 @@ abstract class AppDatabase : RoomDatabase() {
                     "Just some random text to wee wee. Need to make this note a bit more longer so we can see a difference in the layout",
                     -35002
                 ),
-                Note(0, "Test try...", "Is this cool or what? Kotlin master race OwO", -15262682)
+                Note(
+                    0,
+                    "Test try...",
+                    "Is this cool or what? Kotlin master race OwO. Java sucks",
+                    -15262682
+                ),
+                Note(
+                    0,
+                    "This must be a deleted note?",
+                    "It should be found in the recycle bin. If not, well...",
+                    dateDeleted = Date()
+                ),
+                Note(
+                    0,
+                    "Another deleted note",
+                    "Just to make sure if it works, know what I'm saying?",
+                    dateDeleted = Date()
+                )
             )
             labelDao.insert(Label(0, "For home"), Label(0, "Exercise"), Label(0, "Academics"))
         }
