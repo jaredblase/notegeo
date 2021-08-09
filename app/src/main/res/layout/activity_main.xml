@@ -4,18 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="androidx.databinding.ObservableArrayList" />
         <import type="androidx.recyclerview.widget.StaggeredGridLayoutManager" />
-        <import type="androidx.databinding.ObservableBoolean" />
         <import type="androidx.recyclerview.widget.LinearLayoutManager" />
         <import type="android.view.View" />
-        <import type="com.mobdeve.s15.group5.notegeo.models.Note" />
         <variable
-            name="notes"
-            type="ObservableArrayList&lt;Note&gt;" />
-        <variable
-            name="isGrid"
-            type="ObservableBoolean" />
+            name="model"
+            type="com.mobdeve.s15.group5.notegeo.home.HomeViewModel" />
         <variable
             name="gridLayout"
             type="StaggeredGridLayoutManager" />
@@ -103,7 +97,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0"
-                    android:src="@{ isGrid ? @drawable/ic_tile_view : @drawable/ic_card }"
+                    android:src="@{ model.isGridView ? @drawable/ic_tile_view : @drawable/ic_card }"
                     tools:ignore="TouchTargetSizeCheck" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -131,13 +125,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                app:layoutManager="@{ isGrid ? gridLayout : linearLayout }"/>
+                app:layoutManager="@{ model.isGridView ? gridLayout : linearLayout }"/>
 
             <ImageView
                 android:layout_width="@dimen/leaf_img_size"
                 android:layout_height="@dimen/leaf_img_size"
                 android:contentDescription="@string/desc.empty"
-                android:visibility="@{ notes.isEmpty() ? View.VISIBLE : View.GONE }"
+                android:visibility="@{ model.savedNotes.isEmpty() ? View.VISIBLE : View.GONE }"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
