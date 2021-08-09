@@ -9,6 +9,10 @@ data class Note(
     @PrimaryKey(autoGenerate = true) var _id: Int = 0,
     var title: String = "",
     var body: String = "",
-    var color: Int = -15262682,
+    var color: Int = DEFAULT_COLOR,
     var dateDeleted: Date? = null
-)
+) {
+    companion object {
+        const val DEFAULT_COLOR = -15262682
+    }
+}
