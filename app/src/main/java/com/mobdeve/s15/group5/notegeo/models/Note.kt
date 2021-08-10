@@ -21,7 +21,7 @@ data class Note(
         parcel.readString() ?: "",
         parcel.readInt(),
         Date(parcel.readLong()),
-        Date(parcel.readLong())
+        (parcel.readValue(Long::class.java.classLoader) as? Long)?.let { Date(it) }
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
