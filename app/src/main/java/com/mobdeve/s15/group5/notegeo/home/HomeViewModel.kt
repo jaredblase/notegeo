@@ -20,5 +20,7 @@ class HomeViewModel(private val repository: NoteGeoRepository) : ViewModel() {
         ids?.let { repository.recycleNotes(it) }
     }
 
+    fun recycleNote(id: Long) = viewModelScope.launch { repository.recycleNotes(listOf(id)) }
+
     fun upsertNote(note: Note) = viewModelScope.launch { repository.upsertNote(note) }
 }

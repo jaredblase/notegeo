@@ -36,11 +36,12 @@ class MainActivity : AppCompatActivity() {
     }
     private val editorResultLauncher = registerForActivityResult(StartActivityForResult()) {
         // data was edited
-        if (it.resultCode == RESULT_OK) {
-            val note = it.data?.getParcelableExtra<Note>(EditNoteActivity.NOTE)
-            if (note != null) {
-                model.upsertNote(note)
-            }
+        val note = it.data?.getParcelableExtra<Note>(EditNoteActivity.NOTE)
+
+        when (it.resultCode) {
+            RESULT_OK -> note?.let { model.upsertNote(note) }
+
+            EditNoteActivity.DELETE -> note?.let { model.recycleNote(note._id) }
         }
     }
 
@@ -90,10 +91,11 @@ class MainActivity : AppCompatActivity() {
         ).build()
 
         adapter.tracker = tracker.apply {
-            addObserver(object: SelectionTracker.SelectionObserver<Long>() {
+            addObserver(object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
                     super.onSelectionChanged()
-                    binding.homeDeleteBtn.visibility = if (selection.isEmpty) View.GONE else View.VISIBLE
+                    binding.homeDeleteBtn.visibility =
+                        if (selection.isEmpty) View.GONE else View.VISIBLE
                 }
             })
         }

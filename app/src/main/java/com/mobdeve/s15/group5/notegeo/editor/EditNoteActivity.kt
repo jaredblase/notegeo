@@ -57,5 +57,6 @@ class EditNoteActivity : AppCompatActivity() {
     companion object {
         private const val FRAGMENT_TAG = "Editor Menu"
         const val NOTE = "Note"
+        const val DELETE = 100
     }
 }
