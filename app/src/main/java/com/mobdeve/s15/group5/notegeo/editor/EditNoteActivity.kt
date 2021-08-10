@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.models.Note
@@ -23,6 +24,9 @@ class EditNoteActivity : AppCompatActivity() {
         // bind model with layout using observers
         model.selectedBackgroundColor.observe(this) { binding.root.setBackgroundColor(it) }
         model.dateEdited.observe(this) { binding.editorDateEditedTv.text = it }
+        model.mPinned.observe(this) {
+            binding.setPinnedBtn.setImageResource(if (it) R.drawable.ic_pin_filled else R.drawable.ic_pin )
+        }
 
         with(binding) {
             with(model.note) {
@@ -40,6 +44,7 @@ class EditNoteActivity : AppCompatActivity() {
 
         with(binding) {
             editorSaveBtn.setOnClickListener { model.save(this) }
+            setPinnedBtn.setOnClickListener { model.togglePin() }
         }
     }
 

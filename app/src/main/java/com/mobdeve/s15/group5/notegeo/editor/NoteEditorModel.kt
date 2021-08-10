@@ -14,14 +14,20 @@ class NoteEditorModel: ViewModel() {
             field = value
             setBgColor(field.color)
             setFormattedDate()
+            mPinned.value = field.isPinned
         }
     val selectedBackgroundColor = MutableLiveData<Int>()
     val dateEdited = MutableLiveData<String>()
     var wasEdited = false
         private set
+    var mPinned = MutableLiveData<Boolean>()
 
     fun setBgColor(backgroundColor: Int) {
         selectedBackgroundColor.value = backgroundColor
+    }
+
+    fun togglePin() {
+        mPinned.value = mPinned.value?.not() ?: false
     }
 
     private fun setFormattedDate() {
@@ -35,6 +41,7 @@ class NoteEditorModel: ViewModel() {
             body = binding.editorBodyEt.text.toString()
             color = selectedBackgroundColor.value ?: Note.DEFAULT_COLOR
             dateEdited = Date()
+            isPinned = mPinned.value ?: false
         }
         setFormattedDate()
         wasEdited = true
