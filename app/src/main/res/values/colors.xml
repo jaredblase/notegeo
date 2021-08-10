@@ -20,4 +20,6 @@
 
     <color name="action_blue">#3369FF</color>
     <color name="black">#000</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

@@ -12,6 +12,7 @@ data class Note(
     var title: String = "",
     var body: String = "",
     var color: Int = DEFAULT_COLOR,
+    var isPinned: Boolean = false,
     var dateEdited: Date = Date(),
     var dateDeleted: Date? = null
 ) : Parcelable {
@@ -20,8 +21,9 @@ data class Note(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readInt(),
+        parcel.readInt() == 1,
         Date(parcel.readLong()),
-        Date(parcel.readLong())
+        (parcel.readValue(Long::class.java.classLoader) as? Long)?.let { Date(it) }
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -29,6 +31,7 @@ data class Note(
         parcel.writeString(title)
         parcel.writeString(body)
         parcel.writeInt(color)
+        parcel.writeInt(if (isPinned) 1 else 0)
         parcel.writeLong(dateEdited.time)
         dateDeleted?.time?.let { parcel.writeLong(it) }
     }

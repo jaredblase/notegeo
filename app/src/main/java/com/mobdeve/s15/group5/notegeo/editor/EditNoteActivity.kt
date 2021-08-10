@@ -1,9 +1,12 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
+import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.models.Note
 
 class EditNoteActivity : AppCompatActivity() {
@@ -21,6 +24,9 @@ class EditNoteActivity : AppCompatActivity() {
         // bind model with layout using observers
         model.selectedBackgroundColor.observe(this) { binding.root.setBackgroundColor(it) }
         model.dateEdited.observe(this) { binding.editorDateEditedTv.text = it }
+        model.mPinned.observe(this) {
+            binding.setPinnedBtn.setImageResource(if (it) R.drawable.ic_pin_filled else R.drawable.ic_pin )
+        }
 
         with(binding) {
             with(model.note) {
@@ -35,10 +41,27 @@ class EditNoteActivity : AppCompatActivity() {
                 EditorMenuFragment().show(supportFragmentManager, FRAGMENT_TAG)
             }
         }
+
+        with(binding) {
+            editorSaveBtn.setOnClickListener { model.save(this) }
+            setPinnedBtn.setOnClickListener { model.togglePin() }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (model.wasEdited) {
+            setResult(RESULT_OK, Intent(this, MainActivity::class.java).apply {
+                putExtra(NOTE, model.note)
+            })
+            finish()
+        }
+
+        super.onBackPressed()
     }
 
     companion object {
         private const val FRAGMENT_TAG = "Editor Menu"
         const val NOTE = "Note"
+        const val DELETE = 100
     }
 }

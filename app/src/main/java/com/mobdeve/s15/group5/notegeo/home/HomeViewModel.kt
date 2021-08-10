@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.mobdeve.s15.group5.notegeo.models.Note
 import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
 import kotlinx.coroutines.launch
 
@@ -18,4 +19,8 @@ class HomeViewModel(private val repository: NoteGeoRepository) : ViewModel() {
     fun recycleNotes(ids: List<Long>?) = viewModelScope.launch {
         ids?.let { repository.recycleNotes(it) }
     }
+
+    fun recycleNote(id: Long) = viewModelScope.launch { repository.recycleNotes(listOf(id)) }
+
+    fun upsertNote(note: Note) = viewModelScope.launch { repository.upsertNote(note) }
 }

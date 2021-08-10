@@ -18,6 +18,7 @@
     <string name="desc.add_more">add note component</string>
     <string name="desc.more_options">more note options</string>
     <string name="desc.empty">This section is empty</string>
+    <string name="desc.is_pinned">Note is pinned</string>
 
     <!--  Main Nav Menu  -->
     <string name="menu.notes">Notes</string>

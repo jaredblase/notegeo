@@ -3,13 +3,11 @@ package com.mobdeve.s15.group5.notegeo.noteview
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.ItemDetailsLookup.ItemDetails
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.NoteItemBinding
 import com.mobdeve.s15.group5.notegeo.models.Note
 
@@ -46,10 +44,7 @@ class NoteAdapter(private val onItemClick: (Note) -> Unit) :
 
         fun bind(mNote: Note, isActivated: Boolean) = binding.run {
             note = mNote
-            holderCl.background = ContextCompat.getDrawable(
-                context,
-                if (isActivated) R.drawable.selected_rounded_layout else R.drawable.less_rounded_layout
-            )
+            holderCv.strokeWidth = if (isActivated) 3 else 0
             executePendingBindings()
         }
 

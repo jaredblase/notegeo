@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.selection.SelectionPredicates
@@ -17,6 +18,7 @@ import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
+import com.mobdeve.s15.group5.notegeo.models.Note
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
 import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
@@ -28,9 +30,19 @@ class MainActivity : AppCompatActivity() {
     private val model by viewModels<HomeViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
     private val adapter = NoteAdapter {
         // go to editor when a note is clicked
-        startActivity(Intent(this, EditNoteActivity::class.java).apply {
+        editorResultLauncher.launch(Intent(this, EditNoteActivity::class.java).apply {
             putExtra(EditNoteActivity.NOTE, it)
         })
+    }
+    private val editorResultLauncher = registerForActivityResult(StartActivityForResult()) {
+        // data was edited
+        val note = it.data?.getParcelableExtra<Note>(EditNoteActivity.NOTE)
+
+        when (it.resultCode) {
+            RESULT_OK -> note?.let { model.upsertNote(note) }
+
+            EditNoteActivity.DELETE -> note?.let { model.recycleNote(note._id) }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,10 +91,11 @@ class MainActivity : AppCompatActivity() {
         ).build()
 
         adapter.tracker = tracker.apply {
-            addObserver(object: SelectionTracker.SelectionObserver<Long>() {
+            addObserver(object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
                     super.onSelectionChanged()
-                    binding.homeDeleteBtn.visibility = if (selection.isEmpty) View.GONE else View.VISIBLE
+                    binding.homeDeleteBtn.visibility =
+                        if (selection.isEmpty) View.GONE else View.VISIBLE
                 }
             })
         }
@@ -119,7 +132,7 @@ class MainActivity : AppCompatActivity() {
             sideMenuBtn.setOnClickListener { mainDl.open() }
             changeLayoutBtn.setOnClickListener { model.toggleView() }
             addNoteFab.setOnClickListener {
-                startActivity(Intent(context, EditNoteActivity::class.java))
+                editorResultLauncher.launch(Intent(context, EditNoteActivity::class.java))
             }
         }
     }

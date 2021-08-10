@@ -1,5 +1,6 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
+import com.mobdeve.s15.group5.notegeo.home.MainActivity
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
@@ -24,8 +26,12 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
         binding.editorMnu.setNavigationItemSelectedListener {
             val result = when (it.itemId) {
                 R.id.editor_delete_btn -> {
-                    // TODO: Delete note
-                    Toast.makeText(activity?.applicationContext, "Deleted!", Toast.LENGTH_SHORT).show()
+                    activity?.run {
+                        setResult(EditNoteActivity.DELETE, Intent(context, MainActivity::class.java).apply {
+                            putExtra(EditNoteActivity.NOTE, model.note)
+                        })
+                        finish()
+                    }
                     true
                 }
 

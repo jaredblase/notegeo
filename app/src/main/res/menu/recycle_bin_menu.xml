@@ -9,11 +9,11 @@
         android:visible="false" />
     <item
         android:id="@+id/restore_all_btn"
-        android:title="@string/rb_menu.restore"
-        android:visible="false" />
+        android:title="@string/rb_menu.restore" />
     <item
         android:id="@+id/rb_delete_selected_btn"
-        android:title="@string/rb_menu.del_select" />
+        android:title="@string/rb_menu.del_select"
+        android:visible="false" />
     <item
         android:id="@+id/delete_all_btn"
         android:title="@string/rb_menu.delete" />
