@@ -29,6 +29,11 @@ class NoteGeoRepository(private val labelDao: LabelDao, private val noteDao: Not
     }
 
     @WorkerThread
+    suspend fun upsertNote(note: Note) {
+        noteDao.insert(note)
+    }
+
+    @WorkerThread
     suspend fun updateNotes(notes: List<Note>) {
         noteDao.update(*notes.toTypedArray())
     }

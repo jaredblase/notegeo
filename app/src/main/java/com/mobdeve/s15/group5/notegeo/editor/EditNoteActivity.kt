@@ -1,9 +1,11 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
+import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.models.Note
 
 class EditNoteActivity : AppCompatActivity() {
@@ -35,6 +37,21 @@ class EditNoteActivity : AppCompatActivity() {
                 EditorMenuFragment().show(supportFragmentManager, FRAGMENT_TAG)
             }
         }
+
+        with(binding) {
+            editorSaveBtn.setOnClickListener { model.save(this) }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (model.wasEdited) {
+            setResult(RESULT_OK, Intent(this, MainActivity::class.java).apply {
+                putExtra(NOTE, model.note)
+            })
+            finish()
+        }
+
+        super.onBackPressed()
     }
 
     companion object {

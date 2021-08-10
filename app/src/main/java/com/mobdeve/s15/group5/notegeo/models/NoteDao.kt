@@ -12,7 +12,7 @@ interface NoteDao {
     @Query("SELECT * FROM note WHERE dateDeleted IS NOT NULL")
     fun getDeletedNotes(): Flow<MutableList<Note>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg note: Note)
 
     @Update
