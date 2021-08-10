@@ -42,7 +42,9 @@
             android:layout_width="48dp"
             android:layout_height="0dp"
             android:background="@null"
+            android:clickable="true"
             android:contentDescription="@string/desc.set_pin"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/set_alarm_btn"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,12 +55,14 @@
         android:id="@+id/editor_title_et"
         style="@style/placeholder"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:hint="@string/title"
         android:importantForAutofill="no"
-        android:inputType="text"
+        android:inputType="textMultiLine|text"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,17 +75,19 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:gravity="start|top"
         android:hint="@string/note"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editor_title_et" />
+        app:layout_constraintTop_toBottomOf="@+id/editor_title_et"
+        android:lineSpacingExtra="1dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
@@ -92,7 +98,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/editor_add_btn"
+            android:id="@+id/editor_save_btn"
             android:layout_width="48dp"
             android:layout_height="0dp"
             android:layout_marginStart="4dp"
@@ -102,7 +108,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/ic_add" />
+            app:srcCompat="@drawable/ic_check" />
 
         <ImageButton
             android:id="@+id/editor_more_options"
@@ -124,7 +130,7 @@
             android:text="Hello World!"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/editor_more_options"
-            app:layout_constraintStart_toEndOf="@+id/editor_add_btn"
+            app:layout_constraintStart_toEndOf="@+id/editor_save_btn"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
