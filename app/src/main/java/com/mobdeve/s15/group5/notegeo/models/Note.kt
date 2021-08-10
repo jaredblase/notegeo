@@ -3,6 +3,7 @@ package com.mobdeve.s15.group5.notegeo.models
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.*
 
@@ -16,6 +17,9 @@ data class Note(
     var dateEdited: Date = Date(),
     var dateDeleted: Date? = null
 ) : Parcelable {
+    @Ignore
+    val isBlank = title.isBlank() && body.isBlank()
+
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
         parcel.readString() ?: "",
