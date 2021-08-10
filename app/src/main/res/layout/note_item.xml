@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
             name="note"
             type="com.mobdeve.s15.group5.notegeo.models.Note" />
@@ -36,6 +34,7 @@
                 android:layout_marginTop="@dimen/note_padding"
                 android:layout_marginEnd="24dp"
                 android:text="@{ note.title }"
+                android:visibility="@{ note.title.isEmpty()? View.GONE : View.VISIBLE }"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,9 +46,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/note_padding"
-                android:layout_marginTop="10dp"
+                android:paddingTop="@{ note.title.isEmpty()? 45 : 10 }"
                 android:layout_marginEnd="@dimen/note_padding"
                 android:text="@{ note.body }"
+                android:visibility="@{ note.body.isEmpty()? View.GONE : View.VISIBLE }"
                 android:textColor="@color/dark_body"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
