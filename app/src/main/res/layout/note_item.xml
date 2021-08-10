@@ -3,43 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="note"
             type="com.mobdeve.s15.group5.notegeo.models.Note" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/holder_cl"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/holder_cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/note_padding">
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/white"
+        app:cardBackgroundColor="@color/transparent">
 
-        <TextView
-            android:id="@+id/note_title_tv"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/note_padding"
-            android:layout_marginTop="@dimen/note_padding"
-            android:layout_marginEnd="@dimen/note_padding"
-            android:text="@{note.title}"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@{ note.color }"
+            android:paddingBottom="@dimen/note_padding">
 
-        <TextView
-            android:id="@+id/note_body_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/note_padding"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="@dimen/note_padding"
-            android:text="@{note.body}"
-            android:textColor="@color/dark_body"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/note_title_tv" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/note_title_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/note_padding"
+                android:layout_marginTop="@dimen/note_padding"
+                android:layout_marginEnd="24dp"
+                android:text="@{ note.title }"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/note_body_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/note_padding"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/note_padding"
+                android:text="@{ note.body }"
+                android:textColor="@color/dark_body"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/note_title_tv" />
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@string/desc.is_pinned"
+                android:visibility="@{ note.isPinned? View.VISIBLE : View.GONE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_pin_filled" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>
