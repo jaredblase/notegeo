@@ -12,6 +12,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
+import com.mobdeve.s15.group5.notegeo.toast
+import java.lang.IllegalStateException
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
@@ -36,8 +38,16 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                 }
 
                 R.id.editor_copy_btn -> {
-                    // TODO: Duplicate note
-                    Toast.makeText(activity?.applicationContext, "Copied!", Toast.LENGTH_SHORT).show()
+                    if (!model.note.isBlank) {
+                        activity?.run {
+                            setResult(EditNoteActivity.DUPLICATE, Intent(context, MainActivity::class.java).apply {
+                                putExtra(EditNoteActivity.NOTE, model.note)
+                            })
+                            finish()
+                        }
+                    } else {
+                        context?.toast("Cannot duplicate blank note!")
+                    }
                     true
                 }
 

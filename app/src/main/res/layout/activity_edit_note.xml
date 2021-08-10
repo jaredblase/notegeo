@@ -98,14 +98,29 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/editor_save_btn"
+            android:id="@+id/editor_cancel_btn"
             android:layout_width="48dp"
             android:layout_height="0dp"
             android:layout_marginStart="4dp"
             android:background="@null"
             android:contentDescription="@string/desc.add_more"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_cross" />
+
+        <ImageButton
+            android:id="@+id/editor_save_btn"
+            android:layout_width="48dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="4dp"
+            android:background="@null"
+            android:contentDescription="@string/desc.add_more"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_check" />
@@ -117,6 +132,7 @@
             android:layout_marginEnd="4dp"
             android:background="@null"
             android:contentDescription="@string/desc.more_options"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -129,8 +145,8 @@
             android:layout_height="wrap_content"
             android:text="Hello World!"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/editor_more_options"
-            app:layout_constraintStart_toEndOf="@+id/editor_save_btn"
+            app:layout_constraintEnd_toEndOf="@+id/editor_save_btn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

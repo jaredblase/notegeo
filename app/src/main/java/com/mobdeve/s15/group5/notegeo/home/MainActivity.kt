@@ -24,25 +24,34 @@ import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
 import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
 import com.mobdeve.s15.group5.notegeo.noteview.NoteDetailsLookup
 import com.mobdeve.s15.group5.notegeo.noteview.NoteKeyProvider
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val model by viewModels<HomeViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
-    private val adapter = NoteAdapter {
-        // go to editor when a note is clicked
-        editorResultLauncher.launch(Intent(this, EditNoteActivity::class.java).apply {
-            putExtra(EditNoteActivity.NOTE, it)
-        })
-    }
-    private val editorResultLauncher = registerForActivityResult(StartActivityForResult()) {
-        // data was edited
-        val note = it.data?.getParcelableExtra<Note>(EditNoteActivity.NOTE)
+    private val adapter = NoteAdapter { launchEditor(it) }
+    private val editorResultLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            // a note was passed
+            result.data?.getParcelableExtra<Note>(EditNoteActivity.NOTE)?.let {
+                when (result.resultCode) {
+                    RESULT_OK -> model.upsertNote(it)
 
-        when (it.resultCode) {
-            RESULT_OK -> note?.let { model.upsertNote(note) }
+                    EditNoteActivity.DELETE -> model.recycleNote(it._id)
 
-            EditNoteActivity.DELETE -> note?.let { model.recycleNote(note._id) }
+                    // save og then open another editor
+                    EditNoteActivity.DUPLICATE -> {
+                        model.upsertNote(it)
+                        launchEditor(it.copy(_id = 0, dateEdited = Date()))
+                    }
+                }
+            }
         }
+
+    private fun launchEditor(note: Note? = null) {
+        editorResultLauncher.launch(Intent(this, EditNoteActivity::class.java).apply {
+            note?.let { putExtra(EditNoteActivity.NOTE, it) }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

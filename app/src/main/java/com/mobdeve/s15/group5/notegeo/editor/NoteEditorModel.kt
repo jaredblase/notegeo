@@ -18,9 +18,8 @@ class NoteEditorModel: ViewModel() {
         }
     val selectedBackgroundColor = MutableLiveData<Int>()
     val dateEdited = MutableLiveData<String>()
-    var wasEdited = false
-        private set
     var mPinned = MutableLiveData<Boolean>()
+    val isEditing = MutableLiveData<Boolean>()
 
     fun setBgColor(backgroundColor: Int) {
         selectedBackgroundColor.value = backgroundColor
@@ -35,16 +34,28 @@ class NoteEditorModel: ViewModel() {
         dateEdited.value = "Edited $date"
     }
 
+    /**
+     * saves text edits, requires user confirmation since they are more critical/essential.
+     */
     fun save(binding: ActivityEditNoteBinding) {
         with(note) {
             title = binding.editorTitleEt.text.toString()
             body = binding.editorBodyEt.text.toString()
-            color = selectedBackgroundColor.value ?: Note.DEFAULT_COLOR
             dateEdited = Date()
-            isPinned = mPinned.value ?: false
         }
         setFormattedDate()
-        wasEdited = true
+        isEditing.value = false
         binding.root.context.toast("Saved!")
+    }
+
+    /**
+     * other attribute aside from text are saved here.
+     */
+    fun finalSave() {
+        with(note) {
+            color = selectedBackgroundColor.value ?: Note.DEFAULT_COLOR
+            isPinned = mPinned.value ?: false
+            // TODO: Location and alarm here
+        }
     }
 }
