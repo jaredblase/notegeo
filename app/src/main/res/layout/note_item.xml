@@ -23,8 +23,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@{ note.color }"
-            android:paddingBottom="@dimen/note_padding">
+            android:paddingBottom="@dimen/note_padding"
+            app:noteColor="@{ note }">
 
             <TextView
                 android:id="@+id/note_title_tv"
@@ -33,28 +33,25 @@
                 android:layout_marginStart="@dimen/note_padding"
                 android:layout_marginTop="@dimen/note_padding"
                 android:layout_marginEnd="24dp"
-                android:text="@{ note.title }"
-                android:visibility="@{ note.title.isEmpty()? View.GONE : View.VISIBLE }"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:noteTitle="@{ note }"/>
 
             <TextView
                 android:id="@+id/note_body_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/note_padding"
-                android:paddingTop="@{ note.title.isEmpty()? 45 : 10 }"
                 android:layout_marginEnd="@dimen/note_padding"
-                android:text="@{ note.body }"
-                android:visibility="@{ note.body.isEmpty()? View.GONE : View.VISIBLE }"
                 android:textColor="@color/dark_body"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/note_title_tv" />
+                app:layout_constraintTop_toBottomOf="@+id/note_title_tv"
+                app:noteBody="@{ note }"/>
 
             <ImageView
                 android:layout_width="17dp"
@@ -62,10 +59,10 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="12dp"
                 android:contentDescription="@string/desc.is_pinned"
-                android:visibility="@{ note.isPinned? View.VISIBLE : View.GONE }"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_pin_filled" />
+                app:srcCompat="@drawable/ic_pin_filled"
+                app:pinned="@{ note }"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>
