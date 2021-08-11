@@ -26,4 +26,7 @@ interface NoteDao {
 
     @Query("DELETE FROM note WHERE dateDeleted IS NOT NULL")
     suspend fun emptyTrash()
+
+    @Query("DELETE FROM note WHERE dateDeleted IS NOT NULL AND (:today - dateDeleted >= 2592000000 OR _id NOT IN (SELECT _id FROM note WHERE dateDeleted IS NOT NULL ORDER BY dateDeleted DESC LIMIT 15))")
+    suspend fun cleanOldNotes(today: Long)
 }

@@ -99,4 +99,9 @@ class RecycleBinActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+    override fun onStart() {
+        model.cleanOldNotes()
+        super.onStart()
+    }
 }

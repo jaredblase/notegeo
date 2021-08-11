@@ -39,5 +39,12 @@ class NoteGeoRepository(private val labelDao: LabelDao, private val noteDao: Not
     }
 
     @WorkerThread
-    suspend fun emptyTrash() = noteDao.emptyTrash()
+    suspend fun cleanOldNotes() {
+        noteDao.cleanOldNotes(Date().time)
+    }
+
+    @WorkerThread
+    suspend fun emptyTrash() {
+        noteDao.emptyTrash()
+    }
 }
