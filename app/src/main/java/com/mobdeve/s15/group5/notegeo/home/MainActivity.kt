@@ -133,16 +133,12 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        val context = this
-
         with(binding) {
             // set click listeners
             homeDeleteBtn.setOnClickListener { model.recycleNotes(adapter.tracker?.selection?.toList()) }
             sideMenuBtn.setOnClickListener { mainDl.open() }
             changeLayoutBtn.setOnClickListener { model.toggleView() }
-            addNoteFab.setOnClickListener {
-                editorResultLauncher.launch(Intent(context, EditNoteActivity::class.java))
-            }
+            addNoteFab.setOnClickListener { launchEditor() }
         }
     }
 
