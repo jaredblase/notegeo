@@ -17,8 +17,8 @@ data class Note(
     var dateEdited: Date = Date(),
     var dateDeleted: Date? = null
 ) : Parcelable {
-    @Ignore
-    val isBlank = title.isBlank() && body.isBlank()
+    val isBlank
+        get() = title.isBlank() && body.isBlank()
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
