@@ -36,21 +36,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/app_title">
 
-            <EditText
-                android:id="@+id/search_et"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/home_sv"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:ems="13"
-                android:hint="@string/search_hint"
-                android:importantForAutofill="no"
-                android:inputType="textFilter"
-                android:textSize="15sp"
+                android:foregroundTint="#FFFFFF"
+                android:foregroundTintMode="src_over"
+                app:iconifiedByDefault="false"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/change_layout_btn"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/side_menu_btn"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                tools:ignore="TextContrastCheck" />
+                app:queryHint="@string/search_hint"
+                app:searchIcon="@null" />
 
             <ImageButton
                 android:id="@+id/side_menu_btn"
@@ -79,7 +79,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
                 tools:ignore="TouchTargetSizeCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -96,7 +95,8 @@
             app:backgroundTint="#3369FF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_add" />
+            app:srcCompat="@android:drawable/ic_menu_add"
+            app:tint="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notes_list_rv"
@@ -116,7 +116,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_title"
             app:srcCompat="@drawable/ic_leaf" />
 
         <ImageButton

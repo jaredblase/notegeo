@@ -16,10 +16,17 @@
 
         <item name="android:editTextBackground">@null</item>
         <item name="popupMenuStyle">@style/PopupMenu</item>
+
+        <item name="autoCompleteTextViewStyle">@style/search_view</item>
     </style>
 
     <style name="PopupMenu" parent="@style/Widget.MaterialComponents.PopupMenu">
         <item name="android:popupBackground">@color/dark_foreground</item>
         <item name="android:textColor">@color/dark_headers</item>
+    </style>
+
+    <style name="search_view" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>
