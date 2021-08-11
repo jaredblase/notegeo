@@ -15,9 +15,15 @@ class NoteAdapter(private val onItemClick: (Note) -> Unit) :
     ListAdapter<Note, NoteAdapter.ViewHolder>(NoteComparator()) {
     var tracker: SelectionTracker<Long>? = null
     private lateinit var context: Context
+    private lateinit var data: MutableList<Note>
 
     init {
         setHasStableIds(true)
+    }
+
+    fun modifyList(list: MutableList<Note>) {
+        data = list
+        submitList(list)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,7 +39,17 @@ class NoteAdapter(private val onItemClick: (Note) -> Unit) :
         }
     }
 
-    override fun getItemId(position: Int) = position.toLong()
+    override fun getItemId(position: Int) = getItem(position)._id
+
+    fun filter(query: CharSequence?) {
+        if (!query.isNullOrEmpty()) {
+            submitList(data.filter {
+                it.title.contains(query, true) || it.body.contains(query, true)
+            }.toMutableList())
+        } else {
+            submitList(data.toCollection(mutableListOf()))
+        }
+    }
 
     inner class ViewHolder(private val binding: NoteItemBinding, onItemClick: (Int) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
@@ -55,7 +71,7 @@ class NoteAdapter(private val onItemClick: (Note) -> Unit) :
     }
 
     class NoteComparator : DiffUtil.ItemCallback<Note>() {
-        override fun areItemsTheSame(oldItem: Note, newItem: Note) = oldItem === newItem
+        override fun areItemsTheSame(oldItem: Note, newItem: Note) = oldItem._id == newItem._id
         override fun areContentsTheSame(oldItem: Note, newItem: Note) = oldItem == newItem
     }
 }

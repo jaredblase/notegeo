@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -61,13 +62,13 @@ class MainActivity : AppCompatActivity() {
 
         // get data from db
         model.savedNotes.observe(this) {
-            adapter.submitList(it)
+            adapter.modifyList(it)
             binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
 
         // setup layout managers
         val gridLayout = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).apply {
-            gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+            gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
         }
         val linearLayout = LinearLayoutManager(this)
 
@@ -134,6 +135,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         with(binding) {
+            homeSv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?) = false
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    adapter.filter(newText)
+                    return true
+                }
+            })
+
             // set click listeners
             homeDeleteBtn.setOnClickListener { model.recycleNotes(adapter.tracker?.selection?.toList()) }
             sideMenuBtn.setOnClickListener { mainDl.open() }
