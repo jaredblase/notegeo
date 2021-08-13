@@ -12,6 +12,7 @@ import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
@@ -25,12 +26,19 @@ import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
 import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
 import com.mobdeve.s15.group5.notegeo.noteview.NoteDetailsLookup
 import com.mobdeve.s15.group5.notegeo.noteview.NoteKeyProvider
+import com.mobdeve.s15.group5.notegeo.toast
+import kotlinx.coroutines.runBlocking
 import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val model by viewModels<HomeViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
     private val adapter = NoteAdapter { launchEditor(it) }
+    private val smoothScroller by lazy {
+        object : LinearSmoothScroller(this) {
+            override fun getVerticalSnapPreference() = SNAP_TO_ANY
+        }
+    }
     private val editorResultLauncher =
         registerForActivityResult(StartActivityForResult()) { result ->
             // a note was passed
@@ -45,6 +53,8 @@ class MainActivity : AppCompatActivity() {
                         model.upsertNote(it)
                         launchEditor(it.copy(_id = 0, dateEdited = Date()))
                     }
+
+                    else -> this.toast("Blank note deleted!")
                 }
             }
         }
@@ -63,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         // get data from db
         model.savedNotes.observe(this) {
             adapter.modifyList(it)
+            adapter.filter(binding.homeSv.query)
             binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
 
@@ -81,6 +92,13 @@ class MainActivity : AppCompatActivity() {
                     notesListRv.layoutManager = linearLayout
                     changeLayoutBtn.setImageResource(R.drawable.ic_card)
                 }
+            }
+        }
+
+        model.postPosition.observe(this) {
+            if (model.lastSavedNote?.isPinned == true) {
+                smoothScroller.targetPosition = it // assign the position obtained
+                binding.notesListRv.layoutManager?.startSmoothScroll(smoothScroller)
             }
         }
 
