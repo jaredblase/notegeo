@@ -13,11 +13,10 @@ import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.toast
-import java.lang.IllegalStateException
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
-    private val model: NoteEditorModel by activityViewModels()
+    private val model by activityViewModels<NoteEditorViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

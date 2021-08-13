@@ -2,6 +2,7 @@ package com.mobdeve.s15.group5.notegeo.models
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mobdeve.s15.group5.notegeo.editor.NoteEditorViewModel
 import com.mobdeve.s15.group5.notegeo.home.HomeViewModel
 import com.mobdeve.s15.group5.notegeo.label.LabelViewModel
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinViewModel
@@ -19,6 +20,9 @@ class ViewModelFactory(private val repository: NoteGeoRepository) : ViewModelPro
             }
             modelClass.isAssignableFrom(RecycleBinViewModel::class.java) -> {
                 RecycleBinViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(NoteEditorViewModel::class.java) -> {
+                NoteEditorViewModel(repository) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class")
