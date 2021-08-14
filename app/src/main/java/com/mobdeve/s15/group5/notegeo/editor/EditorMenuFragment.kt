@@ -5,17 +5,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
+import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.toast
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
     private val model by activityViewModels<NoteEditorViewModel>()
+    private val selectLabelLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+        // A label was selected
+        result.data?.let {
+            val id = it.getLongExtra(LabelActivity.LABEL_ID, -1)
+            val name = it.getStringExtra(LabelActivity.LABEL_NAME)
+            model.assignLabel(id, name)
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,10 +61,9 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                 }
 
                 R.id.editor_labels_btn -> {
-                    // TODO: Show labels
-                    activity?.run {
-
-                    }
+                    selectLabelLauncher.launch(Intent(context, LabelActivity::class.java).apply {
+                        putExtra(LabelActivity.IS_SELECTING, true)
+                    })
                     true
                 }
 
