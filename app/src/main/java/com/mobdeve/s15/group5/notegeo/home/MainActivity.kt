@@ -27,7 +27,6 @@ import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
 import com.mobdeve.s15.group5.notegeo.noteview.NoteDetailsLookup
 import com.mobdeve.s15.group5.notegeo.noteview.NoteKeyProvider
 import com.mobdeve.s15.group5.notegeo.toast
-import kotlinx.coroutines.runBlocking
 import java.util.Date
 
 class MainActivity : AppCompatActivity() {

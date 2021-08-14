@@ -17,7 +17,7 @@
         android:focusable="true"
         app:cardCornerRadius="18dp"
         app:cardElevation="0dp"
-        app:strokeColor="@color/white"
+        app:strokeColor="@android:color/white"
         app:cardBackgroundColor="@color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout

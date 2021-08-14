@@ -8,7 +8,7 @@ import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.toast
 import java.util.Date
 
-class NoteEditorModel: ViewModel() {
+class NoteEditorViewModel: ViewModel() {
     var note = Note()
         set(value) {
             field = value
@@ -32,6 +32,10 @@ class NoteEditorModel: ViewModel() {
     private fun setFormattedDate() {
         val date = DateFormat.format("dd MMM yy kk:mm", note.dateEdited).toString()
         dateEdited.value = "Edited $date"
+    }
+
+    fun assignLabel(id: Int, name: String?) {
+        println("MESSAGE RECEIVED: $id, $name")
     }
 
     /**

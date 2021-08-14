@@ -7,7 +7,7 @@
     android:gravity="center">
 
     <com.mobdeve.s15.group5.notegeo.editor.PaletteHolder
-        style="@style/white"
+        style="@style/note_theme_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/palette_holder_margin"
@@ -15,7 +15,7 @@
         android:contentDescription="@string/color.white" />
 
     <com.mobdeve.s15.group5.notegeo.editor.PaletteHolder
-        style="@style/royal_blue"
+        style="@style/note_theme_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/palette_holder_margin"
@@ -23,7 +23,7 @@
         android:contentDescription="@string/color.royal_blue" />
 
     <com.mobdeve.s15.group5.notegeo.editor.PaletteHolder
-        style="@style/dark_blue"
+        style="@style/note_theme_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/palette_holder_margin"
@@ -31,7 +31,7 @@
         android:contentDescription="@string/color.dark_blue" />
 
     <com.mobdeve.s15.group5.notegeo.editor.PaletteHolder
-        style="@style/yellow"
+        style="@style/note_theme_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/palette_holder_margin"
@@ -39,7 +39,7 @@
         android:contentDescription="@string/color.yellow" />
 
     <com.mobdeve.s15.group5.notegeo.editor.PaletteHolder
-        style="@style/spring_green"
+        style="@style/note_theme_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/palette_holder_margin"
@@ -47,7 +47,7 @@
         android:contentDescription="@string/color.spring_green" />
 
     <com.mobdeve.s15.group5.notegeo.editor.PaletteHolder
-        style="@style/coral"
+        style="@style/note_theme_6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/palette_holder_margin"
@@ -55,7 +55,7 @@
         android:contentDescription="@string/color.coral" />
 
     <com.mobdeve.s15.group5.notegeo.editor.PaletteHolder
-        style="@style/magenta"
+        style="@style/note_theme_7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/palette_holder_margin"

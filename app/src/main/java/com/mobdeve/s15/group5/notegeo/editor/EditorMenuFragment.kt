@@ -5,19 +5,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
+import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.toast
-import java.lang.IllegalStateException
 
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
-    private val model: NoteEditorModel by activityViewModels()
+    private val model by activityViewModels<NoteEditorViewModel>()
+    private val selectLabelLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+        // A label was selected
+        result.data?.let {
+            val id = it.getIntExtra(LabelActivity.LABEL_ID, -1)
+            val name = it.getStringExtra(LabelActivity.LABEL_NAME)
+            model.assignLabel(id, name)
+        }
+        dismiss()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +35,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
         binding = FragmentEditorMenuBinding.inflate(inflater, container, false)
 
         binding.editorMnu.setNavigationItemSelectedListener {
-            val result = when (it.itemId) {
+            when (it.itemId) {
                 R.id.editor_delete_btn -> {
                     activity?.run {
                         setResult(EditNoteActivity.DELETE, Intent(context, MainActivity::class.java).apply {
@@ -34,6 +43,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                         })
                         finish()
                     }
+                    dismiss()
                     true
                 }
 
@@ -48,20 +58,19 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                     } else {
                         context?.toast("Cannot duplicate blank note!")
                     }
+                    dismiss()
                     true
                 }
 
                 R.id.editor_labels_btn -> {
-                    // TODO: Show labels
-                    Toast.makeText(activity?.applicationContext, "Showing labels...", Toast.LENGTH_SHORT).show()
+                    selectLabelLauncher.launch(Intent(context, LabelActivity::class.java).apply {
+                        putExtra(LabelActivity.IS_SELECTING, true)
+                    })
                     true
                 }
 
                 else -> false
             }
-
-            dismiss()
-            result
         }
 
         // color palette configuration
