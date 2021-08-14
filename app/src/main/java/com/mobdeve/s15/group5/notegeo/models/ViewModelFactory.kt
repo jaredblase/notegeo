@@ -22,7 +22,7 @@ class ViewModelFactory(private val repository: NoteGeoRepository) : ViewModelPro
                 RecycleBinViewModel(repository) as T
             }
             modelClass.isAssignableFrom(NoteEditorViewModel::class.java) -> {
-                NoteEditorViewModel(repository) as T
+                NoteEditorViewModel() as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class")

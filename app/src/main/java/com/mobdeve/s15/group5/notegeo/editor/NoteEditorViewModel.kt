@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import com.mobdeve.s15.group5.notegeo.models.Note
 import android.text.format.DateFormat
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
-import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
 import com.mobdeve.s15.group5.notegeo.toast
 import java.util.Date
 
-class NoteEditorViewModel(repository: NoteGeoRepository): ViewModel() {
+class NoteEditorViewModel: ViewModel() {
     var note = Note()
         set(value) {
             field = value
@@ -21,7 +20,6 @@ class NoteEditorViewModel(repository: NoteGeoRepository): ViewModel() {
     val dateEdited = MutableLiveData<String>()
     var mPinned = MutableLiveData<Boolean>()
     val isEditing = MutableLiveData<Boolean>()
-    val allLabels = repository.allLabels
 
     fun setBgColor(backgroundColor: Int) {
         selectedBackgroundColor.value = backgroundColor

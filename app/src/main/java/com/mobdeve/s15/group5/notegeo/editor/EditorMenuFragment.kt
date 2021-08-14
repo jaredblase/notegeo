@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -52,7 +51,9 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
 
                 R.id.editor_labels_btn -> {
                     // TODO: Show labels
-                    Toast.makeText(activity?.applicationContext, "Showing labels...", Toast.LENGTH_SHORT).show()
+                    activity?.run {
+
+                    }
                     true
                 }
 
