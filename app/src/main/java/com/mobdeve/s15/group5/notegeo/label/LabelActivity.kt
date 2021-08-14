@@ -29,7 +29,7 @@ class LabelActivity : AppCompatActivity() {
         val isSelecting = intent.getBooleanExtra(IS_SELECTING, false)
 
         // setup recycler view
-        val adapter = LabelAdapter()
+        val adapter = if (isSelecting) ChooseLabelAdapter() else LabelAdapter()
         val layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
         rv.layoutManager = layoutManager
