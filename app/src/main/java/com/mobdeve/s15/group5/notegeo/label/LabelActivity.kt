@@ -1,5 +1,6 @@
 package com.mobdeve.s15.group5.notegeo.label
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
+import com.mobdeve.s15.group5.notegeo.editor.EditorMenuFragment
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
+import kotlin.properties.Delegates
 
 class LabelActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLabelBinding
     private lateinit var popup: PopupMenu
+    private var isSelecting by Delegates.notNull<Boolean>()
     private val model by viewModels<LabelViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
+    private lateinit var adapter: LabelAdapter
 
     private val rv
         get() = binding.labelsRv
@@ -26,10 +31,10 @@ class LabelActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // get configuration from extras
-        val isSelecting = intent.getBooleanExtra(IS_SELECTING, false)
+        isSelecting = intent.getBooleanExtra(IS_SELECTING, false)
 
         // setup recycler view
-        val adapter = if (isSelecting) ChooseLabelAdapter() else LabelAdapter()
+        adapter = if (isSelecting) ChooseLabelAdapter() else LabelAdapter()
         val layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
         rv.layoutManager = layoutManager
@@ -68,6 +73,22 @@ class LabelActivity : AppCompatActivity() {
 
         binding.isEmpty = model.listIsEmpty
         binding.executePendingBindings()
+    }
+
+    override fun onBackPressed() {
+        val pos = if (isSelecting) (adapter as ChooseLabelAdapter).lastSelectedPosition else -1
+
+        if (pos != -1) {
+            val item = adapter.currentList[pos]
+
+            setResult(RESULT_OK, Intent(this, EditorMenuFragment::class.java).apply {
+                putExtra(LABEL_ID, item._id)
+                putExtra(LABEL_NAME, item.label)
+            })
+            finish()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     companion object {

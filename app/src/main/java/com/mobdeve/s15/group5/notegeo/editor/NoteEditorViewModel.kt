@@ -34,8 +34,8 @@ class NoteEditorViewModel: ViewModel() {
         dateEdited.value = "Edited $date"
     }
 
-    fun assignLabel(id: Long, name: String?) {
-        println("MESSAGE RECEIVED HOES: $id, $name")
+    fun assignLabel(id: Int, name: String?) {
+        println("MESSAGE RECEIVED: $id, $name")
     }
 
     /**

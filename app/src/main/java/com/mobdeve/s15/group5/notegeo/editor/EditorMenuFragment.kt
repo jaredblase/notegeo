@@ -21,11 +21,11 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
     private val selectLabelLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         // A label was selected
         result.data?.let {
-            val id = it.getLongExtra(LabelActivity.LABEL_ID, -1)
+            val id = it.getIntExtra(LabelActivity.LABEL_ID, -1)
             val name = it.getStringExtra(LabelActivity.LABEL_NAME)
             model.assignLabel(id, name)
         }
-
+        dismiss()
     }
 
     override fun onCreateView(
@@ -35,7 +35,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
         binding = FragmentEditorMenuBinding.inflate(inflater, container, false)
 
         binding.editorMnu.setNavigationItemSelectedListener {
-            val result = when (it.itemId) {
+            when (it.itemId) {
                 R.id.editor_delete_btn -> {
                     activity?.run {
                         setResult(EditNoteActivity.DELETE, Intent(context, MainActivity::class.java).apply {
@@ -43,6 +43,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                         })
                         finish()
                     }
+                    dismiss()
                     true
                 }
 
@@ -57,6 +58,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                     } else {
                         context?.toast("Cannot duplicate blank note!")
                     }
+                    dismiss()
                     true
                 }
 
@@ -69,9 +71,6 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
 
                 else -> false
             }
-
-            dismiss()
-            result
         }
 
         // color palette configuration
