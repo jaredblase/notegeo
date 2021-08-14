@@ -21,38 +21,38 @@
     </style>
 
     <!--  Notes  -->
-    <style name="white">
-        <item name="note_background_color">@color/white</item>
-        <item name="note_foreground_color">@color/black</item>
+    <style name="note_theme_1">
+        <item name="note_background_color">@color/note.color_1</item>
+        <item name="note_foreground_color">@android:color/white</item>
     </style>
 
-    <style name="royal_blue">
-        <item name="note_background_color">@color/royal_blue</item>
-        <item name="note_foreground_color">@color/white</item>
+    <style name="note_theme_2">
+        <item name="note_background_color">@color/note.color_2</item>
+        <item name="note_foreground_color">@android:color/white</item>
     </style>
 
-    <style name="dark_blue">
-        <item name="note_background_color">@color/dark_blue</item>
-        <item name="note_foreground_color">@color/white</item>
+    <style name="note_theme_3">
+        <item name="note_background_color">@color/note.color_3</item>
+        <item name="note_foreground_color">@android:color/white</item>
     </style>
 
-    <style name="yellow">
-        <item name="note_background_color">@color/yellow</item>
-        <item name="note_foreground_color">@color/black</item>
+    <style name="note_theme_4">
+        <item name="note_background_color">@color/note.color_4</item>
+        <item name="note_foreground_color">@android:color/white</item>
     </style>
 
-    <style name="spring_green">
-        <item name="note_background_color">@color/spring_green</item>
-        <item name="note_foreground_color">@color/black</item>
+    <style name="note_theme_5">
+        <item name="note_background_color">@color/note.color_5</item>
+        <item name="note_foreground_color">@android:color/white</item>
     </style>
 
-    <style name="coral">
-        <item name="note_background_color">@color/coral</item>
-        <item name="note_foreground_color">@color/black</item>
+    <style name="note_theme_6">
+        <item name="note_background_color">@color/note.color_6</item>
+        <item name="note_foreground_color">@android:color/white</item>
     </style>
 
-    <style name="magenta">
-        <item name="note_background_color">@color/magenta</item>
-        <item name="note_foreground_color">@color/black</item>
+    <style name="note_theme_7">
+        <item name="note_background_color">@color/note.color_7</item>
+        <item name="note_foreground_color">@android:color/white</item>
     </style>
 </resources>

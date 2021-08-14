@@ -4,19 +4,19 @@
     <color name="dark_background">#0E121B</color>
     <color name="dark_foreground">#171C26</color>
     <color name="dark_headers">#FFF</color>
-    <color name="dark_body">#99FFFFFF</color>
+    <color name="dark_body">#B3FFFFFF</color>
     <color name="dark_category">#66FFFFFF</color>
     <color name="dark_border">#33FFFFFF</color>
     <color name="dark_status_bar">#121212</color>
     
     <!--  Note Colors  -->
-    <color name="white">#FFF</color>
-    <color name="royal_blue">#3369FF</color>
-    <color name="dark_blue">#171C26</color>
-    <color name="yellow">#FFDA47</color>
-    <color name="spring_green">#0AEBAF</color>
-    <color name="coral">#FF7746</color>
-    <color name="magenta">#CB3783</color>
+    <color name="note.color_1">#C62828</color>
+    <color name="note.color_2">#FF7746</color>
+    <color name="note.color_3">#F9A825</color>
+    <color name="note.color_4">#388E3C</color>
+    <color name="note.color_5">#171C26</color>
+    <color name="note.color_6">#00838F</color>
+    <color name="note.color_7">#6A1B9A</color>
 
     <color name="action_blue">#3369FF</color>
     <color name="black">#000</color>
