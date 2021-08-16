@@ -16,7 +16,7 @@ class HomeViewModel(private val repository: NoteGeoRepository) : ViewModel() {
         // gets the position of the last-saved note whenever the list is updated
         savedNotes.observeForever {
             for ((pos, elem) in it.withIndex()) {
-                if (elem._id == lastSavedNote?._id) {
+                if (elem.note._id == lastSavedNote?._id) {
                     postPosition.value = pos
                     break
                 }

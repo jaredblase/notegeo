@@ -11,8 +11,9 @@ import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
-import com.mobdeve.s15.group5.notegeo.models.Note
+import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
+import com.mobdeve.s15.group5.notegeo.toast
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
@@ -24,7 +25,7 @@ class EditNoteActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // set note to view model, if no note was passed, create a new note
-        model.note = intent.getParcelableExtra(NOTE) ?: Note()
+        model.noteAndLabel = intent.getParcelableExtra(NOTE_AND_LABEL) ?: NoteAndLabel()
 
         // bind model with layout using observers
         model.selectedBackgroundColor.observe(this) { binding.root.setBackgroundColor(it) }
@@ -56,6 +57,20 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
+        // setup label watcher
+        model.labelName.observe(this) {
+            with(binding.labelTv) {
+                text = it
+                visibility = if (it == null) View.GONE else View.VISIBLE
+            }
+        }
+
+        // TODO: setup alarm listener
+        binding.alarmTv.visibility = View.GONE
+
+        // TODO: setup location listener
+        binding.locationTv.visibility = View.GONE
+
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
@@ -64,6 +79,7 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
+        // note text editing
         refreshFields()
         binding.editorTitleEt.addTextChangedListener(watcher)
         binding.editorBodyEt.addTextChangedListener(watcher)
@@ -84,7 +100,7 @@ class EditNoteActivity : AppCompatActivity() {
 
     private fun refreshFields() {
         with(binding) {
-            with(model.note) {
+            with(model.noteAndLabel.note) {
                 editorTitleEt.setText(title)
                 editorBodyEt.setText(body)
             }
@@ -95,20 +111,21 @@ class EditNoteActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (model.isEditing.value == true) {
             refreshFields()
-        } else if (!model.note.isBlank) {
+        } else if (!model.noteAndLabel.note.isBlank) {
             model.finalSave()
             setResult(RESULT_OK, Intent(this, MainActivity::class.java).apply {
-                putExtra(NOTE, model.note)
+                putExtra(NOTE_AND_LABEL, model.noteAndLabel)
             })
             finish()
+        } else {
+            toast("Blank note deleted!")
+            super.onBackPressed()
         }
-
-        super.onBackPressed()
     }
 
     companion object {
         private const val FRAGMENT_TAG = "Editor Menu"
-        const val NOTE = "Note"
+        const val NOTE_AND_LABEL = "NoteAndLabel"
         const val DELETE = 100
         const val DUPLICATE = 200
     }

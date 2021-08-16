@@ -2,15 +2,29 @@ package com.mobdeve.s15.group5.notegeo.models
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import java.util.*
+import java.util.Date
+
+@Dao
+interface LabelDao {
+    @Query("SELECT * FROM label")
+    fun getAll(): Flow<MutableList<Label>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(vararg label: Label)
+
+    @Query("DELETE FROM label")
+    suspend fun clearTable()
+}
 
 @Dao
 interface NoteDao {
+    @Transaction
     @Query("SELECT * FROM note WHERE dateDeleted IS NULL ORDER BY isPinned DESC")
-    fun getSavedNotes(): Flow<MutableList<Note>>
+    fun getSavedNotes(): Flow<MutableList<NoteAndLabel>>
 
+    @Transaction
     @Query("SELECT * FROM note WHERE dateDeleted IS NOT NULL ORDER BY dateDeleted DESC")
-    fun getDeletedNotes(): Flow<MutableList<Note>>
+    fun getDeletedNotes(): Flow<MutableList<NoteAndLabel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg note: Note)

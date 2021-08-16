@@ -32,6 +32,7 @@ class LabelActivity : AppCompatActivity() {
 
         // get configuration from extras
         isSelecting = intent.getBooleanExtra(IS_SELECTING, false)
+        val labelId = intent.getIntExtra(LABEL_ID, -1)
 
         // setup recycler view
         adapter = if (isSelecting) ChooseLabelAdapter() else LabelAdapter()
@@ -42,6 +43,17 @@ class LabelActivity : AppCompatActivity() {
         // load data from db once
         model.allLabels.observe(this) {
             adapter.submitList(it)
+
+            // if there is a selected label, set selected properties
+            if (labelId != -1) {
+                for ((i, label) in adapter.currentList.withIndex()) {
+                    if (label._id == labelId) {
+                        label.isChecked.set(true)
+                        (adapter as ChooseLabelAdapter).lastSelectedPosition = i
+                    }
+                }
+            }
+
             model.listIsEmpty.set(it.isEmpty())
             model.allLabels.removeObservers(this)
         }
@@ -76,14 +88,14 @@ class LabelActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val pos = if (isSelecting) (adapter as ChooseLabelAdapter).lastSelectedPosition else -1
+        if (isSelecting) {
+            val pos = (adapter as ChooseLabelAdapter).lastSelectedPosition
 
-        if (pos != -1) {
-            val item = adapter.currentList[pos]
+            val item = if (pos == -1) null else adapter.currentList[pos]
 
             setResult(RESULT_OK, Intent(this, EditorMenuFragment::class.java).apply {
-                putExtra(LABEL_ID, item._id)
-                putExtra(LABEL_NAME, item.label)
+                putExtra(LABEL_ID, item?._id)
+                putExtra(LABEL_NAME, item?.label)
             })
             finish()
         } else {

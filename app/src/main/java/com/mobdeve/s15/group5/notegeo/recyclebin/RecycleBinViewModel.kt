@@ -22,7 +22,7 @@ class RecycleBinViewModel(private val repository: NoteGeoRepository) : ViewModel
     fun restore(ids: List<Long>?) = viewModelScope.launch {
         if (ids != null) {
             deletedNotes.value?.run {
-                forEach { if (it._id in ids) it.dateDeleted = null }
+                forEach { if (it.note._id in ids) it.note.dateDeleted = null }
                 repository.updateNotes(this)
             }
         }
@@ -32,7 +32,7 @@ class RecycleBinViewModel(private val repository: NoteGeoRepository) : ViewModel
 
     fun restoreAll() = viewModelScope.launch {
         deletedNotes.value?.run {
-            forEach { it.dateDeleted = null }
+            forEach { it.note.dateDeleted = null }
             repository.updateNotes(this)
         }
     }

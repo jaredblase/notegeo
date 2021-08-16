@@ -20,6 +20,10 @@
         <item name="android:layout_marginTop">8dp</item>
     </style>
 
+    <style name="tag">
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
     <!--  Notes  -->
     <style name="note_theme_1">
         <item name="note_background_color">@color/note.color_1</item>
