@@ -33,6 +33,7 @@ class LabelActivity : AppCompatActivity() {
         // get configuration from extras
         isSelecting = intent.getBooleanExtra(IS_SELECTING, false)
         val labelId = intent.getIntExtra(LABEL_ID, -1)
+        val bgColor = intent.getIntExtra(BG_COLOR, -1)
 
         // setup recycler view
         adapter = if (isSelecting) ChooseLabelAdapter() else LabelAdapter()
@@ -60,6 +61,7 @@ class LabelActivity : AppCompatActivity() {
 
 
         if (isSelecting) {
+            window.decorView.setBackgroundColor(bgColor)
             // hide unnecessary buttons
             (binding.labelsMnuBtn.parent as ViewGroup).removeView(binding.labelsMnuBtn)
             binding.saveBtn.visibility = View.GONE
@@ -107,5 +109,6 @@ class LabelActivity : AppCompatActivity() {
         const val IS_SELECTING = "IS_SELECTING"
         const val LABEL_ID = "LABEL_ID"
         const val LABEL_NAME = "LABEL_NAME"
+        const val BG_COLOR = "BACKGROUND_COLOR"
     }
 }
