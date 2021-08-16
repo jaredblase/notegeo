@@ -57,10 +57,10 @@ data class Note(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readInt(),
-        (parcel.readValue(Int::class.java.classLoader) as? Int),
+        parcel.readSerializable() as? Int,
         parcel.readInt() == 1,
         Date(parcel.readLong()),
-        (parcel.readValue(Long::class.java.classLoader) as? Long)?.let { Date(it) }
+        (parcel.readSerializable() as? Long)?.let { Date(it) }
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -68,10 +68,10 @@ data class Note(
         parcel.writeString(title)
         parcel.writeString(body)
         parcel.writeInt(color)
-        parcel.writeValue(label)
+        parcel.writeSerializable(label)
         parcel.writeInt(if (isPinned) 1 else 0)
         parcel.writeLong(dateEdited.time)
-        dateDeleted?.time?.let { parcel.writeLong(it) }
+        parcel.writeSerializable(dateDeleted?.time)
     }
 
     override fun describeContents() = 0
