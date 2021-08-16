@@ -40,9 +40,17 @@ class NoteEditorViewModel: ViewModel() {
     }
 
     fun assignLabel(id: Int, name: String?) {
-        noteAndLabel.note.label = id
-        updateNoteEditDate()
-        // TODO: Update view
+        // a change is made
+        if (id != noteAndLabel.note.label) {
+            updateNoteEditDate()
+
+            if (id == -1) {
+                noteAndLabel.note.label = null
+            } else {
+                noteAndLabel.note.label = id
+            }
+            // TODO: Update view
+        }
     }
 
     /**

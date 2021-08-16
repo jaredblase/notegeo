@@ -65,6 +65,9 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                 R.id.editor_labels_btn -> {
                     selectLabelLauncher.launch(Intent(context, LabelActivity::class.java).apply {
                         putExtra(LabelActivity.IS_SELECTING, true)
+                        model.noteAndLabel.note.label?.let { labelId ->
+                            putExtra(LabelActivity.LABEL_ID, labelId)
+                        }
                     })
                     true
                 }
