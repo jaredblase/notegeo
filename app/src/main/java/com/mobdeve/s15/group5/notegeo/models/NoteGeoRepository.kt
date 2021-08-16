@@ -8,8 +8,8 @@ import java.util.*
  * Central repository for the whole application
  */
 class NoteGeoRepository(private val labelDao: LabelDao, private val noteDao: NoteDao) {
-    val savedNotes: Flow<MutableList<Note>> = noteDao.getSavedNotes()
-    val deletedNotes: Flow<MutableList<Note>> = noteDao.getDeletedNotes()
+    val savedNotes: Flow<MutableList<NoteAndLabel>> = noteDao.getSavedNotes()
+    val deletedNotes: Flow<MutableList<NoteAndLabel>> = noteDao.getDeletedNotes()
     val allLabels: Flow<MutableList<Label>> = labelDao.getAll()
 
     @WorkerThread
@@ -34,8 +34,8 @@ class NoteGeoRepository(private val labelDao: LabelDao, private val noteDao: Not
     }
 
     @WorkerThread
-    suspend fun updateNotes(notes: List<Note>) {
-        noteDao.update(*notes.toTypedArray())
+    suspend fun updateNotes(notes: List<NoteAndLabel>) {
+        noteDao.update(*notes.map { it.note }.toTypedArray())
     }
 
     @WorkerThread

@@ -21,6 +21,7 @@ import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
 import com.mobdeve.s15.group5.notegeo.models.Note
+import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
 import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
@@ -41,16 +42,18 @@ class MainActivity : AppCompatActivity() {
     private val editorResultLauncher =
         registerForActivityResult(StartActivityForResult()) { result ->
             // a note was passed
-            result.data?.getParcelableExtra<Note>(EditNoteActivity.NOTE)?.let {
+            result.data?.getParcelableExtra<NoteAndLabel>(EditNoteActivity.NOTE_AND_LABEL)?.let {
                 when (result.resultCode) {
-                    RESULT_OK -> model.upsertNote(it)
+                    RESULT_OK -> model.upsertNote(it.note)
 
-                    EditNoteActivity.DELETE -> model.recycleNote(it._id)
+                    EditNoteActivity.DELETE -> model.recycleNote(it.note._id)
 
                     // save og then open another editor
                     EditNoteActivity.DUPLICATE -> {
-                        model.upsertNote(it)
-                        launchEditor(it.copy(_id = 0, dateEdited = Date()))
+                        model.upsertNote(it.note)
+                        launchEditor(
+                            NoteAndLabel(it.note.copy(_id = 0, dateEdited = Date()), it.label)
+                        )
                     }
 
                     else -> this.toast("Blank note deleted!")
@@ -58,9 +61,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun launchEditor(note: Note? = null) {
+    private fun launchEditor(note: NoteAndLabel? = null) {
         editorResultLauncher.launch(Intent(this, EditNoteActivity::class.java).apply {
-            note?.let { putExtra(EditNoteActivity.NOTE, it) }
+            note?.let {
+                putExtra(EditNoteActivity.NOTE_AND_LABEL, it)
+            }
         })
     }
 

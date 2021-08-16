@@ -39,7 +39,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                 R.id.editor_delete_btn -> {
                     activity?.run {
                         setResult(EditNoteActivity.DELETE, Intent(context, MainActivity::class.java).apply {
-                            putExtra(EditNoteActivity.NOTE, model.note)
+                            putExtra(EditNoteActivity.NOTE_AND_LABEL, model.noteAndLabel)
                         })
                         finish()
                     }
@@ -48,10 +48,10 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
                 }
 
                 R.id.editor_copy_btn -> {
-                    if (!model.note.isBlank) {
+                    if (!model.noteAndLabel.note.isBlank) {
                         activity?.run {
                             setResult(EditNoteActivity.DUPLICATE, Intent(context, MainActivity::class.java).apply {
-                                putExtra(EditNoteActivity.NOTE, model.note)
+                                putExtra(EditNoteActivity.NOTE_AND_LABEL, model.noteAndLabel)
                             })
                             finish()
                         }

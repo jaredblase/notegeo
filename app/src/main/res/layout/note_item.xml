@@ -5,8 +5,8 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="note"
-            type="com.mobdeve.s15.group5.notegeo.models.Note" />
+            name="item"
+            type="com.mobdeve.s15.group5.notegeo.models.NoteAndLabel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/note_padding"
-            app:noteColor="@{ note }">
+            app:noteColor="@{ item }">
 
             <TextView
                 android:id="@+id/note_title_tv"
@@ -38,7 +38,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:noteTitle="@{ note }"/>
+                app:noteTitle="@{ item }"/>
 
             <TextView
                 android:id="@+id/note_body_tv"
@@ -51,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/note_title_tv"
-                app:noteBody="@{ note }"/>
+                app:noteBody="@{ item }"/>
 
             <ImageView
                 android:layout_width="17dp"
@@ -62,7 +62,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_pin_filled"
-                app:pinned="@{ note }"/>
+                app:pinned="@{ item }"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>
