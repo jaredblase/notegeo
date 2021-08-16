@@ -16,11 +16,13 @@ class NoteEditorViewModel: ViewModel() {
             setBgColor(field.note.color)
             updateNoteEditDate()
             mPinned.value = field.note.isPinned
+            labelName.value = field.label?.label
         }
     val selectedBackgroundColor = MutableLiveData<Int>()
     val dateEdited = MutableLiveData<String>()
     var mPinned = MutableLiveData<Boolean>()
     val isEditing = MutableLiveData<Boolean>()
+    val labelName = MutableLiveData<String?>()
 
     fun setBgColor(backgroundColor: Int) {
         selectedBackgroundColor.value = backgroundColor
@@ -49,7 +51,8 @@ class NoteEditorViewModel: ViewModel() {
             } else {
                 noteAndLabel.note.label = id
             }
-            // TODO: Update view
+
+            labelName.value = name
         }
     }
 

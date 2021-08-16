@@ -57,6 +57,20 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
+        // setup label watcher
+        model.labelName.observe(this) {
+            with(binding.labelTv) {
+                text = it
+                visibility = if (it == null) View.GONE else View.VISIBLE
+            }
+        }
+
+        // TODO: setup alarm listener
+        binding.alarmTv.visibility = View.GONE
+
+        // TODO: setup location listener
+        binding.locationTv.visibility = View.GONE
+
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
@@ -65,6 +79,7 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
+        // note text editing
         refreshFields()
         binding.editorTitleEt.addTextChangedListener(watcher)
         binding.editorBodyEt.addTextChangedListener(watcher)
