@@ -54,24 +54,28 @@ abstract class AppDatabase : RoomDatabase() {
         suspend fun populateDatabase(labelDao: LabelDao, noteDao: NoteDao) {
             // add data
             noteDao.insert(
-                Note(0, "Sample", "Lorem Ipsum Brodie", -16061521),
+                Note(0, "Sample", "Lorem Ipsum Brodie", -13070788),
                 Note(
                     0,
                     "Hello!",
                     "Just some random text to wee wee. Need to make this note a bit more longer so we can see a difference in the layout",
-                    -35002
+                    -35002,
+                    1
                 ),
                 Note(
                     0,
                     "Test try...",
                     "Is this cool or what? Kotlin master race OwO. Java sucks",
-                    -15262682
+                    -15262682,
+                    2
                 ),
                 Note(
                     0,
                     "This must be a deleted note?",
                     "It should be found in the recycle bin. If not, well...",
-                    dateDeleted = Date()
+                    -16743537,
+                    label = 3,
+                    dateDeleted = Date(),
                 ),
                 Note(
                     0,
@@ -80,7 +84,7 @@ abstract class AppDatabase : RoomDatabase() {
                     dateDeleted = Date()
                 )
             )
-            labelDao.insert(Label(0, "For home"), Label(0, "Exercise"), Label(0, "Academics"))
+            labelDao.insert(Label(1, "For home"), Label(2, "Exercise"), Label(3, "Academics"))
         }
     }
 }
