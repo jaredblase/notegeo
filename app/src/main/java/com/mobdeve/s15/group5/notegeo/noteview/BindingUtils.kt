@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
+import com.google.android.material.textview.MaterialTextView
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 
 @BindingAdapter("noteColor")
@@ -28,4 +29,14 @@ fun TextView.setNoteBody(item: NoteAndLabel) {
 @BindingAdapter("pinned")
 fun ImageView.setPinned(item: NoteAndLabel) {
     visibility = if (item.note.isPinned) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("noteLabel")
+fun TextView.setLabel(item: NoteAndLabel) {
+    if (item.label != null) {
+        text = item.label?.label
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
 }

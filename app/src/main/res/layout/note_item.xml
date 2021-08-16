@@ -15,10 +15,10 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
+        app:cardBackgroundColor="@color/transparent"
         app:cardCornerRadius="18dp"
         app:cardElevation="0dp"
-        app:strokeColor="@android:color/white"
-        app:cardBackgroundColor="@color/transparent">
+        app:strokeColor="@android:color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:noteTitle="@{ item }"/>
+                app:noteTitle="@{ item }" />
 
             <TextView
                 android:id="@+id/note_body_tv"
@@ -51,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/note_title_tv"
-                app:noteBody="@{ item }"/>
+                app:noteBody="@{ item }" />
 
             <ImageView
                 android:layout_width="17dp"
@@ -61,8 +61,26 @@
                 android:contentDescription="@string/desc.is_pinned"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_pin_filled"
-                app:pinned="@{ item }"/>
+                app:pinned="@{ item }"
+                app:srcCompat="@drawable/ic_pin_filled" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/note_padding"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:paddingStart="@dimen/label.h_padding"
+                android:paddingTop="@dimen/label.v_padding"
+                android:paddingEnd="@dimen/label.h_padding"
+                android:paddingBottom="@dimen/label.v_padding"
+                app:circularflow_defaultRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/note_body_tv"
+                app:noteLabel="@{ item }" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </com.google.android.material.card.MaterialCardView>
 </layout>
