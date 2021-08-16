@@ -14,7 +14,7 @@ class NoteEditorViewModel: ViewModel() {
         set(value) {
             field = value
             setBgColor(field.note.color)
-            setFormattedDate()
+            updateNoteEditDate()
             mPinned.value = field.note.isPinned
         }
     val selectedBackgroundColor = MutableLiveData<Int>()
@@ -30,13 +30,18 @@ class NoteEditorViewModel: ViewModel() {
         mPinned.value = mPinned.value?.not() ?: false
     }
 
-    private fun setFormattedDate() {
-        val date = DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateEdited).toString()
-        dateEdited.value = "Edited $date"
+    /**
+     * update note's dateEdited attribute while also setting the view's dateEdited textView
+     */
+    private fun updateNoteEditDate() {
+        val date = Date()
+        noteAndLabel.note.dateEdited = date
+        dateEdited.value = "Edited ${DateFormat.format("dd MMM yy kk:mm", date)}"
     }
 
     fun assignLabel(id: Int, name: String?) {
         noteAndLabel.note.label = id
+        updateNoteEditDate()
         // TODO: Update view
     }
 
@@ -44,14 +49,21 @@ class NoteEditorViewModel: ViewModel() {
      * saves text edits, requires user confirmation since they are more critical/essential.
      */
     fun save(binding: ActivityEditNoteBinding) {
-        with(noteAndLabel.note) {
-            title = binding.editorTitleEt.text.toString()
-            body = binding.editorBodyEt.text.toString()
-            dateEdited = Date()
+        val titleText = binding.editorTitleEt.text.toString().trim()
+        val bodyText = binding.editorBodyEt.text.toString().trim()
+
+        if (titleText.isNotEmpty() || titleText.isNotEmpty()) {
+            with(noteAndLabel.note) {
+                title = titleText
+                body = bodyText
+            }
+
+            updateNoteEditDate()
+            isEditing.value = false
+            binding.root.context.toast("Saved!")
+        } else {
+            binding.root.context.toast("Cannot save blank note!")
         }
-        setFormattedDate()
-        isEditing.value = false
-        binding.root.context.toast("Saved!")
     }
 
     /**
