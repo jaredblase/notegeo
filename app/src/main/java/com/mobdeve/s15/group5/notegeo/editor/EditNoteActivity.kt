@@ -3,10 +3,9 @@ package com.mobdeve.s15.group5.notegeo.editor
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.activity.viewModels
+import com.mobdeve.s15.group5.notegeo.MyWatcher
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
@@ -71,13 +70,7 @@ class EditNoteActivity : AppCompatActivity() {
         // TODO: setup location listener
         binding.locationTv.visibility = View.GONE
 
-        val watcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                model.isEditing.value = true
-            }
-        }
+        val watcher = MyWatcher { model.isEditing.value = true }
 
         // note text editing
         refreshFields()

@@ -2,7 +2,6 @@ package com.mobdeve.s15.group5.notegeo.label
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +11,7 @@ import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
 import com.mobdeve.s15.group5.notegeo.editor.EditorMenuFragment
+import com.mobdeve.s15.group5.notegeo.focusAndOpenKeyboard
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import kotlin.properties.Delegates
 
@@ -82,8 +82,7 @@ class LabelActivity : AppCompatActivity() {
             binding.saveBtn.setOnClickListener { model.updateLabels(this) }
         }
 
-        // add label function
-        binding.addLabelLl.setOnClickListener { model.addLabel(adapter) }
+        binding.addLabelLl.setOnClickListener { focusAndOpenKeyboard(binding.addLabelEt) }
 
         binding.isEmpty = model.listIsEmpty
         binding.executePendingBindings()

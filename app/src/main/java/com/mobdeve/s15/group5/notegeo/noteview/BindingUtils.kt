@@ -5,7 +5,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
-import com.google.android.material.textview.MaterialTextView
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 
 @BindingAdapter("noteColor")
