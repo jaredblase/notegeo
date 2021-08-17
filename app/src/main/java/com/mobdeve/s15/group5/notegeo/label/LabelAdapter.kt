@@ -3,12 +3,14 @@ package com.mobdeve.s15.group5.notegeo.label
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.LabelItemBinding
 import com.mobdeve.s15.group5.notegeo.focusAndOpenKeyboard
 import com.mobdeve.s15.group5.notegeo.hideKeyboard
@@ -19,12 +21,15 @@ import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 open class LabelAdapter :
     ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelComparator()) {
     var isSelecting = false
+    private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var activity: AppCompatActivity
     private lateinit var model: LabelViewModel
+    private var lastEditedPosition = -1
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         activity = recyclerView.context as AppCompatActivity
+        layoutManager = recyclerView.layoutManager!!
         model = ViewModelProvider(
             activity,
             ViewModelFactory((activity.applicationContext as NoteGeoApplication).repo)
@@ -37,8 +42,20 @@ open class LabelAdapter :
 
         with(binding) {
             editBtn.setOnClickListener {
+                // if another edit is occurring
+                if (lastEditedPosition != -1) {
+                    getItem(lastEditedPosition).isBeingEdited.set(false)
+
+                    layoutManager.findViewByPosition(lastEditedPosition)
+                        ?.findViewById<EditText>(R.id.label_name_et)
+                        ?.setText(
+                            getItem(lastEditedPosition).label
+                        )
+                }
+
                 getItem(holder.bindingAdapterPosition).isBeingEdited.set(true)
                 activity.focusAndOpenKeyboard(labelNameEt)
+                lastEditedPosition = holder.bindingAdapterPosition
             }
 
             saveBtn.setOnClickListener {

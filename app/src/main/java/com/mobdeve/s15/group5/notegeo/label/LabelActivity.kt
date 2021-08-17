@@ -38,8 +38,8 @@ class LabelActivity : AppCompatActivity() {
         // setup recycler view
         adapter = if (isSelecting) ChooseLabelAdapter() else LabelAdapter()
         val layoutManager = LinearLayoutManager(this)
-        rv.adapter = adapter
         rv.layoutManager = layoutManager
+        rv.adapter = adapter
 
         // load data from db once
         model.allLabels.observe(this) {
