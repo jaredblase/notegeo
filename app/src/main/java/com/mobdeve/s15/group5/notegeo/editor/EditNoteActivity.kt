@@ -5,14 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import com.mobdeve.s15.group5.notegeo.MyWatcher
-import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
-import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
-import com.mobdeve.s15.group5.notegeo.toast
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
@@ -85,10 +82,16 @@ class EditNoteActivity : AppCompatActivity() {
         }
 
         with(binding) {
-            editorSaveBtn.setOnClickListener { model.save(this) }
-            editorCancelBtn.setOnClickListener { refreshFields() }
+            editorSaveBtn.setOnClickListener { model.save(this); clearFocus(it) }
+            editorCancelBtn.setOnClickListener { refreshFields(); clearFocus(it) }
             setPinnedBtn.setOnClickListener { model.togglePin() }
         }
+    }
+
+    private fun clearFocus(v: View) {
+        hideKeyboard(v)
+        binding.editorBodyEt.clearFocus()
+        binding.editorTitleEt.clearFocus()
     }
 
     private fun refreshFields() {
