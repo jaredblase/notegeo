@@ -1,10 +1,7 @@
 package com.mobdeve.s15.group5.notegeo.label
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
 import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
@@ -13,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
-    val allLabels = repository.allLabels.asLiveData()
+    val repoLabels = repository.allLabels.asLiveData()
+    val allLabels = MutableLiveData<List<Label>>()
     val numSelected = MutableLiveData(0)
 
     fun modifyNumSelected(isSelected: Boolean) {
@@ -21,12 +19,16 @@ class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
     }
 
     fun updateLabel(label: Label) = viewModelScope.launch(Dispatchers.IO) {
+        allLabels.value?.first { it._id == label._id }?.label = label.label
         repository.updateLabel(label)
     }
 
     fun deleteSelectedLabels() = viewModelScope.launch {
-        allLabels.value?.filter { it.isChecked.get() }?.map { it._id }?.let {
-            repository.deleteLabels(it)
+        allLabels.value?.run {
+            val (toDelete, toSave) = partition { it.isChecked.get() }
+
+            repository.deleteLabels(toDelete.map { it._id })
+            allLabels.value = toSave
         }
         numSelected.value = 0
     }
@@ -43,7 +45,9 @@ class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
                     context.toast("Label already exists!")
                 }
                 else -> {
-                    repository.addLabel(Label(label = text))
+                    val label = Label(label = text)
+                    val id = repository.addLabel(label)
+                    allLabels.value = allLabels.value?.plus(label.apply { _id = id.toInt() })
                     binding.labelCancelBtn.performClick()
                 }
             }

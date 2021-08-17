@@ -41,7 +41,11 @@ class LabelActivity : AppCompatActivity() {
         rv.layoutManager = layoutManager
         rv.adapter = adapter
 
-        // load data from db once
+        model.repoLabels.observe(this) { list ->
+            model.allLabels.value = list
+            model.repoLabels.removeObservers(this)
+        }
+
         model.allLabels.observe(this) {
             adapter.submitList(it)
 
@@ -56,6 +60,7 @@ class LabelActivity : AppCompatActivity() {
             }
             binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
+
 
         if (isSelecting) {
             window.decorView.setBackgroundColor(bgColor)
@@ -91,7 +96,8 @@ class LabelActivity : AppCompatActivity() {
             labelAddBtn.setOnClickListener { model.addLabel(this, context) }
             labelCancelBtn.setOnClickListener {
                 addLabelEt.setText("")
-                hideKeyboard(addLabelEt)
+                addLabelEt.clearFocus()
+                hideKeyboard(it)
             }
         }
     }

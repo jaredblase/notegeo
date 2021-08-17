@@ -10,7 +10,7 @@ interface LabelDao {
     fun getAll(): Flow<MutableList<Label>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(vararg label: Label)
+    suspend fun insert(vararg label: Label): LongArray
 
     @Update
     suspend fun update(vararg label: Label)
