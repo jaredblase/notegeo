@@ -1,30 +1,20 @@
 package com.mobdeve.s15.group5.notegeo.label
 
-import android.content.Context
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
-import com.mobdeve.s15.group5.notegeo.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 
 class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
     val allLabels = repository.allLabels.asLiveData()
     val listIsEmpty = ObservableBoolean()
 
-    fun updateLabels(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            allLabels.value?.run {
-                // Filters empty labels before updating the database.
-                repository.updateLabels(filter { it.label.isNotEmpty() })
-            }
-        }
-        context.toast("Saved!")
+    fun updateLabel(label: Label) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateLabel(label)
     }
 
     fun deleteSelectedLabels(adapter: LabelAdapter) {

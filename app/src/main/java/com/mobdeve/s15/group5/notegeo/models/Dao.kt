@@ -9,7 +9,7 @@ interface LabelDao {
     @Query("SELECT * FROM label")
     fun getAll(): Flow<MutableList<Label>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg label: Label)
 
     @Query("DELETE FROM label")
