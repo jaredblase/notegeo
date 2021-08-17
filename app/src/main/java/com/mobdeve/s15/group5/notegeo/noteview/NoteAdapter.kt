@@ -44,7 +44,9 @@ class NoteAdapter(private val onItemClick: (NoteAndLabel) -> Unit) :
     fun filter(query: CharSequence?) {
         if (!query.isNullOrEmpty()) {
             submitList(data.filter {
-                it.note.title.contains(query, true) || it.note.body.contains(query, true)
+                it.note.title.contains(query, true) ||
+                it.note.body.contains(query, true) ||
+                it.label?.label?.contains(query, true) == true
             }.toMutableList())
         } else {
             submitList(data.toCollection(mutableListOf()))

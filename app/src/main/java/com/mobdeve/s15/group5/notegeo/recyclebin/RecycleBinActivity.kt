@@ -19,7 +19,7 @@ import com.mobdeve.s15.group5.notegeo.toast
 class RecycleBinActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecycleBinBinding
     private val model by viewModels<RecycleBinViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
-    private val adapter = NoteAdapter { this.toast("NOTE SELECTED") }
+    private val adapter = NoteAdapter { this.toast("Cannot open recycled note. Please restore first.") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
