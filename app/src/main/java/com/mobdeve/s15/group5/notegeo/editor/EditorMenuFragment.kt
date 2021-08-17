@@ -21,9 +21,7 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
     private val selectLabelLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         // A label was selected
         result.data?.let {
-            val id = it.getIntExtra(LabelActivity.LABEL_ID, -1)
-            val name = it.getStringExtra(LabelActivity.LABEL_NAME)
-            model.assignLabel(id, name)
+            model.assignLabel(it.getParcelableExtra(LabelActivity.LABEL))
         }
         dismiss()
     }

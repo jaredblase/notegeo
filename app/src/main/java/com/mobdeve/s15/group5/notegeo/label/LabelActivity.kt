@@ -95,8 +95,7 @@ class LabelActivity : AppCompatActivity() {
             val item = if (pos == -1) null else adapter.currentList[pos]
 
             setResult(RESULT_OK, Intent(this, EditorMenuFragment::class.java).apply {
-                putExtra(LABEL_ID, item?._id)
-                putExtra(LABEL_NAME, item?.label)
+                putExtra(LABEL, item)
             })
             finish()
         } else {
@@ -107,7 +106,7 @@ class LabelActivity : AppCompatActivity() {
     companion object {
         const val IS_SELECTING = "IS_SELECTING"
         const val LABEL_ID = "LABEL_ID"
-        const val LABEL_NAME = "LABEL_NAME"
+        const val LABEL = "LABEL"
         const val BG_COLOR = "BACKGROUND_COLOR"
     }
 }

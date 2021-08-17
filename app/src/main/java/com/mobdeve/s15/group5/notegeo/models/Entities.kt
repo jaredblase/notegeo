@@ -10,13 +10,14 @@ import java.util.*
 data class Label(
     @PrimaryKey(autoGenerate = true) var _id: Int = 0,
     var label: String = "",
-    /** Used for the label activity */
-    @Ignore var isChecked: ObservableBoolean = ObservableBoolean()
 ) : Parcelable {
+    /** Used for the label activity */
+    @Ignore var isChecked = ObservableBoolean()
+    @Ignore val isBeingEdited = ObservableBoolean()
+
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString() ?: "",
-        parcel.readParcelable(ObservableBoolean::class.java.classLoader) ?: ObservableBoolean()
     )
 
     override fun describeContents() = 0
@@ -24,7 +25,6 @@ data class Label(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(_id)
         parcel.writeString(label)
-        parcel.writeParcelable(isChecked, flags)
     }
 
     companion object CREATOR : Parcelable.Creator<Label> {
