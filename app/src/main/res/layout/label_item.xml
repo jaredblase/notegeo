@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
+        <import type="android.text.InputType" />
+
         <variable
             name="item"
             type="com.mobdeve.s15.group5.notegeo.models.Label" />
@@ -22,38 +26,90 @@
             android:id="@+id/label_item_cb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@{ item.isChecked ? @color/action_blue : @color/dark_body }"
-            android:checked="@={ item.isChecked }"
             android:textColor="@color/dark_headers"
+            android:buttonTint="@color/dark_body"
+            android:visibility="@{ isSelecting ? View.GONE : View.VISIBLE }"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:checked="true"
-            android:visibility="@{ isSelecting ? View.GONE : View.VISIBLE }"/>
+            tools:ignore="DuplicateClickableBoundsCheck" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/label_item_rb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@android:color/white"
+            android:checked="@={ item.isChecked }"
+            android:visibility="@{ isSelecting ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:checked="@={ item.isChecked }"
-            android:visibility="@{ isSelecting ? View.VISIBLE : View.GONE }"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/label_name_et"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="48dp"
+            android:inputType="none"
             android:ems="10"
-            android:inputType="textPersonName"
             android:text="@{ item.label }"
             android:textColor="@color/dark_headers"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cancel_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
+            app:setIsEditing="@{ item.isBeingEdited }"
             tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/edit_btn"
+            android:layout_width="48dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="4dp"
+            android:background="@null"
+            android:contentDescription="@string/label.edit"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setIsEditing="@{ item.isBeingEdited }"
+            app:showOnEdit="@{ false }"
+            app:srcCompat="@drawable/ic_edit"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <ImageButton
+            android:id="@+id/save_btn"
+            android:layout_width="48dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="4dp"
+            android:background="@null"
+            android:contentDescription="@string/label.edit"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setIsEditing="@{ item.isBeingEdited }"
+            app:showOnEdit="@{ true }"
+            app:srcCompat="@drawable/ic_plain_check"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <ImageButton
+            android:id="@+id/cancel_btn"
+            android:layout_width="48dp"
+            android:layout_height="0dp"
+            android:background="@null"
+            android:contentDescription="@string/label.cancel"
+            android:scaleX="0.6"
+            android:scaleY="0.6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/save_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setIsEditing="@{ item.isBeingEdited }"
+            app:showOnEdit="@{ true }"
+            app:srcCompat="@drawable/ic_plain_cross"
+            tools:ignore="TouchTargetSizeCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

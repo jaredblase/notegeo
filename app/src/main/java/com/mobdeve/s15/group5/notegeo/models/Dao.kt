@@ -12,8 +12,11 @@ interface LabelDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(vararg label: Label)
 
-    @Query("DELETE FROM label")
-    suspend fun clearTable()
+    @Update
+    suspend fun update(vararg label: Label)
+
+    @Query("DELETE FROM label WHERE _id IN (:ids)")
+    suspend fun delete(ids: List<Int>)
 }
 
 @Dao

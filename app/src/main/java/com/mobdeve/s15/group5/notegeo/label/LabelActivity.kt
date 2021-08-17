@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
-import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
 import com.mobdeve.s15.group5.notegeo.editor.EditorMenuFragment
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
@@ -33,12 +33,13 @@ class LabelActivity : AppCompatActivity() {
         // get configuration from extras
         isSelecting = intent.getBooleanExtra(IS_SELECTING, false)
         val labelId = intent.getIntExtra(LABEL_ID, -1)
+        val bgColor = intent.getIntExtra(BG_COLOR, -1)
 
         // setup recycler view
         adapter = if (isSelecting) ChooseLabelAdapter() else LabelAdapter()
         val layoutManager = LinearLayoutManager(this)
-        rv.adapter = adapter
         rv.layoutManager = layoutManager
+        rv.adapter = adapter
 
         // load data from db once
         model.allLabels.observe(this) {
@@ -53,59 +54,72 @@ class LabelActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            model.listIsEmpty.set(it.isEmpty())
-            model.allLabels.removeObservers(this)
+            binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
 
-
         if (isSelecting) {
+            window.decorView.setBackgroundColor(bgColor)
             // hide unnecessary buttons
             (binding.labelsMnuBtn.parent as ViewGroup).removeView(binding.labelsMnuBtn)
-            binding.saveBtn.visibility = View.GONE
         } else {
             // setup popup menu
             popup = PopupMenu(this, binding.labelsMnuBtn).apply {
                 setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.delete_selected_label_btn -> model.deleteSelectedLabels(adapter)
-                        R.id.delete_all_label_btn -> model.removeAllLabels(adapter)
+                    if (item.itemId == R.id.delete_selected_label_btn) {
+                        model.deleteSelectedLabels()
                     }
                     true
                 }
             }.also { menuInflater.inflate(R.menu.labels_menu, it.menu) }
             binding.labelsMnuBtn.setOnClickListener { popup.show() }
-
-            // saving functionality
-            binding.saveBtn.setOnClickListener { model.updateLabels(this) }
         }
 
-        // add label function
-        binding.addLabelLl.setOnClickListener { model.addLabel(adapter) }
+        model.numSelected.observe(this) {
+            binding.labelsMnuBtn.visibility = if (it == 0) View.GONE else View.VISIBLE
+        }
 
-        binding.isEmpty = model.listIsEmpty
-        binding.executePendingBindings()
+        // add label stuff
+        binding.addLabelCl.setOnClickListener { focusAndOpenKeyboard(binding.addLabelEt) }
+        binding.addLabelEt.addTextChangedListener(MyWatcher {
+            val value = if (it?.length == 0) View.GONE else View.VISIBLE
+            binding.labelAddBtn.visibility = value
+            binding.labelCancelBtn.visibility = value
+        })
+
+        val context = this
+        with(binding) {
+            labelAddBtn.setOnClickListener { model.addLabel(this, context) }
+            labelCancelBtn.setOnClickListener {
+                addLabelEt.setText("")
+                hideKeyboard(addLabelEt)
+            }
+        }
     }
 
     override fun onBackPressed() {
-        if (isSelecting) {
-            val pos = (adapter as ChooseLabelAdapter).lastSelectedPosition
+        when {
+            // is still editing an entry
+            adapter.lastEditedPosition != -1 -> {
+                binding.labelsRv.layoutManager?.findViewByPosition(adapter.lastEditedPosition)
+                    ?.findViewById<ImageButton>(R.id.cancel_btn)?.performClick()
+            }
+            isSelecting -> {
+                val pos = (adapter as ChooseLabelAdapter).lastSelectedPosition
+                val item = if (pos == -1) null else adapter.currentList[pos]
 
-            val item = if (pos == -1) null else adapter.currentList[pos]
-
-            setResult(RESULT_OK, Intent(this, EditorMenuFragment::class.java).apply {
-                putExtra(LABEL_ID, item?._id)
-                putExtra(LABEL_NAME, item?.label)
-            })
-            finish()
-        } else {
-            super.onBackPressed()
+                setResult(RESULT_OK, Intent(this, EditorMenuFragment::class.java).apply {
+                    putExtra(LABEL, item)
+                })
+                finish()
+            }
+            else -> super.onBackPressed()
         }
     }
 
     companion object {
         const val IS_SELECTING = "IS_SELECTING"
         const val LABEL_ID = "LABEL_ID"
-        const val LABEL_NAME = "LABEL_NAME"
+        const val LABEL = "LABEL"
+        const val BG_COLOR = "BACKGROUND_COLOR"
     }
 }

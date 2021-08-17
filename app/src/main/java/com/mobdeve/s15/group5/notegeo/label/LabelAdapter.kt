@@ -1,25 +1,87 @@
 package com.mobdeve.s15.group5.notegeo.label
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.widget.doOnTextChanged
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.LabelItemBinding
+import com.mobdeve.s15.group5.notegeo.focusAndOpenKeyboard
+import com.mobdeve.s15.group5.notegeo.hideKeyboard
 import com.mobdeve.s15.group5.notegeo.models.Label
+import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 
 open class LabelAdapter :
     ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelComparator()) {
     var isSelecting = false
+    private lateinit var layoutManager: RecyclerView.LayoutManager
+    private lateinit var activity: AppCompatActivity
+    private lateinit var model: LabelViewModel
+    var lastEditedPosition = -1
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        activity = recyclerView.context as AppCompatActivity
+        layoutManager = recyclerView.layoutManager!!
+        model = ViewModelProvider(
+            activity,
+            ViewModelFactory((activity.applicationContext as NoteGeoApplication).repo)
+        ).get(LabelViewModel::class.java)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelViewHolder {
         val binding = LabelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val holder = LabelViewHolder(binding, isSelecting)
 
-        // update text on change
-        binding.labelNameEt.doOnTextChanged { text, _, _, _ ->
-            getItem(holder.bindingAdapterPosition).label = text.toString()
+        with(binding) {
+            editBtn.setOnClickListener {
+                // if another edit is occurring
+                if (lastEditedPosition != -1) {
+                    getItem(lastEditedPosition).isBeingEdited.set(false)
+
+                    layoutManager.findViewByPosition(lastEditedPosition)
+                        ?.findViewById<EditText>(R.id.label_name_et)
+                        ?.setText(
+                            getItem(lastEditedPosition).label
+                        )
+                }
+
+                getItem(holder.bindingAdapterPosition).isBeingEdited.set(true)
+                activity.focusAndOpenKeyboard(labelNameEt)
+                lastEditedPosition = holder.bindingAdapterPosition
+            }
+
+            saveBtn.setOnClickListener {
+                val item = getItem(holder.bindingAdapterPosition)
+
+                activity.hideKeyboard(it)
+                lastEditedPosition = -1
+                model.updateLabel(item.apply { label = binding.labelNameEt.text.toString() })
+                item.isBeingEdited.set(false)
+            }
+
+            cancelBtn.setOnClickListener {
+                val item = getItem(holder.bindingAdapterPosition)
+
+                lastEditedPosition = -1
+                activity.hideKeyboard(it)
+                labelNameEt.setText(item.label)
+                item.isBeingEdited.set(false)
+            }
+
+            labelItemCb.setOnClickListener {
+                val obs = getItem(holder.bindingAdapterPosition).isChecked
+                obs.set(!obs.get()) // toggle
+                model.modifyNumSelected(obs.get())
+                labelItemCb.buttonTintList =
+                    ColorStateList.valueOf(activity.getColor(if (obs.get()) R.color.action_blue else R.color.dark_body))
+            }
         }
 
         return holder
