@@ -17,14 +17,13 @@ import com.mobdeve.s15.group5.notegeo.hideKeyboard
 import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 
-
 open class LabelAdapter :
     ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelComparator()) {
     var isSelecting = false
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var activity: AppCompatActivity
     private lateinit var model: LabelViewModel
-    private var lastEditedPosition = -1
+    var lastEditedPosition = -1
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -62,22 +61,20 @@ open class LabelAdapter :
                 val item = getItem(holder.bindingAdapterPosition)
 
                 activity.hideKeyboard(it)
-                model.updateLabel(item.apply {
-                    Log.d("THE TEXT", binding.labelNameEt.text.toString())
-                    label = binding.labelNameEt.text.toString()
-                })
+                lastEditedPosition = -1
+                model.updateLabel(item.apply { label = binding.labelNameEt.text.toString() })
                 item.isBeingEdited.set(false)
             }
 
             cancelBtn.setOnClickListener {
                 val item = getItem(holder.bindingAdapterPosition)
 
+                lastEditedPosition = -1
                 activity.hideKeyboard(it)
                 labelNameEt.setText(item.label)
                 item.isBeingEdited.set(false)
             }
         }
-
 
         return holder
     }

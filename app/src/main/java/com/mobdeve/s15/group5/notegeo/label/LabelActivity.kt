@@ -3,6 +3,7 @@ package com.mobdeve.s15.group5.notegeo.label
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -85,17 +86,22 @@ class LabelActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (isSelecting) {
-            val pos = (adapter as ChooseLabelAdapter).lastSelectedPosition
+        when {
+            // is still editing an entry
+            adapter.lastEditedPosition != -1 -> {
+                binding.labelsRv.layoutManager?.findViewByPosition(adapter.lastEditedPosition)
+                    ?.findViewById<ImageButton>(R.id.cancel_btn)?.performClick()
+            }
+            isSelecting -> {
+                val pos = (adapter as ChooseLabelAdapter).lastSelectedPosition
+                val item = if (pos == -1) null else adapter.currentList[pos]
 
-            val item = if (pos == -1) null else adapter.currentList[pos]
-
-            setResult(RESULT_OK, Intent(this, EditorMenuFragment::class.java).apply {
-                putExtra(LABEL, item)
-            })
-            finish()
-        } else {
-            super.onBackPressed()
+                setResult(RESULT_OK, Intent(this, EditorMenuFragment::class.java).apply {
+                    putExtra(LABEL, item)
+                })
+                finish()
+            }
+            else -> super.onBackPressed()
         }
     }
 
