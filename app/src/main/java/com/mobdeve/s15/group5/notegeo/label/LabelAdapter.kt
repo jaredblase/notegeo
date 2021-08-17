@@ -1,6 +1,6 @@
 package com.mobdeve.s15.group5.notegeo.label
 
-import android.util.Log
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
@@ -73,6 +73,14 @@ open class LabelAdapter :
                 activity.hideKeyboard(it)
                 labelNameEt.setText(item.label)
                 item.isBeingEdited.set(false)
+            }
+
+            labelItemCb.setOnClickListener {
+                val obs = getItem(holder.bindingAdapterPosition).isChecked
+                obs.set(!obs.get()) // toggle
+                model.modifyNumSelected(obs.get())
+                labelItemCb.buttonTintList =
+                    ColorStateList.valueOf(activity.getColor(if (obs.get()) R.color.action_blue else R.color.dark_body))
             }
         }
 

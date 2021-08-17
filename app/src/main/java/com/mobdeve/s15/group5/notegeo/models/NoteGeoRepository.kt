@@ -13,8 +13,18 @@ class NoteGeoRepository(private val labelDao: LabelDao, private val noteDao: Not
     val allLabels: Flow<MutableList<Label>> = labelDao.getAll()
 
     @WorkerThread
-    suspend fun updateLabel(label: Label) {
+    suspend fun addLabel(label: Label) {
         labelDao.insert(label)
+    }
+
+    @WorkerThread
+    suspend fun updateLabel(label: Label) {
+        labelDao.update(label)
+    }
+
+    @WorkerThread
+    suspend fun deleteLabels(ids: List<Int>) {
+        labelDao.delete(ids)
     }
 
     @WorkerThread

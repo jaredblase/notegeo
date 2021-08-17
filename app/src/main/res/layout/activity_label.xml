@@ -1,99 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
 
-    <data>
-        <import type="android.view.View" />
-        <variable
-            name="isEmpty"
-            type="androidx.databinding.ObservableBoolean" />
-    </data>
+    <TextView
+        android:id="@+id/textView2"
+        style="@style/activity_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/root_padding"
+        android:layout_marginTop="@dimen/root_padding"
+        android:text="@string/labels"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/labels_rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/root_padding"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_label_cl">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageButton
+        android:id="@+id/labels_mnu_btn"
+        style="@style/popup_btn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@null"
+        android:contentDescription="@string/desc.more_options"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_snowman" />
+
+    <ImageView
+        android:id="@+id/empty_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/leaf_img_size"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/desc.empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_leaf" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/add_label_cl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false">
-
-        <TextView
-            android:id="@+id/textView2"
-            style="@style/activity_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/root_padding"
-            android:layout_marginTop="@dimen/root_padding"
-            android:text="@string/labels"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/labels_rv"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/root_padding"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_label_ll">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <ImageButton
-            android:id="@+id/labels_mnu_btn"
-            style="@style/popup_btn"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@null"
-            android:contentDescription="@string/desc.more_options"
-            android:visibility="@{ isEmpty ? View.GONE : View.VISIBLE }"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_snowman" />
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:gravity="start|center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <ImageView
-            android:id="@+id/empty_iv"
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/leaf_img_size"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/desc.empty"
-            android:visibility="@{ isEmpty ? View.VISIBLE : View.GONE }"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:contentDescription="@string/add_label"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_leaf" />
+            app:srcCompat="@drawable/ic_plus" />
 
-        <LinearLayout
-            android:id="@+id/add_label_ll"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="24dp"
-            android:gravity="start|center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
+        <EditText
+            android:id="@+id/add_label_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:hint="@string/add_label"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:textColor="@color/dark_body"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="18dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="28dp"
-                android:contentDescription="@string/add_label"
-                app:srcCompat="@drawable/ic_plus" />
+        <ImageButton
+            android:id="@+id/label_add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:background="@null"
+            android:contentDescription="@string/add_label"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_plain_check"
+            app:tint="@color/dark_body"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:visibility="visible" />
 
-            <EditText
-                android:id="@+id/add_label_et"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:hint="@string/add_label"
-                android:inputType="text"
-                android:textColor="@color/dark_body"
-                android:textSize="16sp"
-                tools:ignore="DuplicateSpeakableTextCheck"
-                android:importantForAutofill="no" />
-
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/label_cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@string/label.cancel"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:scaleX="0.6"
+            android:scaleY="0.6"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/label_add_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_plain_cross"
+            app:tint="@color/dark_body"
+            tools:ignore="TouchTargetSizeCheck"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

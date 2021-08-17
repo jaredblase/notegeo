@@ -3,8 +3,4 @@
     <item
         android:id="@+id/delete_selected_label_btn"
         android:title="@string/label_menu.delete_selected" />
-
-    <item
-        android:id="@+id/delete_all_label_btn"
-        android:title="@string/label_menu.delete_all" />
 </menu>

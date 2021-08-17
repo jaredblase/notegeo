@@ -2,17 +2,16 @@ package com.mobdeve.s15.group5.notegeo.label
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
-import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
 import com.mobdeve.s15.group5.notegeo.editor.EditorMenuFragment
-import com.mobdeve.s15.group5.notegeo.focusAndOpenKeyboard
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import kotlin.properties.Delegates
 
@@ -55,11 +54,8 @@ class LabelActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            model.listIsEmpty.set(it.isEmpty())
-            model.allLabels.removeObservers(this)
+            binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
-
 
         if (isSelecting) {
             window.decorView.setBackgroundColor(bgColor)
@@ -69,9 +65,8 @@ class LabelActivity : AppCompatActivity() {
             // setup popup menu
             popup = PopupMenu(this, binding.labelsMnuBtn).apply {
                 setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.delete_selected_label_btn -> model.deleteSelectedLabels(adapter)
-                        R.id.delete_all_label_btn -> model.removeAllLabels(adapter)
+                    if (item.itemId == R.id.delete_selected_label_btn) {
+                        model.deleteSelectedLabels()
                     }
                     true
                 }
@@ -79,10 +74,26 @@ class LabelActivity : AppCompatActivity() {
             binding.labelsMnuBtn.setOnClickListener { popup.show() }
         }
 
-        binding.addLabelLl.setOnClickListener { focusAndOpenKeyboard(binding.addLabelEt) }
+        model.numSelected.observe(this) {
+            binding.labelsMnuBtn.visibility = if (it == 0) View.GONE else View.VISIBLE
+        }
 
-        binding.isEmpty = model.listIsEmpty
-        binding.executePendingBindings()
+        // add label stuff
+        binding.addLabelCl.setOnClickListener { focusAndOpenKeyboard(binding.addLabelEt) }
+        binding.addLabelEt.addTextChangedListener(MyWatcher {
+            val value = if (it?.length == 0) View.GONE else View.VISIBLE
+            binding.labelAddBtn.visibility = value
+            binding.labelCancelBtn.visibility = value
+        })
+
+        val context = this
+        with(binding) {
+            labelAddBtn.setOnClickListener { model.addLabel(this, context) }
+            labelCancelBtn.setOnClickListener {
+                addLabelEt.setText("")
+                hideKeyboard(addLabelEt)
+            }
+        }
     }
 
     override fun onBackPressed() {

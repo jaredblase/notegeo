@@ -43,7 +43,6 @@
 
     <!--  Labels Menu  -->
     <string name="label_menu.delete_selected">Delete selected</string>
-    <string name="label_menu.delete_all">Delete all labels</string>
 
     <!--  Note Colors  -->
     <string name="color.white">White</string>
