@@ -6,7 +6,8 @@
     <string name="search_hint">Search your notes</string>
     <string name="empty_message">It\'s so clean here…</string>
     <string name="add_label">Add new label</string>
-    <string name="save">SAVE</string>
+    <string name="rename">RENAME</string>
+    <string name="add">ADD</string>
 
     <!--  Content Descriptions  -->
     <string name="desc.menu">menu</string>
@@ -60,4 +61,7 @@
     <!-- Activity Labels -->
     <string name="recycle_bin">Recycle Bin</string>
     <string name="labels">Labels</string>
+    <string name="label.edit">Edit entry</string>
+    <string name="label.cancel">Cancel edit</string>
+    <string name="label.save">Save edit</string>
 </resources>
