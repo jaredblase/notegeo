@@ -5,6 +5,7 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +15,13 @@ fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_
 fun AppCompatActivity.focusAndOpenKeyboard(v: View) {
     v.requestFocus()
     with(getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager) {
-        toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        showSoftInput(v, 0)
+    }
+}
+
+fun AppCompatActivity.hideKeyboard(v: View) {
+    with(getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager) {
+        hideSoftInputFromWindow(v.windowToken, 0)
     }
 }
 
