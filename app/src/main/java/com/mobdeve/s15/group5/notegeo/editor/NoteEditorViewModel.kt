@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.mobdeve.s15.group5.notegeo.models.Note
 import android.text.format.DateFormat
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
+import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.toast
 import java.util.Date
@@ -41,19 +42,13 @@ class NoteEditorViewModel: ViewModel() {
         dateEdited.value = "Edited ${DateFormat.format("dd MMM yy kk:mm", date)}"
     }
 
-    fun assignLabel(id: Int, name: String?) {
+    fun assignLabel(label: Label?) {
         // a change is made
-        if (id != noteAndLabel.note.label) {
+        if (label?._id != noteAndLabel.note.label) {
             updateNoteEditDate()
-
-            if (id == -1) {
-                noteAndLabel.note.label = null
-            } else {
-                noteAndLabel.note.label = id
-            }
-
-            labelName.value = name
         }
+        noteAndLabel.note.label = label?._id
+        labelName.value = label?.label
     }
 
     /**

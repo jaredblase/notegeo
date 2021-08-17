@@ -64,7 +64,6 @@ class LabelActivity : AppCompatActivity() {
             window.decorView.setBackgroundColor(bgColor)
             // hide unnecessary buttons
             (binding.labelsMnuBtn.parent as ViewGroup).removeView(binding.labelsMnuBtn)
-            binding.saveBtn.visibility = View.GONE
         } else {
             // setup popup menu
             popup = PopupMenu(this, binding.labelsMnuBtn).apply {
@@ -77,9 +76,6 @@ class LabelActivity : AppCompatActivity() {
                 }
             }.also { menuInflater.inflate(R.menu.labels_menu, it.menu) }
             binding.labelsMnuBtn.setOnClickListener { popup.show() }
-
-            // saving functionality
-            binding.saveBtn.setOnClickListener { model.updateLabels(this) }
         }
 
         binding.addLabelLl.setOnClickListener { focusAndOpenKeyboard(binding.addLabelEt) }
