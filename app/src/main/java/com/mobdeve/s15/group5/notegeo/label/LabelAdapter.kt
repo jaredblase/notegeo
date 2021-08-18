@@ -8,11 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
-import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.LabelItemBinding
-import com.mobdeve.s15.group5.notegeo.focusAndOpenKeyboard
-import com.mobdeve.s15.group5.notegeo.hideKeyboard
 import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 
@@ -52,7 +49,6 @@ open class LabelAdapter :
                 }
 
                 getItem(holder.bindingAdapterPosition).isBeingEdited.set(true)
-                activity.focusAndOpenKeyboard(labelNameEt)
                 lastEditedPosition = holder.bindingAdapterPosition
             }
 
@@ -74,8 +70,15 @@ open class LabelAdapter :
                 item.isBeingEdited.set(false)
             }
 
+            // onCheckChanged doesn't seem to work. I settled with this one
             labelItemCb.setOnClickListener {
-                model.modifyNumSelected(getItem(holder.bindingAdapterPosition).isChecked.get())
+                model.modifyNumSelected(labelItemCb.isChecked)
+            }
+
+            labelNameEt.setOnClickListener {
+                if (!getItem(holder.bindingAdapterPosition).isBeingEdited.get()) {
+                    labelItemCb.performClick()
+                }
             }
         }
 

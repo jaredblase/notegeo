@@ -18,7 +18,8 @@
             android:exported="true" />
         <activity
             android:name=".editor.EditNoteActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".home.MainActivity"
             android:exported="true">

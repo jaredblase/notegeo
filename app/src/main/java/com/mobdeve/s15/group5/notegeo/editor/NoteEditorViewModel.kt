@@ -15,7 +15,7 @@ class NoteEditorViewModel: ViewModel() {
         set(value) {
             field = value
             setBgColor(field.note.color)
-            updateNoteEditDate()
+            setDateEditedText()
             mPinned.value = field.note.isPinned
             labelName.value = field.label?.label
         }
@@ -36,16 +36,17 @@ class NoteEditorViewModel: ViewModel() {
     /**
      * update note's dateEdited attribute while also setting the view's dateEdited textView
      */
-    private fun updateNoteEditDate() {
-        val date = Date()
-        noteAndLabel.note.dateEdited = date
-        dateEdited.value = "Edited ${DateFormat.format("dd MMM yy kk:mm", date)}"
+    private fun setDateEditedText(toUpdate: Boolean = false) {
+        if (toUpdate) {
+            noteAndLabel.note.dateEdited = Date()
+        }
+        dateEdited.value = "Edited ${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateEdited)}"
     }
 
     fun assignLabel(label: Label?) {
         // a change is made
         if (label?._id != noteAndLabel.note.label) {
-            updateNoteEditDate()
+            setDateEditedText(true)
         }
         noteAndLabel.note.label = label?._id
         labelName.value = label?.label
@@ -64,7 +65,7 @@ class NoteEditorViewModel: ViewModel() {
                 body = bodyText
             }
 
-            updateNoteEditDate()
+            setDateEditedText(true)
             isEditing.value = false
             binding.root.context.toast("Saved!")
         } else {
