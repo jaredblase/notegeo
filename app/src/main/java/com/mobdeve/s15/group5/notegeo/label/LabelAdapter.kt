@@ -15,7 +15,7 @@ import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 
 open class LabelAdapter :
     ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelComparator()) {
-    var isSelecting = false
+    var isChoosingLabel = false
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var activity: AppCompatActivity
     private lateinit var model: LabelViewModel
@@ -33,7 +33,7 @@ open class LabelAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelViewHolder {
         val binding = LabelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val holder = LabelViewHolder(binding, isSelecting)
+        val holder = LabelViewHolder(binding, isChoosingLabel)
 
         with(binding) {
             editBtn.setOnClickListener {
@@ -77,7 +77,7 @@ open class LabelAdapter :
 
             labelNameEt.setOnClickListener {
                 if (!getItem(holder.bindingAdapterPosition).isBeingEdited.get()) {
-                    labelItemCb.performClick()
+                    (if (isChoosingLabel) labelItemRb else labelItemCb).performClick()
                 }
             }
         }

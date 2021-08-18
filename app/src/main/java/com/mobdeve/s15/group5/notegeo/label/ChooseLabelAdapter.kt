@@ -8,7 +8,7 @@ class ChooseLabelAdapter : LabelAdapter() {
     var lastSelectedPosition = -1
 
     init {
-        isSelecting = true
+        isChoosingLabel = true
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelViewHolder {
