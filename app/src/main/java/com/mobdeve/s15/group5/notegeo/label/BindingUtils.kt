@@ -4,8 +4,10 @@ import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableBoolean
+import com.mobdeve.s15.group5.notegeo.focusAndOpenKeyboard
 
 @BindingAdapter("setIsEditing", "showOnEdit")
 fun ImageButton.setEditingVisibility(isEditing: ObservableBoolean, showOnEdit: Boolean) {
@@ -16,10 +18,13 @@ fun ImageButton.setEditingVisibility(isEditing: ObservableBoolean, showOnEdit: B
 fun EditText.setEditable(isEditing: ObservableBoolean) {
     if (isEditing.get()) {
         inputType = InputType.TYPE_CLASS_TEXT
+        isFocusableInTouchMode = true
         requestFocus()
         setSelection(text.length)
+        (context as AppCompatActivity).focusAndOpenKeyboard(this)
     } else {
         inputType = InputType.TYPE_NULL
+        isFocusableInTouchMode = false
         clearFocus()
     }
 }
