@@ -19,7 +19,7 @@ class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
     }
 
     fun updateLabel(label: Label) = viewModelScope.launch(Dispatchers.IO) {
-        allLabels.value?.first { it._id == label._id }?.label = label.label
+        allLabels.value?.first { it._id == label._id }?.name = label.name
         repository.updateLabel(label)
     }
 
@@ -41,11 +41,11 @@ class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
                 text.isBlank() -> {
                     context.toast("Cannot add blank label!")
                 }
-                allLabels.value?.any { it.label.equals(text, true) } == true -> {
+                allLabels.value?.any { it.name.equals(text, true) } == true -> {
                     context.toast("Label already exists!")
                 }
                 else -> {
-                    val label = Label(label = text)
+                    val label = Label(name = text)
                     val id = repository.addLabel(label)
                     allLabels.value = allLabels.value?.plus(label.apply { _id = id.toInt() })
                     binding.labelCancelBtn.performClick()

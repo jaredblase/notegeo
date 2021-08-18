@@ -6,10 +6,10 @@ import androidx.databinding.ObservableBoolean
 import androidx.room.*
 import java.util.*
 
-@Entity(indices = [Index(value = ["label"], unique = true)])
+@Entity(indices = [Index(value = ["name"], unique = true)])
 data class Label(
     @PrimaryKey(autoGenerate = true) var _id: Int = 0,
-    var label: String = "",
+    var name: String = "",
 ) : Parcelable {
     /** Used for the label activity */
     @Ignore var isChecked = ObservableBoolean()
@@ -24,7 +24,7 @@ data class Label(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(_id)
-        parcel.writeString(label)
+        parcel.writeString(name)
     }
 
     companion object CREATOR : Parcelable.Creator<Label> {

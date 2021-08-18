@@ -46,7 +46,7 @@ class NoteAdapter(private val onItemClick: (NoteAndLabel) -> Unit) :
             submitList(data.filter {
                 it.note.title.contains(query, true) ||
                 it.note.body.contains(query, true) ||
-                it.label?.label?.contains(query, true) == true
+                it.label?.name?.contains(query, true) == true
             }.toMutableList())
         } else {
             submitList(data.toCollection(mutableListOf()))

@@ -33,7 +33,7 @@ fun ImageView.setPinned(item: NoteAndLabel) {
 @BindingAdapter("noteLabel")
 fun TextView.setLabel(item: NoteAndLabel) {
     if (item.label != null) {
-        text = item.label?.label
+        text = item.label?.name
         visibility = View.VISIBLE
     } else {
         visibility = View.GONE

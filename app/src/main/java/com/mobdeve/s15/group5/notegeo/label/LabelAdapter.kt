@@ -44,7 +44,7 @@ open class LabelAdapter :
                     layoutManager.findViewByPosition(lastEditedPosition)
                         ?.findViewById<EditText>(R.id.label_name_et)
                         ?.setText(
-                            getItem(lastEditedPosition).label
+                            getItem(lastEditedPosition).name
                         )
                 }
 
@@ -57,7 +57,7 @@ open class LabelAdapter :
 
                 activity.hideKeyboard(it)
                 lastEditedPosition = -1
-                model.updateLabel(item.apply { label = binding.labelNameEt.text.toString() })
+                model.updateLabel(item.apply { name = binding.labelNameEt.text.toString() })
                 item.isBeingEdited.set(false)
             }
 
@@ -66,7 +66,7 @@ open class LabelAdapter :
 
                 lastEditedPosition = -1
                 activity.hideKeyboard(it)
-                labelNameEt.setText(item.label)
+                labelNameEt.setText(item.name)
                 item.isBeingEdited.set(false)
             }
 
@@ -100,6 +100,6 @@ open class LabelAdapter :
     class LabelComparator : DiffUtil.ItemCallback<Label>() {
         override fun areItemsTheSame(oldItem: Label, newItem: Label) = oldItem._id == newItem._id
         override fun areContentsTheSame(oldItem: Label, newItem: Label) =
-            oldItem.label == newItem.label
+            oldItem.name == newItem.name
     }
 }
