@@ -20,7 +20,6 @@ import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
-import com.mobdeve.s15.group5.notegeo.models.Note
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
@@ -77,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         // get data from db
         model.savedNotes.observe(this) {
             adapter.modifyList(it)
+            binding.progressIndicator.visibility = View.GONE
             adapter.filter(binding.homeSv.query)
             binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
