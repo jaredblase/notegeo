@@ -48,6 +48,7 @@ class LabelActivity : AppCompatActivity() {
 
         model.allLabels.observe(this) {
             adapter.submitList(it)
+            binding.progressIndicator.visibility = View.GONE
 
             // if there is a selected label, set selected properties
             if (labelId != -1) {

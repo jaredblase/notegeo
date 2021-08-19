@@ -36,6 +36,7 @@
         android:layout_height="48dp"
         android:background="@null"
         android:contentDescription="@string/desc.more_options"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_snowman" />
@@ -46,11 +47,23 @@
         android:layout_height="@dimen/leaf_img_size"
         android:adjustViewBounds="true"
         android:contentDescription="@string/desc.empty"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_leaf" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:indeterminate="true"
+        app:indicatorColor="@android:color/white"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/add_label_cl"

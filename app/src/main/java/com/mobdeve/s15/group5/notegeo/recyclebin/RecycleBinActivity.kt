@@ -29,6 +29,7 @@ class RecycleBinActivity : AppCompatActivity() {
         // everytime the list is updated
         model.deletedNotes.observe(this) {
             adapter.submitList(it)
+            binding.progressIndicator.visibility = View.GONE
 
             with(binding) {
                 if (it.isEmpty()) {
