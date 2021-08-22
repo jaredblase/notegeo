@@ -130,6 +130,10 @@ class EditNoteActivity : AppCompatActivity() {
             editorSaveBtn.setOnClickListener { model.save(this); clearFocus(it) }
             editorCancelBtn.setOnClickListener { refreshFields(); clearFocus(it) }
             setPinnedBtn.setOnClickListener { model.togglePin() }
+
+            labelTv.setOnRemoveListener { model.assignLabel(null) }
+            alarmTv.setOnRemoveListener { /* TODO: Clear Alarm */ }
+            locationTv.setOnRemoveListener { /* TODO: Clear Location */ }
         }
     }
 

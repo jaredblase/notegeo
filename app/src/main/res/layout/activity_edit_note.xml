@@ -161,40 +161,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editor_body_et">
 
-        <TextView
+        <com.mobdeve.s15.group5.notegeo.editor.RemovableItemView
             android:id="@+id/label_tv"
             style="@style/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
-            android:paddingStart="@dimen/label.h_padding"
-            android:paddingTop="@dimen/label.v_padding"
-            android:paddingEnd="@dimen/label.h_padding"
-            android:paddingBottom="@dimen/label.v_padding"
             android:text="Hello World!" />
 
-        <TextView
+        <com.mobdeve.s15.group5.notegeo.editor.RemovableItemView
             android:id="@+id/alarm_tv"
             style="@style/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/border"
-            android:paddingStart="@dimen/label.h_padding"
-            android:paddingTop="@dimen/label.v_padding"
-            android:paddingEnd="@dimen/label.h_padding"
-            android:paddingBottom="@dimen/label.v_padding"
             android:text="Hello World!" />
 
-        <TextView
+        <com.mobdeve.s15.group5.notegeo.editor.RemovableItemView
             android:id="@+id/location_tv"
             style="@style/tag"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border"
-            android:paddingStart="@dimen/label.h_padding"
-            android:paddingTop="@dimen/label.v_padding"
-            android:paddingEnd="@dimen/label.h_padding"
-            android:paddingBottom="@dimen/label.v_padding"
             android:text="Hello World!" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

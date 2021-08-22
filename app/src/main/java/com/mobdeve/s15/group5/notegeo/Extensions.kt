@@ -10,6 +10,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
+fun View.dpToPx(dp: Int): Int {
+    val scale = resources.displayMetrics.density
+    return (dp * scale + 0.5F).toInt()
+}
+
 fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
 fun AppCompatActivity.focusAndOpenKeyboard(v: View) {
