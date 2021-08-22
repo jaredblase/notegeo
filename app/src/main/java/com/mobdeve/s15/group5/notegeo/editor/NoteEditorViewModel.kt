@@ -21,6 +21,7 @@ class NoteEditorViewModel: ViewModel() {
         }
     val selectedBackgroundColor = MutableLiveData<Int>()
     val dateEdited = MutableLiveData<String>()
+    val dateAlarm = MutableLiveData<String>()
     var mPinned = MutableLiveData<Boolean>()
     val isEditing = MutableLiveData<Boolean>()
     val labelName = MutableLiveData<String?>()
@@ -41,6 +42,11 @@ class NoteEditorViewModel: ViewModel() {
             noteAndLabel.note.dateEdited = Date()
         }
         dateEdited.value = "Edited ${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateEdited)}"
+    }
+
+    fun setDateAlarm(date: Date) {
+        noteAndLabel.note.dateAlarm = date
+        dateAlarm.value = "${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateAlarm)}"
     }
 
     fun assignLabel(label: Label?) {

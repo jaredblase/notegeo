@@ -5,11 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
+import java.util.*
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
@@ -62,7 +68,46 @@ class EditNoteActivity : AppCompatActivity() {
         }
 
         // TODO: setup alarm listener
-        binding.alarmTv.visibility = View.GONE
+        model.dateAlarm.observe(this) {
+            with(binding.alarmTv) {
+                text = it
+                visibility = if (it == null) View.GONE else View.VISIBLE
+            }
+        }
+        binding.setAlarmBtn.setOnClickListener {
+            // today forward constraint
+            val constraintsBuilder = CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointForward.now())
+            // instantiate date picker
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("SELECT ALARM DATE")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setCalendarConstraints(constraintsBuilder.build())
+                .build()
+
+            // ok is pressed
+            datePicker.addOnPositiveButtonClickListener {
+                val date = datePicker.selection!!
+                // instantiate time picker
+                val timePicker = MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(12)
+                    .setMinute(10)
+                    .setTitleText("SELECT ALARM TIME")
+                    .build()
+
+                // ok is pressed
+                timePicker.addOnPositiveButtonClickListener {
+                    val hours = (timePicker.hour - 8) * 3600000
+                    val minutes = timePicker.minute * 60000
+                    model.setDateAlarm(Date(date + hours + minutes))
+                }
+
+                timePicker.show(supportFragmentManager, TIME_TAG)
+            }
+
+            datePicker.show(supportFragmentManager, DATE_TAG)
+        }
 
         // TODO: setup location listener
         binding.locationTv.visibility = View.GONE
@@ -121,6 +166,8 @@ class EditNoteActivity : AppCompatActivity() {
 
     companion object {
         private const val FRAGMENT_TAG = "Editor Menu"
+        private const val DATE_TAG = "DatePicker"
+        private const val TIME_TAG = "TimePicker"
         const val NOTE_AND_LABEL = "NoteAndLabel"
         const val DELETE = 100
         const val DUPLICATE = 200
