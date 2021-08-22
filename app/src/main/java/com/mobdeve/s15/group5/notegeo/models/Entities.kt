@@ -47,7 +47,8 @@ data class Note(
     var label: Int? = null,
     var isPinned: Boolean = false,
     var dateEdited: Date = Date(),
-    var dateDeleted: Date? = null
+    var dateDeleted: Date? = null,
+    var dateAlarm: Date? = null
 ) : Parcelable {
     val isBlank
         get() = title.isBlank() && body.isBlank()
@@ -60,6 +61,7 @@ data class Note(
         parcel.readSerializable() as? Int,
         parcel.readInt() == 1,
         Date(parcel.readLong()),
+        (parcel.readSerializable() as? Long)?.let { Date(it) },
         (parcel.readSerializable() as? Long)?.let { Date(it) }
     )
 
@@ -72,6 +74,7 @@ data class Note(
         parcel.writeInt(if (isPinned) 1 else 0)
         parcel.writeLong(dateEdited.time)
         parcel.writeSerializable(dateDeleted?.time)
+        parcel.writeSerializable(dateAlarm?.time)
     }
 
     override fun describeContents() = 0
