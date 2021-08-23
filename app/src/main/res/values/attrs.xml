@@ -4,4 +4,8 @@
         <attr name="note_background_color" format="color" />
         <attr name="note_foreground_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="RemovableItemView">
+        <attr name="hasRemoveButton" format="boolean" />
+    </declare-styleable>
 </resources>
