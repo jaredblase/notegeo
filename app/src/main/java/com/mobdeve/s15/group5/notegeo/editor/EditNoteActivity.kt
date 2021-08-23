@@ -4,7 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.activity.viewModels
+import androidx.core.view.updateLayoutParams
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -60,20 +62,11 @@ class EditNoteActivity : AppCompatActivity() {
         }
 
         // setup label watcher
-        model.labelName.observe(this) {
-            with(binding.labelTv) {
-                text = it
-                visibility = if (it == null) View.GONE else View.VISIBLE
-            }
-        }
+        model.labelName.observe(this) { updateTags(binding.labelTv, it) }
 
         // TODO: setup alarm listener
-        model.dateAlarm.observe(this) {
-            with(binding.alarmTv) {
-                text = it
-                visibility = if (it == null) View.GONE else View.VISIBLE
-            }
-        }
+        model.dateAlarm.observe(this) { updateTags(binding.alarmTv, it) }
+
         binding.setAlarmBtn.setOnClickListener {
             // today forward constraint
             val constraintsBuilder = CalendarConstraints.Builder()
@@ -138,6 +131,35 @@ class EditNoteActivity : AppCompatActivity() {
             labelTv.setOnRemoveListener { model.assignLabel(null) }
             alarmTv.setOnRemoveListener { model.setDateAlarm(null) }
             locationTv.setOnRemoveListener { /* TODO: Clear Location */ }
+        }
+    }
+
+    /**
+     * Updates the received view with the received string.
+     * Also adjusts the height of the body editor depending
+     * if at least one tag is visible.
+     */
+    private fun updateTags(v: RemovableItemView, t: String?) {
+        if (t == null) {
+            v.visibility = View.GONE
+
+            // check other tags
+            with(binding) {
+                if (labelTv.visibility == View.GONE && alarmTv.visibility == View.GONE && locationTv.visibility == View.GONE) {
+                    tagsHolderFl.visibility = View.GONE
+                    editorBodyEt.updateLayoutParams { height = 0 }
+                }
+            }
+        } else {
+            v.text = t
+            v.visibility = View.VISIBLE
+
+            with(binding) {
+                if (tagsHolderFl.visibility != View.VISIBLE) {
+                    tagsHolderFl.visibility = View.VISIBLE
+                    editorBodyEt.updateLayoutParams { height = WRAP_CONTENT }
+                }
+            }
         }
     }
 

@@ -84,9 +84,11 @@
         android:lineSpacingExtra="1dp"
         android:minHeight="48dp"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editor_title_et" />
+        app:layout_constraintTop_toBottomOf="@+id/editor_title_et"
+        app:layout_constraintVertical_bias="0.001" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
@@ -149,13 +151,15 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/tags_holder_fl"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/note_padding"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="@dimen/note_padding"
         android:orientation="horizontal"
+        app:flexWrap="wrap"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -182,5 +186,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hello World!" />
-    </LinearLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
