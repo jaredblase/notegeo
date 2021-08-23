@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 class RecycleBinViewModel(private val repository: NoteGeoRepository) : ViewModel() {
     val deletedNotes = repository.deletedNotes.asLiveData()

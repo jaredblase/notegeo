@@ -6,7 +6,6 @@
     <color name="dark_headers">#FFF</color>
     <color name="dark_body">#B3FFFFFF</color>
     <color name="dark_category">#66FFFFFF</color>
-    <color name="dark_border">#33FFFFFF</color>
     <color name="dark_status_bar">#121212</color>
     
     <!--  Note Colors  -->
@@ -19,7 +18,6 @@
     <color name="note.color_7">#6A1B9A</color>
 
     <color name="action_blue">#3369FF</color>
-    <color name="black">#000</color>
 
     <color name="transparent">#00000000</color>
 </resources>
