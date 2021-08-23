@@ -7,11 +7,12 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.dpToPx
 
 class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, attrs) {
 
     val backgroundColor: Int
-    var isPaletteSelected = false
+    var isPaletteSelected = true
         set(value) {
             if (field != value) {
                 field = value
@@ -21,8 +22,8 @@ class PaletteHolder(mContext: Context, attrs: AttributeSet?) : View(mContext, at
 
     private val foregroundColor: Int
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val borderWidth = 8F
-    private val innerRadius = 40F
+    private val borderWidth = dpToPx(3).toFloat()
+    private val innerRadius = dpToPx(15).toFloat()
     private val center = innerRadius + borderWidth
 
     init {
