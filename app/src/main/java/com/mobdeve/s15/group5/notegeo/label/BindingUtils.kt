@@ -11,7 +11,7 @@ import com.mobdeve.s15.group5.notegeo.focusAndOpenKeyboard
 
 @BindingAdapter("setIsEditing", "showOnEdit")
 fun ImageButton.setEditingVisibility(isEditing: ObservableBoolean, showOnEdit: Boolean) {
-    visibility = if (isEditing.get() xor showOnEdit) View.GONE else View.VISIBLE
+    visibility = if (isEditing.get() xor showOnEdit) View.INVISIBLE else View.VISIBLE
 }
 
 @BindingAdapter("setIsEditing")
