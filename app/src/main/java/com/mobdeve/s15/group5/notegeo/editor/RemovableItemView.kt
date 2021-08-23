@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.dpToPx
+import kotlin.math.ceil
 
 class RemovableItemView(context: Context, attrs: AttributeSet? = null) :
     androidx.appcompat.widget.AppCompatTextView(context, attrs) {
@@ -19,7 +20,8 @@ class RemovableItemView(context: Context, attrs: AttributeSet? = null) :
 
         compoundDrawablePadding = 14
         val cross = getDrawable(context, R.drawable.ic_cross)!!.apply {
-            setBounds(0, 0, 50, 50)
+            val size = ceil(textSize * 1.2).toInt()
+            setBounds(0, 0, size, size)
         }
 
         setCompoundDrawables(null, null, cross, null)
