@@ -4,10 +4,7 @@
     <string name="app_name.geo">Geo</string>
 
     <string name="search_hint">Search your notes</string>
-    <string name="empty_message">It\'s so clean here…</string>
     <string name="add_label">Add new label</string>
-    <string name="rename">RENAME</string>
-    <string name="add">ADD</string>
 
     <!--  Content Descriptions  -->
     <string name="desc.menu">menu</string>
@@ -32,8 +29,6 @@
     <string name="editor_menu.delete">Delete note</string>
     <string name="editor_menu.copy">Make a copy</string>
     <string name="editor_menu.labels">Labels</string>
-    <string name="editor_menu.add">Add</string>
-    <string name="editor_menu.options">More</string>
 
     <!-- Recycle Bin Menu -->
     <string name="rb_menu.del_select">Delete selected</string>
@@ -62,5 +57,4 @@
     <string name="labels">Labels</string>
     <string name="label.edit">Edit entry</string>
     <string name="label.cancel">Cancel edit</string>
-    <string name="label.save">Save edit</string>
 </resources>
