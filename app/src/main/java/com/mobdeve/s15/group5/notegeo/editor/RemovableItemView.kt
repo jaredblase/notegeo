@@ -2,6 +2,7 @@ package com.mobdeve.s15.group5.notegeo.editor
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -17,6 +18,7 @@ class RemovableItemView(context: Context, attrs: AttributeSet? = null) :
 
     init {
         maxLines = 1
+        ellipsize = TextUtils.TruncateAt.END
         background = getDrawable(context, R.drawable.border)!!
 
         context.obtainStyledAttributes(attrs, R.styleable.RemovableItemView).apply {
