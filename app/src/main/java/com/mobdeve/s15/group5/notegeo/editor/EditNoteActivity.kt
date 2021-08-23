@@ -103,10 +103,14 @@ class EditNoteActivity : AppCompatActivity() {
                     model.setDateAlarm(Date(date + hours + minutes))
                 }
 
-                timePicker.show(supportFragmentManager, TIME_TAG)
+                if (supportFragmentManager.findFragmentByTag(TIME_TAG) == null) {
+                    timePicker.show(supportFragmentManager, TIME_TAG)
+                }
             }
 
-            datePicker.show(supportFragmentManager, DATE_TAG)
+            if (supportFragmentManager.findFragmentByTag(DATE_TAG) == null) {
+                datePicker.show(supportFragmentManager, DATE_TAG)
+            }
         }
 
         // TODO: setup location listener
@@ -132,7 +136,7 @@ class EditNoteActivity : AppCompatActivity() {
             setPinnedBtn.setOnClickListener { model.togglePin() }
 
             labelTv.setOnRemoveListener { model.assignLabel(null) }
-            alarmTv.setOnRemoveListener { /* TODO: Clear Alarm */ }
+            alarmTv.setOnRemoveListener { model.setDateAlarm(null) }
             locationTv.setOnRemoveListener { /* TODO: Clear Location */ }
         }
     }

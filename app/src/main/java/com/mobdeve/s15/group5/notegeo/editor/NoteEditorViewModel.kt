@@ -16,12 +16,13 @@ class NoteEditorViewModel: ViewModel() {
             field = value
             setBgColor(field.note.color)
             setDateEditedText()
+            setDateAlarm(field.note.dateAlarm)
             mPinned.value = field.note.isPinned
             labelName.value = field.label?.name
         }
     val selectedBackgroundColor = MutableLiveData<Int>()
     val dateEdited = MutableLiveData<String>()
-    val dateAlarm = MutableLiveData<String>()
+    val dateAlarm = MutableLiveData<String?>()
     var mPinned = MutableLiveData<Boolean>()
     val isEditing = MutableLiveData<Boolean>()
     val labelName = MutableLiveData<String?>()
@@ -44,9 +45,13 @@ class NoteEditorViewModel: ViewModel() {
         dateEdited.value = "Edited ${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateEdited)}"
     }
 
-    fun setDateAlarm(date: Date) {
+    fun setDateAlarm(date: Date?) {
         noteAndLabel.note.dateAlarm = date
-        dateAlarm.value = "${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateAlarm)}"
+        if (date != null) {
+            dateAlarm.value = "${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateAlarm)}"
+        } else {
+            dateAlarm.value = null
+        }
     }
 
     fun assignLabel(label: Label?) {
