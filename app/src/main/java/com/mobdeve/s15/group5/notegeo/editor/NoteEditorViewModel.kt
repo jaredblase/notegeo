@@ -1,9 +1,11 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mobdeve.s15.group5.notegeo.models.Note
 import android.text.format.DateFormat
+import com.mobdeve.s15.group5.notegeo.alarms.AlarmReceiver
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
@@ -48,9 +50,9 @@ class NoteEditorViewModel: ViewModel() {
     fun setDateAlarm(date: Date?) {
         if (date != noteAndLabel.note.dateAlarm) {
             setDateEditedText(true)
+            noteAndLabel.note.dateAlarm = date
         }
 
-        noteAndLabel.note.dateAlarm = date
         if (date != null) {
             dateAlarm.value = "${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateAlarm)}"
         } else {
@@ -91,11 +93,16 @@ class NoteEditorViewModel: ViewModel() {
     /**
      * other attribute aside from text are saved here.
      */
-    fun finalSave() {
+    fun finalSave(context: Context) {
         with(noteAndLabel.note) {
             color = selectedBackgroundColor.value ?: Note.DEFAULT_COLOR
             isPinned = mPinned.value ?: false
             // TODO: Location and alarm here
+            val alarmReceiver = AlarmReceiver()
+            alarmReceiver.cancelAlarm(context, noteAndLabel.note)
+            if (noteAndLabel.note.dateAlarm != null && noteAndLabel.note.dateAlarm!!.after(Date())) {
+                alarmReceiver.setAlarm(context, noteAndLabel.note)
+            }
         }
     }
 }

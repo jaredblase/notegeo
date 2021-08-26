@@ -188,7 +188,7 @@ class EditNoteActivity : AppCompatActivity() {
         if (model.isEditing.value == true) {
             refreshFields()
         } else if (!model.noteAndLabel.note.isBlank) {
-            model.finalSave()
+            model.finalSave(this)
             setResult(RESULT_OK, Intent(this, MainActivity::class.java).apply {
                 putExtra(NOTE_AND_LABEL, model.noteAndLabel)
             })
