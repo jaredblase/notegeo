@@ -46,6 +46,10 @@ class NoteEditorViewModel: ViewModel() {
     }
 
     fun setDateAlarm(date: Date?) {
+        if (date != noteAndLabel.note.dateAlarm) {
+            setDateEditedText(true)
+        }
+
         noteAndLabel.note.dateAlarm = date
         if (date != null) {
             dateAlarm.value = "${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateAlarm)}"

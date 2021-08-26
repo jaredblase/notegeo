@@ -93,7 +93,12 @@ class EditNoteActivity : AppCompatActivity() {
                 timePicker.addOnPositiveButtonClickListener {
                     val hours = (timePicker.hour - 8) * 3600000
                     val minutes = timePicker.minute * 60000
-                    model.setDateAlarm(Date(date + hours + minutes))
+
+                    if (date + hours + minutes - Calendar.getInstance().timeInMillis < 10 * 60000) {
+                        this.toast("Alarm must be set at least 10 minutes from now!")
+                    } else {
+                        model.setDateAlarm(Date(date + hours + minutes))
+                    }
                 }
 
                 if (supportFragmentManager.findFragmentByTag(TIME_TAG) == null) {
