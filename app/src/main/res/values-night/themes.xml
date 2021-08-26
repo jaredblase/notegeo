@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.NoteGeo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.NoteGeo" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/dark_foreground</item>
         <item name="colorPrimaryVariant">@color/dark_status_bar</item>
@@ -15,6 +15,24 @@
         <item name="android:textColorHint">@color/dark_category</item>
 
         <item name="android:editTextBackground">@null</item>
+        <item name="popupMenuStyle">@style/PopupMenu</item>
+
+        <item name="autoCompleteTextViewStyle">@style/search_view</item>
     </style>
 
+    <style name="PopupMenu" parent="@style/Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@color/dark_foreground</item>
+        <item name="android:textColor">@color/dark_headers</item>
+    </style>
+
+    <style name="search_view" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="colorPrimary">@color/dark_foreground</item>
+        <item name="colorPrimaryDark">@color/dark_background</item>
+    </style>
 </resources>
