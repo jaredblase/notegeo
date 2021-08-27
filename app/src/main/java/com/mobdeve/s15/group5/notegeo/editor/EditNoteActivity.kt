@@ -1,6 +1,7 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
 import android.content.Intent
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -61,11 +62,17 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
-        // setup label watcher
+        // setup label observer
         model.labelName.observe(this) { updateTags(binding.labelTv, it) }
 
-        // TODO: setup alarm listener
-        model.dateAlarm.observe(this) { updateTags(binding.alarmTv, it) }
+        // setup alarm observer
+        model.dateAlarm.observe(this) {
+            updateTags(binding.alarmTv, it)
+            model.noteAndLabel.note.dateAlarm?.time?.let { time ->
+                binding.alarmTv.paintFlags =
+                    if (time <= System.currentTimeMillis()) Paint.STRIKE_THRU_TEXT_FLAG else 0
+            }
+        }
 
         binding.setAlarmBtn.setOnClickListener {
             // today forward constraint
@@ -80,24 +87,26 @@ class EditNoteActivity : AppCompatActivity() {
 
             // ok is pressed
             datePicker.addOnPositiveButtonClickListener {
-                val date = datePicker.selection!!
+                var date = datePicker.selection!!
+                val cal = Calendar.getInstance()
+
                 // instantiate time picker
                 val timePicker = MaterialTimePicker.Builder()
                     .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(12)
-                    .setMinute(10)
+                    .setHour(cal.get(Calendar.HOUR_OF_DAY))
+                    .setMinute(cal.get(Calendar.MINUTE))
                     .setTitleText("SELECT ALARM TIME")
                     .build()
 
                 // ok is pressed
                 timePicker.addOnPositiveButtonClickListener {
-                    val hours = (timePicker.hour - 8) * 3600000
-                    val minutes = timePicker.minute * 60000
+                    date += (timePicker.hour - 8) * 3600000 // hours
+                    date += timePicker.minute * 60000       // minutes
 
-                    if (date + hours + minutes - Calendar.getInstance().timeInMillis < 10 * 60000) {
-                        this.toast("Alarm must be set at least 10 minutes from now!")
+                    if (date - cal.timeInMillis < 60000) {
+                        this.toast("Alarm must be set at least 1 minute from now!")
                     } else {
-                        model.setDateAlarm(Date(date + hours + minutes))
+                        model.setDateAlarm(Date(date))
                     }
                 }
 

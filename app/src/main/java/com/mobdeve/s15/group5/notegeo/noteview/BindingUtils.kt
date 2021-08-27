@@ -1,5 +1,6 @@
 package com.mobdeve.s15.group5.notegeo.noteview
 
+import android.graphics.Paint
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.ImageView
@@ -52,6 +53,10 @@ fun TextView.setDateAlarm(item: NoteAndLabel) {
     if (item.note.dateAlarm != null) {
         text = "${DateFormat.format("dd MMM yy kk:mm", item.note.dateAlarm)}"
         visibility = View.VISIBLE
+
+        if (item.note.dateAlarm!!.time <= System.currentTimeMillis()) {
+            paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+        }
     } else {
         visibility = View.GONE
     }
