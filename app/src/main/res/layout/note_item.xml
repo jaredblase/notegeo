@@ -55,8 +55,7 @@
             <ImageView
                 android:layout_width="17dp"
                 android:layout_height="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginTop="16dp"
                 android:contentDescription="@string/desc.is_pinned"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
