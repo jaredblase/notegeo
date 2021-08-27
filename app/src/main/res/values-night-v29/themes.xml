@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.NoteGeo" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="colorPrimary">@color/dark_foreground</item>
+        <item name="colorPrimaryVariant">@color/dark_status_bar</item>
+        <item name="colorOnPrimary">@color/dark_body</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/dark_background</item>
+        <item name="android:textColor">@color/dark_headers</item>
+        <item name="android:textColorHint">@color/dark_category</item>
+
+        <item name="android:editTextBackground">@null</item>
+        <item name="popupMenuStyle">@style/PopupMenu</item>
+
+        <item name="autoCompleteTextViewStyle">@style/search_view</item>
+    </style>
+</resources>
