@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -48,7 +49,9 @@ class  NotificationUtils(base: Context) : ContextWrapper(base) {
         return NotificationCompat.Builder(applicationContext, MYCHANNEL_ID)
             .setContentTitle("Reminder!")
             .setContentText(text)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_notification))
+            .setColor(getColor(R.color.dark_background))
             .setContentIntent(pendingIntent)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
             .setAutoCancel(true)
