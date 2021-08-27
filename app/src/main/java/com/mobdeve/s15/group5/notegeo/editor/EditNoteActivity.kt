@@ -129,7 +129,7 @@ class EditNoteActivity : AppCompatActivity() {
         }
 
         with(binding) {
-            editorSaveBtn.setOnClickListener { model.save(this); clearFocus(it) }
+            editorSaveBtn.setOnClickListener { if (model.save(this)) clearFocus(it) }
             editorCancelBtn.setOnClickListener { refreshFields(); clearFocus(it) }
             setPinnedBtn.setOnClickListener { model.togglePin() }
 

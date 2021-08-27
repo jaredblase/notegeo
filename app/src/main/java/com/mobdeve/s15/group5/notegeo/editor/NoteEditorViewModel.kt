@@ -72,11 +72,11 @@ class NoteEditorViewModel: ViewModel() {
     /**
      * saves text edits, requires user confirmation since they are more critical/essential.
      */
-    fun save(binding: ActivityEditNoteBinding) {
+    fun save(binding: ActivityEditNoteBinding): Boolean {
         val titleText = binding.editorTitleEt.text.toString().trim()
         val bodyText = binding.editorBodyEt.text.toString().trim()
 
-        if (titleText.isNotEmpty() || titleText.isNotEmpty()) {
+        return if (titleText.isNotEmpty() || bodyText.isNotEmpty()) {
             with(noteAndLabel.note) {
                 title = titleText
                 body = bodyText
@@ -85,8 +85,10 @@ class NoteEditorViewModel: ViewModel() {
             setDateEditedText(true)
             isEditing.value = false
             binding.root.context.toast("Saved!")
+            true
         } else {
             binding.root.context.toast("Cannot save blank note!")
+            false
         }
     }
 
