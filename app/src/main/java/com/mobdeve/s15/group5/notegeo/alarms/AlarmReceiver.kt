@@ -37,8 +37,10 @@ class AlarmReceiver: BroadcastReceiver() {
             putExtra(ID_KEY, note._id)
             putExtra(TITLE_KEY, note.title)
         }
-        val pendingIntent = PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, date.time, pendingIntent)
+
+        PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT).let {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, date.time, it)
+        }
     }
 
     fun cancelAlarm(context: Context, note: Note) {
@@ -49,9 +51,9 @@ class AlarmReceiver: BroadcastReceiver() {
             putExtra(ID_KEY, note._id)
             putExtra(TITLE_KEY, note.title)
         }
-        val pendingIntent = PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        if (pendingIntent != null) {
-            alarmManager.cancel(pendingIntent)
+
+        PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)?.let {
+            alarmManager.cancel(it)
         }
     }
 
