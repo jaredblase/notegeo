@@ -6,6 +6,9 @@ import android.view.View
 import androidx.annotation.DimenRes
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * A class that defines the spacing between each note item in the recycler view.
+ */
 class ItemOffsetDecoration(private val mItemOffset: Int) : RecyclerView.ItemDecoration() {
     constructor(context: Context, @DimenRes itemOffsetId: Int) : this(
         context.resources.getDimensionPixelSize(itemOffsetId)
