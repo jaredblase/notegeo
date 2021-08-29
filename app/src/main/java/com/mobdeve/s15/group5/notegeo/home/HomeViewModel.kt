@@ -1,6 +1,8 @@
 package com.mobdeve.s15.group5.notegeo.home
 
+import android.content.Context
 import androidx.lifecycle.*
+import com.mobdeve.s15.group5.notegeo.alarms.AlarmReceiver
 import com.mobdeve.s15.group5.notegeo.models.Note
 import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
 import kotlinx.coroutines.launch
@@ -28,8 +30,15 @@ class HomeViewModel(private val repository: NoteGeoRepository) : ViewModel() {
         isGridView.value = isGridView.value?.not()
     }
 
-    fun recycleNotes(ids: List<Long>?) = viewModelScope.launch {
-        ids?.let { repository.recycleNotes(it) }
+    fun recycleNotes(ids: List<Long>?, context: Context) = viewModelScope.launch {
+        ids?.let {
+            savedNotes.value?.forEach { noteAndLabel ->
+                if (noteAndLabel.note._id in it) {
+                    AlarmReceiver().cancelAlarm(context, noteAndLabel.note)
+                }
+            }
+            repository.recycleNotes(it)
+        }
     }
 
     fun recycleNote(id: Long) = viewModelScope.launch { repository.recycleNotes(listOf(id)) }

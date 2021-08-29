@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             })
 
             // set click listeners
-            homeDeleteBtn.setOnClickListener { model.recycleNotes(adapter.tracker?.selection?.toList()) }
+            homeDeleteBtn.setOnClickListener { model.recycleNotes(adapter.tracker?.selection?.toList(), applicationContext) }
             sideMenuBtn.setOnClickListener { mainDl.open() }
             changeLayoutBtn.setOnClickListener { model.toggleView() }
             addNoteFab.setOnClickListener { launchEditor() }

@@ -35,7 +35,7 @@ interface NoteDao {
     @Update
     suspend fun update(vararg note: Note)
 
-    @Query("UPDATE note SET dateDeleted = :date, isPinned = 0 WHERE _id IN (:ids)")
+    @Query("UPDATE note SET dateDeleted = :date, isPinned = 0, dateAlarm = null WHERE _id IN (:ids)")
     suspend fun recycleNotes(ids: List<Long>, date: Date)
 
     @Query("DELETE FROM note WHERE _id IN (:ids)")
