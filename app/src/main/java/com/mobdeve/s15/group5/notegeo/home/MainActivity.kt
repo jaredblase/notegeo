@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -175,10 +176,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (adapter.tracker?.hasSelection() == true) {
-            adapter.tracker?.clearSelection()
-        } else {
-            super.onBackPressed()
+        when {
+            adapter.tracker?.hasSelection() == true -> {
+                adapter.tracker?.clearSelection()
+            }
+            binding.mainDl.isDrawerOpen(GravityCompat.START) -> {
+                binding.mainDl.closeDrawers()
+            }
+            else -> {
+                super.onBackPressed()
+            }
         }
     }
 
