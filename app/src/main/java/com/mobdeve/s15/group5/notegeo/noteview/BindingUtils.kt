@@ -54,9 +54,7 @@ fun TextView.setDateAlarm(item: NoteAndLabel) {
         text = "${DateFormat.format("dd MMM yy kk:mm", item.note.dateAlarm)}"
         visibility = View.VISIBLE
 
-        if (item.note.dateAlarm!!.time <= System.currentTimeMillis()) {
-            paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-        }
+        paintFlags = if (item.note.dateAlarm!!.time <= System.currentTimeMillis()) Paint.STRIKE_THRU_TEXT_FLAG else 0
     } else {
         visibility = View.GONE
     }
