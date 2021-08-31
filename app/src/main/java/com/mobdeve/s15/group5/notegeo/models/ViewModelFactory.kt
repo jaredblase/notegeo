@@ -6,20 +6,24 @@ import com.mobdeve.s15.group5.notegeo.editor.NoteEditorViewModel
 import com.mobdeve.s15.group5.notegeo.home.HomeViewModel
 import com.mobdeve.s15.group5.notegeo.label.LabelViewModel
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import java.lang.IllegalArgumentException
 
-class ViewModelFactory(private val repository: NoteGeoRepository) : ViewModelProvider.Factory {
+class ViewModelFactory(
+    private val repository: NoteGeoRepository,
+    private val dispatcher: CoroutineDispatcher
+) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(LabelViewModel::class.java) -> {
-                LabelViewModel(repository) as T
+                LabelViewModel(repository, dispatcher) as T
             }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(repository) as T
+                HomeViewModel(repository, dispatcher) as T
             }
             modelClass.isAssignableFrom(RecycleBinViewModel::class.java) -> {
-                RecycleBinViewModel(repository) as T
+                RecycleBinViewModel(repository, dispatcher) as T
             }
             modelClass.isAssignableFrom(NoteEditorViewModel::class.java) -> {
                 NoteEditorViewModel() as T

@@ -6,10 +6,15 @@ import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
 import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
 import com.mobdeve.s15.group5.notegeo.toast
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
+class LabelViewModel(
+    private val repository: NoteGeoRepository,
+    private val dispatcher: CoroutineDispatcher
+) :
+    ViewModel() {
     val repoLabels = repository.allLabels.asLiveData()
     val allLabels = MutableLiveData<List<Label>>()
     val numSelected = MutableLiveData(0)
@@ -23,7 +28,7 @@ class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
         repository.updateLabel(label)
     }
 
-    fun deleteSelectedLabels() = viewModelScope.launch {
+    fun deleteSelectedLabels() = viewModelScope.launch(dispatcher) {
         allLabels.value?.run {
             val (toDelete, toSave) = partition { it.isChecked.get() }
 
@@ -34,7 +39,7 @@ class LabelViewModel(private val repository: NoteGeoRepository) : ViewModel() {
     }
 
     fun addLabel(binding: ActivityLabelBinding, context: Context) =
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             val text = binding.addLabelEt.text.toString()
             // checks
             when {

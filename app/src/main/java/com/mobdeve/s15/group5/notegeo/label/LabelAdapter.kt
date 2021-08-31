@@ -12,6 +12,7 @@ import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.LabelItemBinding
 import com.mobdeve.s15.group5.notegeo.models.Label
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
+import kotlinx.coroutines.Dispatchers
 
 open class LabelAdapter :
     ListAdapter<Label, LabelAdapter.LabelViewHolder>(LabelComparator()) {
@@ -27,7 +28,7 @@ open class LabelAdapter :
         layoutManager = recyclerView.layoutManager!!
         model = ViewModelProvider(
             activity,
-            ViewModelFactory((activity.applicationContext as NoteGeoApplication).repo)
+            ViewModelFactory((activity.applicationContext as NoteGeoApplication).repo, Dispatchers.Default)
         ).get(LabelViewModel::class.java)
     }
 

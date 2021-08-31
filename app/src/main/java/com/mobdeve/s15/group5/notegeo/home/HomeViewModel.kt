@@ -1,13 +1,20 @@
 package com.mobdeve.s15.group5.notegeo.home
 
 import android.content.Context
+import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.*
 import com.mobdeve.s15.group5.notegeo.alarms.AlarmReceiver
 import com.mobdeve.s15.group5.notegeo.models.Note
 import com.mobdeve.s15.group5.notegeo.models.NoteGeoRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repository: NoteGeoRepository) : ViewModel() {
+class HomeViewModel(
+    private val repository: NoteGeoRepository,
+    private val dispatcher: CoroutineDispatcher
+) : ViewModel() {
     val savedNotes = repository.savedNotes.asLiveData()
     val isGridView = MutableLiveData(true)
 
@@ -30,7 +37,7 @@ class HomeViewModel(private val repository: NoteGeoRepository) : ViewModel() {
         isGridView.value = isGridView.value?.not()
     }
 
-    fun recycleNotes(ids: List<Long>?, context: Context) = viewModelScope.launch {
+    fun recycleNotes(ids: List<Long>?, context: Context) = viewModelScope.launch(dispatcher) {
         ids?.let {
             savedNotes.value?.forEach { noteAndLabel ->
                 if (noteAndLabel.note._id in it) {
@@ -41,11 +48,12 @@ class HomeViewModel(private val repository: NoteGeoRepository) : ViewModel() {
         }
     }
 
-    fun recycleNote(id: Long) = viewModelScope.launch { repository.recycleNotes(listOf(id)) }
+    fun recycleNote(id: Long) =
+        viewModelScope.launch(dispatcher) { repository.recycleNotes(listOf(id)) }
 
     fun upsertNote(note: Note) {
         lastSavedNote = note
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             repository.upsertNote(note)
         }
     }

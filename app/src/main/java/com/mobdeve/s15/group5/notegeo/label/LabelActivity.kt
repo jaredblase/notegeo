@@ -13,13 +13,14 @@ import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityLabelBinding
 import com.mobdeve.s15.group5.notegeo.editor.EditorMenuFragment
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
+import kotlinx.coroutines.Dispatchers
 import kotlin.properties.Delegates
 
 class LabelActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLabelBinding
     private lateinit var popup: PopupMenu
     private var isSelecting by Delegates.notNull<Boolean>()
-    private val model by viewModels<LabelViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
+    private val model by viewModels<LabelViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.Default) }
     private lateinit var adapter: LabelAdapter
 
     private val rv

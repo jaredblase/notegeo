@@ -28,11 +28,12 @@ import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
 import com.mobdeve.s15.group5.notegeo.noteview.NoteDetailsLookup
 import com.mobdeve.s15.group5.notegeo.noteview.NoteKeyProvider
 import com.mobdeve.s15.group5.notegeo.toast
+import kotlinx.coroutines.Dispatchers
 import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val model by viewModels<HomeViewModel> { ViewModelFactory((application as NoteGeoApplication).repo) }
+    private val model by viewModels<HomeViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.Default) }
     private val adapter = NoteAdapter { launchEditor(it) }
     private val smoothScroller by lazy {
         object : LinearSmoothScroller(this) {

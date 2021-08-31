@@ -99,12 +99,14 @@ class NoteEditorViewModel: ViewModel() {
         with(noteAndLabel.note) {
             color = selectedBackgroundColor.value ?: Note.DEFAULT_COLOR
             isPinned = mPinned.value ?: false
-            // TODO: Location and alarm here
+
             val alarmReceiver = AlarmReceiver()
             alarmReceiver.cancelAlarm(context, noteAndLabel.note)
             if (noteAndLabel.note.dateAlarm != null && noteAndLabel.note.dateAlarm!!.after(Date())) {
                 alarmReceiver.setAlarm(context, noteAndLabel.note)
             }
+
+            // TODO: Location here
         }
     }
 }
