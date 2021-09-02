@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mobdeve.s15.group5.notegeo">
 
     <application
@@ -10,12 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteGeo">
+        <service
+            android:name=".alarms.UpdateService"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedService" />
+
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/SplashTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -31,11 +39,11 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".home.MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+
         <receiver
-                android:name=".alarms.AlarmReceiver"
-                android:enabled="true"/>
+            android:name=".alarms.AlarmReceiver"
+            android:enabled="true" />
     </application>
 
 </manifest>

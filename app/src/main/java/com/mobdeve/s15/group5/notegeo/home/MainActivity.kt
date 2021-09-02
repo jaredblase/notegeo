@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // get data from db
-        model.savedNotes.observe(this) {
+        model.savedNotes.observeForever {
             adapter.modifyList(it)
             binding.progressIndicator.visibility = View.GONE
             adapter.filter(binding.homeSv.query)
