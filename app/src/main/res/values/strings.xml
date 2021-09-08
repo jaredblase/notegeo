@@ -57,4 +57,7 @@
     <string name="labels">Labels</string>
     <string name="label.edit">Edit entry</string>
     <string name="label.cancel">Cancel edit</string>
+
+    <!--- Google API Key -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDrtyQDzVlh6_7bYOegT0rksslYCbqkDk0</string>
 </resources>

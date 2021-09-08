@@ -3,6 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mobdeve.s15.group5.notegeo">
 
+    <!--For geofencing -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="@string/google_maps_key" />
+
     <application
         android:name=".NoteGeoApplication"
         android:allowBackup="false"
@@ -44,6 +53,7 @@
         <receiver
             android:name=".alarms.AlarmReceiver"
             android:enabled="true" />
+        <!--  <receiver android:name=".GeofenceReceiver"/>   -->
     </application>
 
 </manifest>
