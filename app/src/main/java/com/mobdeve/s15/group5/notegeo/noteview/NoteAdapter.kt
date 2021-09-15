@@ -15,16 +15,8 @@ class NoteAdapter(private val onItemClick: (NoteAndLabel) -> Unit) :
     ListAdapter<NoteAndLabel, NoteAdapter.ViewHolder>(NoteComparator()) {
     var tracker: SelectionTracker<Long>? = null
     private lateinit var context: Context
-    private lateinit var data: MutableList<NoteAndLabel>
 
-    init {
-        setHasStableIds(true)
-    }
-
-    fun modifyList(list: MutableList<NoteAndLabel>) {
-        data = list
-        submitList(list)
-    }
+    init { setHasStableIds(true) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -40,22 +32,6 @@ class NoteAdapter(private val onItemClick: (NoteAndLabel) -> Unit) :
     }
 
     override fun getItemId(position: Int) = getItem(position).note._id
-
-    /**
-     * Filters the items to display depending if the char sequence received is present in the notes.
-     */
-    fun filter(query: CharSequence?) {
-        if (!query.isNullOrEmpty()) {
-            // submit a filtered list. Checks the sequence in the title, body, and label.
-            submitList(data.filter {
-                it.note.title.contains(query, true) ||
-                it.note.body.contains(query, true) ||
-                it.label?.name?.contains(query, true) == true
-            }.toMutableList())
-        } else {
-            submitList(data.toCollection(mutableListOf()))  // resubmit the whole list
-        }
-    }
 
     inner class ViewHolder(private val binding: NoteItemBinding, onItemClick: (Int) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {

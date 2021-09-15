@@ -16,10 +16,8 @@ import com.google.android.material.timepicker.TimeFormat
 import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
-import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
-import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import kotlinx.coroutines.Dispatchers
 import java.util.*
 

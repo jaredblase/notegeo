@@ -4,7 +4,11 @@
     <string name="app_name.geo">Geo</string>
 
     <string name="search_hint">Search your notes</string>
+    <string name="edit_note_hint">Tap here to edit…</string>
     <string name="add_label">Add new label</string>
+    <string name="confirm_singular_note_delete">Delete this note?</string>
+    <string name="confirm_selection_delete">Delete selection?</string>
+    <string name="confirm_all_delete">Delete everything here?</string>
 
     <!--  Content Descriptions  -->
     <string name="desc.menu">menu</string>
@@ -50,7 +54,6 @@
 
     <!--  Placeholders  -->
     <string name="title">Title</string>
-    <string name="note">Note</string>
 
     <!-- Activity Labels -->
     <string name="recycle_bin">Recycle Bin</string>

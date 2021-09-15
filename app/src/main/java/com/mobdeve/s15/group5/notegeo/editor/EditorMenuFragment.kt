@@ -10,6 +10,7 @@ import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.buildConfirmationDialog
 import com.mobdeve.s15.group5.notegeo.databinding.FragmentEditorMenuBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.label.LabelActivity
@@ -18,13 +19,14 @@ import com.mobdeve.s15.group5.notegeo.toast
 class EditorMenuFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEditorMenuBinding
     private val model by activityViewModels<NoteEditorViewModel>()
-    private val selectLabelLauncher = registerForActivityResult(StartActivityForResult()) { result ->
-        // A label was selected
-        result.data?.let {
-            model.assignLabel(it.getParcelableExtra(LabelActivity.LABEL))
+    private val selectLabelLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            // A label was selected
+            result.data?.let {
+                model.assignLabel(it.getParcelableExtra(LabelActivity.LABEL))
+            }
+            dismiss()
         }
-        dismiss()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,21 +38,29 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
             when (it.itemId) {
                 R.id.editor_delete_btn -> {
                     activity?.run {
-                        setResult(EditNoteActivity.DELETE, Intent(context, MainActivity::class.java).apply {
-                            putExtra(EditNoteActivity.NOTE_AND_LABEL, model.noteAndLabel)
-                        })
-                        finish()
+                        buildConfirmationDialog(getString(R.string.confirm_singular_note_delete)) { _, _ ->
+                            setResult(
+                                EditNoteActivity.DELETE,
+                                Intent(context, MainActivity::class.java).apply {
+                                    putExtra(
+                                        EditNoteActivity.NOTE_AND_LABEL,
+                                        model.noteAndLabel
+                                    )
+                                })
+                            finish()
+                        }.show()
                     }
-                    dismiss()
                     true
                 }
 
                 R.id.editor_copy_btn -> {
                     if (!model.noteAndLabel.note.isBlank) {
                         activity?.run {
-                            setResult(EditNoteActivity.DUPLICATE, Intent(context, MainActivity::class.java).apply {
-                                putExtra(EditNoteActivity.NOTE_AND_LABEL, model.noteAndLabel)
-                            })
+                            setResult(
+                                EditNoteActivity.DUPLICATE,
+                                Intent(context, MainActivity::class.java).apply {
+                                    putExtra(EditNoteActivity.NOTE_AND_LABEL, model.noteAndLabel)
+                                })
                             finish()
                         }
                     } else {
@@ -79,7 +89,8 @@ class EditorMenuFragment : BottomSheetDialogFragment() {
         val colorSelectionView = binding.editorMnu.getHeaderView(0) as ViewGroup
         colorSelectionView.children.forEach { paletteHolder ->
             paletteHolder as PaletteHolder
-            paletteHolder.isSelected = paletteHolder.backgroundColor == model.selectedBackgroundColor.value
+            paletteHolder.isSelected =
+                paletteHolder.backgroundColor == model.selectedBackgroundColor.value
 
             paletteHolder.setOnClickListener {
                 it as PaletteHolder

@@ -11,6 +11,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.buildConfirmationDialog
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityRecycleBinBinding
 import com.mobdeve.s15.group5.notegeo.noteview.*
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
@@ -68,9 +69,17 @@ class RecycleBinActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.recycle_bin_menu, popup.menu)
         popup.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.rb_delete_selected_btn -> model.delete(adapter.tracker?.selection?.toList())
+                R.id.rb_delete_selected_btn -> {
+                    buildConfirmationDialog(getString(R.string.confirm_selection_delete)) { _, _ ->
+                        model.delete(adapter.tracker?.selection?.toList())
+                    }.show()
+                }
                 R.id.rb_restore_selected_btn -> model.restore(adapter.tracker?.selection?.toList())
-                R.id.delete_all_btn -> model.deleteAll()
+                R.id.delete_all_btn -> {
+                    buildConfirmationDialog(getString(R.string.confirm_all_delete)) { _, _ ->
+                        model.deleteAll()
+                    }.show()
+                }
                 R.id.restore_all_btn -> model.restoreAll()
             }
             tracker.clearSelection()

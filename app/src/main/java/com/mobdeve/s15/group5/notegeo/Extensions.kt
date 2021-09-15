@@ -2,11 +2,13 @@ package com.mobdeve.s15.group5.notegeo
 
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.DialogInterface
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 fun View.dpToPx(dp: Int): Int {
@@ -15,6 +17,13 @@ fun View.dpToPx(dp: Int): Int {
 }
 
 fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+fun Context.buildConfirmationDialog(message: String, posAction: DialogInterface.OnClickListener) =
+    AlertDialog.Builder(this)
+        .setMessage(message)
+        .setPositiveButton("DELETE", posAction)
+        .setNegativeButton("CANCEL") { dialog, _ -> dialog.dismiss() }
+        .create()
 
 fun AppCompatActivity.focusAndOpenKeyboard(v: View) {
     v.requestFocus()
@@ -30,9 +39,9 @@ fun AppCompatActivity.hideKeyboard(v: View) {
 }
 
 class MyWatcher(private val fn: (Editable?) -> Unit) : TextWatcher {
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
     override fun afterTextChanged(s: Editable?) = fn(s)
 }

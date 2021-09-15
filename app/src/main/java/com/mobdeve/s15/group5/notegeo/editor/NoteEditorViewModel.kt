@@ -12,7 +12,7 @@ import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.toast
 import java.util.Date
 
-class NoteEditorViewModel: ViewModel() {
+class NoteEditorViewModel : ViewModel() {
     var noteAndLabel = NoteAndLabel()
         set(value) {
             field = value
@@ -44,7 +44,8 @@ class NoteEditorViewModel: ViewModel() {
         if (toUpdate) {
             noteAndLabel.note.dateEdited = Date()
         }
-        dateEdited.value = "Edited ${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateEdited)}"
+        dateEdited.value =
+            "Edited ${DateFormat.format("dd MMM yy kk:mm", noteAndLabel.note.dateEdited)}"
     }
 
     fun setDateAlarm(date: Date?) {
@@ -95,18 +96,16 @@ class NoteEditorViewModel: ViewModel() {
     /**
      * other attribute aside from text are saved here.
      */
-    fun finalSave(context: Context) {
-        with(noteAndLabel.note) {
-            color = selectedBackgroundColor.value ?: Note.DEFAULT_COLOR
-            isPinned = mPinned.value ?: false
+    fun finalSave(context: Context) = with(noteAndLabel.note) {
+        color = selectedBackgroundColor.value ?: Note.DEFAULT_COLOR
+        isPinned = mPinned.value ?: false
 
-            val alarmReceiver = AlarmReceiver()
-            alarmReceiver.cancelAlarm(context, noteAndLabel.note)
-            if (noteAndLabel.note.dateAlarm != null && noteAndLabel.note.dateAlarm!!.after(Date())) {
-                alarmReceiver.setAlarm(context, noteAndLabel.note)
-            }
-
-            // TODO: Location here
+        val alarmReceiver = AlarmReceiver()
+        alarmReceiver.cancelAlarm(context, this)
+        if (dateAlarm != null && dateAlarm!!.after(Date())) {
+            alarmReceiver.setAlarm(context, this)
         }
+
+        // TODO: Location here
     }
 }

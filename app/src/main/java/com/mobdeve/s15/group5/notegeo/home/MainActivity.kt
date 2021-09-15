@@ -19,6 +19,7 @@ import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
 import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.R
+import com.mobdeve.s15.group5.notegeo.buildConfirmationDialog
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
@@ -33,7 +34,12 @@ import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val model by viewModels<HomeViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.Default) }
+    private val model by viewModels<HomeViewModel> {
+        ViewModelFactory(
+            (application as NoteGeoApplication).repo,
+            Dispatchers.Default
+        )
+    }
     private val adapter = NoteAdapter { launchEditor(it) }
     private val smoothScroller by lazy {
         object : LinearSmoothScroller(this) {
@@ -77,9 +83,8 @@ class MainActivity : AppCompatActivity() {
 
         // get data from db
         model.savedNotes.observeForever {
-            adapter.modifyList(it)
             binding.progressIndicator.visibility = View.GONE
-            adapter.filter(binding.homeSv.query)
+            model.filterNotes(adapter, binding.homeSv.query)
             binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
 
@@ -107,6 +112,8 @@ class MainActivity : AppCompatActivity() {
                 binding.notesListRv.layoutManager?.startSmoothScroll(smoothScroller)
             }
         }
+
+        model.filterReminders.observe(this) { model.filterNotes(adapter, binding.homeSv.query) }
 
         // setup recycler view
         binding.notesListRv.let {
@@ -137,18 +144,11 @@ class MainActivity : AppCompatActivity() {
         // setup menu
         binding.drawerMenu.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.notes_menu_btn -> {
-                    // TODO: Remove any filters
-                }
-
-                R.id.reminders_menu_btn -> {
-                    // TODO: Filter to only be notes with reminders
-                }
-
+                R.id.notes_menu_btn -> model.filterReminders.value = false
+                R.id.reminders_menu_btn -> model.filterReminders.value = true
                 R.id.deleted_menu_btn -> {
                     startActivity(Intent(this, RecycleBinActivity::class.java))
                 }
-
                 R.id.labels_menu_btn -> {
                     startActivity(Intent(this, LabelActivity::class.java))
                 }
@@ -163,13 +163,17 @@ class MainActivity : AppCompatActivity() {
                 override fun onQueryTextSubmit(query: String?) = false
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    adapter.filter(newText)
+                    model.filterNotes(adapter, newText)
                     return true
                 }
             })
 
             // set click listeners
-            homeDeleteBtn.setOnClickListener { model.recycleNotes(adapter.tracker?.selection?.toList(), applicationContext) }
+            homeDeleteBtn.setOnClickListener {
+                buildConfirmationDialog(getString(R.string.confirm_selection_delete)) { _, _ ->
+                    model.recycleNotes(adapter.tracker?.selection?.toList(), applicationContext)
+                }.show()
+            }
             sideMenuBtn.setOnClickListener { mainDl.open() }
             changeLayoutBtn.setOnClickListener { model.toggleView() }
             addNoteFab.setOnClickListener { launchEditor() }
@@ -178,15 +182,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         when {
-            adapter.tracker?.hasSelection() == true -> {
-                adapter.tracker?.clearSelection()
-            }
-            binding.mainDl.isDrawerOpen(GravityCompat.START) -> {
-                binding.mainDl.closeDrawers()
-            }
-            else -> {
-                super.onBackPressed()
-            }
+            adapter.tracker?.hasSelection() == true -> adapter.tracker?.clearSelection()
+            binding.mainDl.isDrawerOpen(GravityCompat.START) -> binding.mainDl.closeDrawers()
+            else -> super.onBackPressed()
         }
     }
 
