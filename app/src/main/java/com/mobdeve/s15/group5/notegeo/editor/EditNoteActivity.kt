@@ -37,6 +37,7 @@ import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_FO
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
+import java.text.DecimalFormat
 import java.util.*
 
 class EditNoteActivity : AppCompatActivity() {
@@ -54,8 +55,17 @@ class EditNoteActivity : AppCompatActivity() {
                 if (result.resultCode == RESULT_OK) {
                     val rad = getDoubleExtra(MapsActivity.RADIUS, 1.0)
                     val latLng = getParcelableExtra<LatLng>(MapsActivity.LAT_LNG)
-
-                    updateTags(binding.locationTv, latLng.toString()) // TODO: How would you like to format the label?
+                    val dec = DecimalFormat("0.00")
+                    if (latLng != null) {
+                        val lati = dec.format(latLng.latitude)
+                        val longi = dec.format(latLng.longitude)
+                        updateTags(binding.locationTv, "Latitude: $lati,Longitude: $longi, $rad")
+                    }else {
+                        updateTags(
+                            binding.locationTv,
+                            null
+                        )
+                    }
 
                     // save to note in model
                     model.noteAndLabel.note.apply {
