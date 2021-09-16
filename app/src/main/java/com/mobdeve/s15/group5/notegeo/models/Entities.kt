@@ -53,7 +53,7 @@ data class Note(
     var dateDeleted: Date? = null,
     var dateAlarm: Date? = null,
     var coordinates: LatLng? = null,
-    var radius: Double = 0.0
+    var radius: Double = 10.0
 ) : Parcelable {
     val isBlank
         get() = title.isBlank() && body.isBlank()
