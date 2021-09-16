@@ -59,7 +59,7 @@ data class Note(
         get() = title.isBlank() && body.isBlank()
 
     val hasReminders
-        get() = dateAlarm != null // TODO: add "or has geo reminder"
+        get() = dateAlarm != null || coordinates != null // TODO: add "or has geo reminder"
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),

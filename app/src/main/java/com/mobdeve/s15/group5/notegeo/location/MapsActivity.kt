@@ -18,10 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.Circle
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMapsBinding
@@ -43,6 +40,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var circle: Circle? = null
+    private var marker: Marker? = null
+    private var geofence: Geofence? = null
 
 
     private val geofencePendingIntent: PendingIntent by lazy {
@@ -70,18 +69,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         val zoomLevel = 15f
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                if (location != null) {
-                    val currLatLng = LatLng(location.latitude, location.longitude)
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currLatLng, zoomLevel))
-                } else {
-                    Log.d("MapsActivity", "Location is null")
+        if (model.noteAndLabel.note.coordinates == null) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) {
+                        val currLatLng = LatLng(location.latitude, location.longitude)
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currLatLng, zoomLevel))
+                    } else {
+                        Log.d("MapsActivity", "Location is null")
+                    }
                 }
-            }
-            .addOnFailureListener {
-                Log.d("MapsActivity", "onFailure " + it.localizedMessage)
-            }
+                .addOnFailureListener {
+                    Log.d("MapsActivity", "onFailure " + it.localizedMessage)
+                }
+        } else {
+            Log.d("MapsActivity", "onMapReady: COORDINATES SAVED ")
+            map.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    model.noteAndLabel.note.coordinates,
+                    zoomLevel+30
+                )
+            )
+            map.addMarker(MarkerOptions().position(model.noteAndLabel.note.coordinates))
+            map.addCircle(
+                CircleOptions().center(model.noteAndLabel.note.coordinates)
+                    .radius(model.noteAndLabel.note.radius + 50)
+                    .fillColor(ContextCompat.getColor(this, R.color.transparent))
+                    .strokeColor(ContextCompat.getColor(this, R.color.note_color_7))
+            )
+        }
         setMarker(map)
         enableMyLocation()
     }
@@ -126,14 +142,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //Adds a marker and its geofence circle
     private fun setMarker(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
-            map.addMarker(
-                MarkerOptions()
-                    .position(latLng)
-            )
-            addCircle(latLng, GEOFENCE_RADIUS)
-            addGeofence(latLng, GEOFENCE_RADIUS)
+            marker?.remove()
+            addMarker(latLng)
+            addCircle(latLng, model.noteAndLabel.note.radius + 50)
+            addGeofence(latLng, model.noteAndLabel.note.radius + 50)
+            model.noteAndLabel.note.coordinates = latLng
 
         }
+    }
+
+    private fun addMarker(latLng: LatLng) {
+        marker = map.addMarker(
+            MarkerOptions()
+                .position(latLng)
+        )
+
     }
 
     private fun addCircle(latLng: LatLng, radius: Double) {
@@ -147,28 +170,56 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
-    fun addGeofence(latLng: LatLng, radius: Double) {
-        val geofence = Geofence.Builder()
-            .setCircularRegion(
-                latLng.latitude, latLng.longitude, radius.toFloat()
-            )
-            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
-            .setRequestId(SOME_ID)
-            .setExpirationDuration(NEVER_EXPIRE.toLong())
-            .build()
 
-        geofencingClient.addGeofences(getGeofencingRequest(geofence), geofencePendingIntent).run {
-            addOnSuccessListener { Log.d("MapsActivity", "Geofence Added") }
+    private fun addGeofence(latLng: LatLng, radius: Double) {
+        if (model.noteAndLabel.note.coordinates != null) {
+            removeGeofence()
+        }
+
+        geofence = getGeofence(latLng, radius)
+        val geoRequest: GeofencingRequest = getGeofencingRequest()
+
+        geofencingClient.addGeofences(geoRequest, geofencePendingIntent).run {
+            addOnSuccessListener {
+                Log.d("MapsActivity", "Geofence Added")
+            }
+            addOnFailureListener {
+                Log.d("MapsActivity", it.stackTraceToString())
+            }
+            addOnCompleteListener {
+                Log.d("MapsActivity", "GEOFENCE ACTIVATED")
+            }
         }
 
     }
 
+    private fun removeGeofence() {
+        geofencingClient.removeGeofences(geofencePendingIntent).run {
+            addOnSuccessListener {
+                Log.d("MapsActivity", "Geofence Deleted")
+            }
+        }
+    }
 
-    private fun getGeofencingRequest(geofence: Geofence): GeofencingRequest {
+
+    private fun getGeofence(latLng: LatLng, radius: Double): Geofence {
+        return Geofence.Builder()
+            .setCircularRegion(
+                latLng.latitude, latLng.longitude, radius.toFloat()
+            )
+            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
+            .setRequestId(model.noteAndLabel.note._id.toString())
+            .setExpirationDuration(Geofence.NEVER_EXPIRE)
+            .build()
+    }
+
+
+    private fun getGeofencingRequest(): GeofencingRequest {
         return GeofencingRequest.Builder().apply {
             setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
             addGeofence(geofence)
         }.build()
+
     }
 
 
@@ -180,9 +231,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
         const val GEOFENCE_RADIUS = 100.0
         const val REQUEST_LOCATION_PERMISSION = 1
-        const val GEOFENCE_TRANSITION_ENTER = 1
-        const val GEOFENCE_TRANSITION_EXIT = 2
-        const val SOME_ID = "SOME_ID"
         const val NEVER_EXPIRE = -1
     }
 
