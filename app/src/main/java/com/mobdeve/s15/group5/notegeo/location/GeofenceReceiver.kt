@@ -1,4 +1,4 @@
-package com.mobdeve.s15.group5.notegeo
+package com.mobdeve.s15.group5.notegeo.location
 
 import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
