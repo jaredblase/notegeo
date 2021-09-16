@@ -1,4 +1,4 @@
-package com.mobdeve.s15.group5.notegeo
+package com.mobdeve.s15.group5.notegeo.location
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -22,6 +22,8 @@ import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
+import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMapsBinding
 import com.mobdeve.s15.group5.notegeo.editor.NoteEditorViewModel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory

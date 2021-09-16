@@ -2,7 +2,7 @@ package com.mobdeve.s15.group5.notegeo.models
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mobdeve.s15.group5.notegeo.GeofenceHelperModel
+import com.mobdeve.s15.group5.notegeo.location.GeofenceHelperModel
 import com.mobdeve.s15.group5.notegeo.editor.NoteEditorViewModel
 import com.mobdeve.s15.group5.notegeo.home.HomeViewModel
 import com.mobdeve.s15.group5.notegeo.label.LabelViewModel

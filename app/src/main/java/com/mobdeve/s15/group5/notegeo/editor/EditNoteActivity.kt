@@ -27,9 +27,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.mobdeve.s15.group5.notegeo.*
-import com.mobdeve.s15.group5.notegeo.MapsActivity.Companion.REQUEST_TURN_DEVICE_LOCATION_ON
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -265,6 +266,7 @@ class EditNoteActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isEmpty() ||
             grantResults[MapsActivity.LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
             (requestCode == MapsActivity.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
