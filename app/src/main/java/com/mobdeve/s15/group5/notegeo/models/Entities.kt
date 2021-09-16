@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.databinding.ObservableBoolean
 import androidx.room.*
+import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
 @Entity(indices = [Index(value = ["name"], unique = true)])
@@ -12,8 +13,10 @@ data class Label(
     var name: String = "",
 ) : Parcelable {
     /** Used for the label activity */
-    @Ignore var isChecked = ObservableBoolean()
-    @Ignore val isBeingEdited = ObservableBoolean()
+    @Ignore
+    var isChecked = ObservableBoolean()
+    @Ignore
+    val isBeingEdited = ObservableBoolean()
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -48,7 +51,9 @@ data class Note(
     var isPinned: Boolean = false,
     var dateEdited: Date = Date(),
     var dateDeleted: Date? = null,
-    var dateAlarm: Date? = null
+    var dateAlarm: Date? = null,
+    //var coordinates: LatLng? = null,
+    var radius: Double? = null
 ) : Parcelable {
     val isBlank
         get() = title.isBlank() && body.isBlank()
@@ -65,7 +70,9 @@ data class Note(
         parcel.readInt() == 1,
         Date(parcel.readLong()),
         (parcel.readSerializable() as? Long)?.let { Date(it) },
-        (parcel.readSerializable() as? Long)?.let { Date(it) }
+        (parcel.readSerializable() as? Long)?.let { Date(it) },
+        //parcel.readTypedObject(),
+        parcel.readDouble()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
