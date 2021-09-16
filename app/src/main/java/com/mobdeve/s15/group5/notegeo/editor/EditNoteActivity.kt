@@ -1,19 +1,33 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
+import android.Manifest
 import android.content.Intent
+import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.mobdeve.s15.group5.notegeo.*
+import com.mobdeve.s15.group5.notegeo.MapsActivity.Companion.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
@@ -23,7 +37,12 @@ import java.util.*
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
-    private val model by viewModels<NoteEditorViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.IO) }
+    private val model by viewModels<NoteEditorViewModel> {
+        ViewModelFactory(
+            (application as NoteGeoApplication).repo,
+            Dispatchers.IO
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,8 +141,21 @@ class EditNoteActivity : AppCompatActivity() {
         }
 
         // TODO: setup location listener
-        binding.setLocationBtn.setOnClickListener{
-            startActivity(Intent(this, MapsActivity::class.java))
+        binding.setLocationBtn.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                checkLocationSettings()
+                launchMaps()
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                    MapsActivity.REQUEST_LOCATION_PERMISSION
+                )
+            }
         }
         binding.locationTv.visibility = View.GONE
 
@@ -211,6 +243,85 @@ class EditNoteActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+    private val mapResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                // a note was passed
+                result.data?.getParcelableExtra<NoteAndLabel>(NOTE_AND_LABEL)?.let {
+                    when (result.resultCode) {
+                        else -> this.toast("Blank note deleted!")
+                    }
+            }
+        }
+
+    private fun launchMaps(note: NoteAndLabel = model.noteAndLabel) {
+        mapResultLauncher.launch(Intent(this, MapsActivity::class.java).apply {
+            putExtra(NOTE_AND_LABEL, note)
+        })
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (grantResults.isEmpty() ||
+            grantResults[MapsActivity.LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
+            (requestCode == MapsActivity.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
+                    grantResults[MapsActivity.BACKGROUND_LOCATION_PERMISSION_INDEX] ==
+                    PackageManager.PERMISSION_DENIED)
+        ) {
+            Log.d("MapsActivity", "Permission needed")
+        } else {
+            Toast.makeText(this, "You have all the permission needed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun checkLocationSettings(resolve: Boolean = true) {
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(this)
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                try {
+                    exception.startResolutionForResult(
+                        this,
+                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Log.d(
+                        "EDITNOTE",
+                        "Error getting location settings resolution: " + sendEx.message
+                    )
+                }
+            } else {
+                Snackbar.make(
+                    binding.root,
+                    "Location must be enabled", Snackbar.LENGTH_INDEFINITE
+                ).setAction(android.R.string.ok) {
+                    checkLocationSettings()
+                }.show()
+
+            }
+        }
+        locationSettingsResponseTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                Toast.makeText(this, "Location can be accessed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_TURN_DEVICE_LOCATION_ON) {
+            checkLocationSettings(false)
+        }
+    }
+
 
     companion object {
         private const val FRAGMENT_TAG = "Editor Menu"
