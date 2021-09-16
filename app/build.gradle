@@ -16,7 +16,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        def secretsProperties = new Properties()
+        if (rootProject.file("secrets.properties").exists()) {
+            rootProject.file("secrets.properties")?.withInputStream {
+                secretsProperties.load(it)
+            }
+        }
+        resValue "string", "google_maps_key", (secretsProperties["GOOGLE_MAPS_API_KEY"] ?: "")
     }
+
 
     buildTypes {
         release {
