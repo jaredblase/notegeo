@@ -10,6 +10,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.model.LatLng
+import java.text.DecimalFormat
 
 fun View.dpToPx(dp: Int): Int {
     val scale = resources.displayMetrics.density
@@ -36,6 +38,12 @@ fun AppCompatActivity.hideKeyboard(v: View) {
     with(getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager) {
         hideSoftInputFromWindow(v.windowToken, 0)
     }
+}
+
+fun LatLng.formatString(radius: Double) = with (DecimalFormat("0.00")) {
+    val lat = format(latitude)
+    val long = format(longitude)
+    "Latitude: $lat, Longitude: $long, $radius"
 }
 
 class MyWatcher(private val fn: (Editable?) -> Unit) : TextWatcher {

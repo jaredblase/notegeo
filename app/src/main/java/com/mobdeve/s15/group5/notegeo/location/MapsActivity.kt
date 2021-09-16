@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,28 +17,24 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMapsBinding
 import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
-import com.mobdeve.s15.group5.notegeo.editor.EditorMenuFragment
-import com.mobdeve.s15.group5.notegeo.editor.NoteEditorViewModel
-import com.mobdeve.s15.group5.notegeo.label.LabelActivity
-import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.toast
-import kotlinx.coroutines.Dispatchers
 
 @SuppressLint("UnspecifiedImmutableFlag")
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private val model by viewModels<NoteEditorViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.IO) }
     private lateinit var map: GoogleMap
-    private lateinit var binding: ActivityMapsBinding
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var circle: Circle? = null
     private var marker: Marker? = null
     private var geofence: Geofence? = null
+
+    private var coordinates: LatLng? = null
+    private var radius = 1.0
+    private var noteId = 0
 
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(this, GeofenceReceiver::class.java)
@@ -48,16 +43,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMapsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(ActivityMapsBinding.inflate(layoutInflater).root)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        (supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment).getMapAsync(this)
         geofencingClient = LocationServices.getGeofencingClient(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        with(intent) {
+            noteId = getIntExtra(NOTE_ID, 0)
+            coordinates = getParcelableExtra(LAT_LNG)
+            radius = getDoubleExtra(RADIUS, 1.0)
+        }
     }
 
     //Initializes google maps on current location
@@ -66,7 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map = googleMap
         val zoomLevel = 15f
 
-        if (model.noteAndLabel.note.coordinates == null) {
+        if (coordinates == null) {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     if (location != null) {
@@ -82,17 +79,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } else {
             Log.d("MapsActivity", "onMapReady: COORDINATES SAVED ")
 
-            model.noteAndLabel.note.coordinates?.let {
+            coordinates!!.let {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(it, zoomLevel + 30))
                 map.addMarker(MarkerOptions().position(it))
                 map.addCircle(
                     CircleOptions().center(it)
-                        .radius(model.noteAndLabel.note.radius + 50)
+                        .radius(radius + 50)
                         .fillColor(ContextCompat.getColor(this, R.color.transparent))
                         .strokeColor(ContextCompat.getColor(this, R.color.note_color_7))
                 )
             }
-
         }
         setMarker(map)
         enableMyLocation()
@@ -101,7 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun isPermissionGranted() =
         ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-    //Shows user's location on map
+    // Shows user's location on map
     @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         if (isPermissionGranted()) {
@@ -135,12 +131,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     //Adds a marker and its geofence circle
     private fun setMarker(map: GoogleMap) {
-        map.setOnMapLongClickListener { latLng ->
+        map.setOnMapLongClickListener {
             marker?.remove()
-            addMarker(latLng)
-            addCircle(latLng, model.noteAndLabel.note.radius + 50)
-            addGeofence(latLng, model.noteAndLabel.note.radius + 50)
-            model.noteAndLabel.note.coordinates = latLng
+            addMarker(it)
+            addCircle(it, radius + 50)
+            addGeofence(it, radius + 50)
+            coordinates = it
         }
     }
 
@@ -161,12 +157,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun addGeofence(latLng: LatLng, radius: Double) {
-        model.noteAndLabel.note.coordinates?.run { removeGeofence() }
-
+        coordinates?.run { removeGeofence() }
         geofence = getGeofence(latLng, radius)
-        val geoRequest = getGeofencingRequest()
 
-        geofencingClient.addGeofences(geoRequest, geofencePendingIntent).run {
+        geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent).run {
             addOnSuccessListener {
                 Log.d("MapsActivity", "Geofence Added")
             }
@@ -177,7 +171,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 Log.d("MapsActivity", "GEOFENCE ACTIVATED")
             }
         }
-
     }
 
     private fun removeGeofence() {
@@ -192,7 +185,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return Geofence.Builder()
             .setCircularRegion(latLng.latitude, latLng.longitude, radius.toFloat())
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
-            .setRequestId(model.noteAndLabel.note._id.toString())
+            .setRequestId(noteId.toString())
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .build()
     }
@@ -207,8 +200,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onBackPressed() {
 
         setResult(RESULT_OK, Intent(this, EditNoteActivity::class.java).apply {
-            putExtra(LAT_LNG, model.noteAndLabel.note.coordinates)
-            putExtra(RADIUS, model.noteAndLabel.note.radius)
+            putExtra(LAT_LNG, coordinates)
+            putExtra(RADIUS, radius)
         })
         finish()
     }
@@ -224,5 +217,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         const val NEVER_EXPIRE = -1
         const val RADIUS = "RADIUS"
         const val LAT_LNG = "LAT_LNG"
+        const val NOTE_ID = "NOTE_ID"
     }
 }
