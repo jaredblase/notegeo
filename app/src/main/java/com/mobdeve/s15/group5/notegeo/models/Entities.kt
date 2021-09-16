@@ -52,8 +52,8 @@ data class Note(
     var dateEdited: Date = Date(),
     var dateDeleted: Date? = null,
     var dateAlarm: Date? = null,
-    //var coordinates: LatLng? = null,
-    var radius: Double? = null
+    var coordinates: LatLng? = null,
+    var radius: Double = 0.0
 ) : Parcelable {
     val isBlank
         get() = title.isBlank() && body.isBlank()
@@ -71,20 +71,22 @@ data class Note(
         Date(parcel.readLong()),
         (parcel.readSerializable() as? Long)?.let { Date(it) },
         (parcel.readSerializable() as? Long)?.let { Date(it) },
-        //parcel.readTypedObject(),
+        parcel.readParcelable(LatLng::class.java.classLoader),
         parcel.readDouble()
     )
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(_id)
-        parcel.writeString(title)
-        parcel.writeString(body)
-        parcel.writeInt(color)
-        parcel.writeSerializable(label)
-        parcel.writeInt(if (isPinned) 1 else 0)
-        parcel.writeLong(dateEdited.time)
-        parcel.writeSerializable(dateDeleted?.time)
-        parcel.writeSerializable(dateAlarm?.time)
+    override fun writeToParcel(parcel: Parcel, flags: Int) = with(parcel) {
+        writeLong(_id)
+        writeString(title)
+        writeString(body)
+        writeInt(color)
+        writeSerializable(label)
+        writeInt(if (isPinned) 1 else 0)
+        writeLong(dateEdited.time)
+        writeSerializable(dateDeleted?.time)
+        writeSerializable(dateAlarm?.time)
+        writeParcelable(coordinates, flags)
+        writeDouble(radius)
     }
 
     override fun describeContents() = 0
