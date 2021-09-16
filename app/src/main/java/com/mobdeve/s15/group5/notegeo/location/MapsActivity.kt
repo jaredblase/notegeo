@@ -21,7 +21,10 @@ import com.google.android.gms.maps.model.*
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMapsBinding
+import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
+import com.mobdeve.s15.group5.notegeo.editor.EditorMenuFragment
 import com.mobdeve.s15.group5.notegeo.editor.NoteEditorViewModel
+import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.toast
 import kotlinx.coroutines.Dispatchers
@@ -200,6 +203,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }.build()
 
     // TODO: Intent going back to the note editor assigning the keys at lines 213, 214
+
+    override fun onBackPressed() {
+
+        setResult(RESULT_OK, Intent(this, EditNoteActivity::class.java).apply {
+            putExtra(LAT_LNG, model.noteAndLabel.note.coordinates)
+            putExtra(RADIUS, model.noteAndLabel.note.radius)
+        })
+        finish()
+    }
 
     companion object {
         const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
