@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
@@ -37,7 +36,6 @@ import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_FO
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
-import java.text.DecimalFormat
 import java.util.*
 
 class EditNoteActivity : AppCompatActivity() {
@@ -55,17 +53,8 @@ class EditNoteActivity : AppCompatActivity() {
                 if (result.resultCode == RESULT_OK) {
                     val rad = getDoubleExtra(MapsActivity.RADIUS, 1.0)
                     val latLng = getParcelableExtra<LatLng>(MapsActivity.LAT_LNG)
-                    val dec = DecimalFormat("0.00")
-                    if (latLng != null) {
-                        val lati = dec.format(latLng.latitude)
-                        val longi = dec.format(latLng.longitude)
-                        updateTags(binding.locationTv, "Latitude: $lati,Longitude: $longi, $rad")
-                    }else {
-                        updateTags(
-                            binding.locationTv,
-                            null
-                        )
-                    }
+
+                    updateTags(binding.locationTv, latLng?.formatString(rad))
 
                     // save to note in model
                     model.noteAndLabel.note.apply {
@@ -126,6 +115,11 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
+        // setup location label
+        with(model.noteAndLabel.note) {
+            updateTags(binding.locationTv, coordinates?.formatString(radius))
+        }
+
         binding.setAlarmBtn.setOnClickListener {
             // today forward constraint
             val constraintsBuilder = CalendarConstraints.Builder()
@@ -181,7 +175,6 @@ class EditNoteActivity : AppCompatActivity() {
                 requestForegroundAndBackgroundLocationPermissions()
             }
         }
-        binding.locationTv.visibility = View.GONE
 
         val watcher = MyWatcher { model.isEditing.value = true }
 
@@ -204,7 +197,10 @@ class EditNoteActivity : AppCompatActivity() {
 
             labelTv.setOnRemoveListener { model.assignLabel(null) }
             alarmTv.setOnRemoveListener { model.setDateAlarm(null) }
-            locationTv.setOnRemoveListener { model.noteAndLabel.note.coordinates = null }
+            locationTv.setOnRemoveListener {
+                model.noteAndLabel.note.coordinates = null
+                updateTags(locationTv, null)
+            }
         }
     }
 
@@ -268,12 +264,6 @@ class EditNoteActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchMaps(note: NoteAndLabel = model.noteAndLabel) {
-        mapResultLauncher.launch(Intent(this, MapsActivity::class.java).apply {
-            putExtra(NOTE_AND_LABEL, note)
-        })
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -288,7 +278,7 @@ class EditNoteActivity : AppCompatActivity() {
         ) {
             Log.d("MapsActivity", "Permission needed")
         } else {
-            Toast.makeText(this, "You have all the permission needed", Toast.LENGTH_SHORT).show()
+            toast("You have all the permission needed")
             checkLocationSettings()
         }
     }
@@ -304,10 +294,7 @@ class EditNoteActivity : AppCompatActivity() {
         locationSettingsResponseTask.addOnFailureListener { exception ->
             if (exception is ResolvableApiException && resolve) {
                 try {
-                    exception.startResolutionForResult(
-                        this,
-                        REQUEST_TURN_DEVICE_LOCATION_ON
-                    )
+                    exception.startResolutionForResult(this, REQUEST_TURN_DEVICE_LOCATION_ON)
                 } catch (sendEx: IntentSender.SendIntentException) {
                     Log.d(
                         "EDITNOTE",
@@ -327,7 +314,13 @@ class EditNoteActivity : AppCompatActivity() {
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {
                 toast("Location can be accessed")
-                launchMaps()
+                mapResultLauncher.launch(Intent(this, MapsActivity::class.java).apply {
+                    with (model.noteAndLabel.note) {
+                        putExtra(MapsActivity.NOTE_ID, _id)
+                        putExtra(MapsActivity.LAT_LNG, coordinates)
+                        putExtra(MapsActivity.RADIUS, radius)
+                    }
+                })
             }
         }
     }
@@ -359,8 +352,7 @@ class EditNoteActivity : AppCompatActivity() {
 
     @TargetApi(29)
     private fun requestForegroundAndBackgroundLocationPermissions() {
-        if (foregroundAndBackgroundLocationPermissionApproved())
-            return
+        if (foregroundAndBackgroundLocationPermissionApproved()) return
 
         // Else request the permission
         // this provides the result[LOCATION_PERMISSION_INDEX]
