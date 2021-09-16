@@ -53,13 +53,14 @@ data class Note(
     var dateDeleted: Date? = null,
     var dateAlarm: Date? = null,
     var coordinates: LatLng? = null,
-    var radius: Double = 0.0
+    var radius: Double = 10.0,
+    var locName: String = ""
 ) : Parcelable {
     val isBlank
         get() = title.isBlank() && body.isBlank()
 
     val hasReminders
-        get() = dateAlarm != null || coordinates != null // TODO: add "or has geo reminder"
+        get() = dateAlarm != null || coordinates != null
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -72,7 +73,8 @@ data class Note(
         (parcel.readSerializable() as? Long)?.let { Date(it) },
         (parcel.readSerializable() as? Long)?.let { Date(it) },
         parcel.readParcelable(LatLng::class.java.classLoader),
-        parcel.readDouble()
+        parcel.readDouble(),
+        parcel.readString() ?: ""
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) = with(parcel) {
@@ -87,20 +89,15 @@ data class Note(
         writeSerializable(dateAlarm?.time)
         writeParcelable(coordinates, flags)
         writeDouble(radius)
+        writeString(locName)
     }
 
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<Note> {
         const val DEFAULT_COLOR = -15262682
-
-        override fun createFromParcel(parcel: Parcel): Note {
-            return Note(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Note?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = Note(parcel)
+        override fun newArray(size: Int) = arrayOfNulls<Note?>(size)
     }
 }
 
@@ -125,13 +122,7 @@ data class NoteAndLabel(
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<NoteAndLabel> {
-        override fun createFromParcel(parcel: Parcel): NoteAndLabel {
-            return NoteAndLabel(parcel)
-        }
-
-        override fun newArray(size: Int): Array<NoteAndLabel?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = NoteAndLabel(parcel)
+        override fun newArray(size: Int) = arrayOfNulls<NoteAndLabel?>(size)
     }
-
 }
