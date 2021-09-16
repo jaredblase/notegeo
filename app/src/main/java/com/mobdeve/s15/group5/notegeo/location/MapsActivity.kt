@@ -34,13 +34,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var coordinates: LatLng? = null
     private var radius = 1.0
-    private var noteId = 0
+    private var noteId = 0L
 
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(this, GeofenceReceiver::class.java)
         PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(ActivityMapsBinding.inflate(layoutInflater).root)
@@ -51,9 +52,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         with(intent) {
-            noteId = getIntExtra(NOTE_ID, 0)
+            noteId = getLongExtra(NOTE_ID, 0)
             coordinates = getParcelableExtra(LAT_LNG)
             radius = getDoubleExtra(RADIUS, 1.0)
+        }
+        geofence = coordinates?.let { getGeofence(it, radius+50) }
+
+        geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent).run {
+            addOnSuccessListener {
+                Log.d("MapsActivity", "Geofence Added")
+            }
+            addOnFailureListener {
+                Log.d("MapsActivity", "ERRORRRR " + it.stackTraceToString())
+            }
+            addOnCompleteListener {
+                Log.d("MapsActivity", "GEOFENCE ACTIVATED")
+            }
         }
     }
 
