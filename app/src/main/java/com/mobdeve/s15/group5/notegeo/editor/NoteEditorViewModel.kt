@@ -93,6 +93,7 @@ class NoteEditorViewModel : ViewModel() {
         }
     }
 
+
     /**
      * other attribute aside from text are saved here.
      */
@@ -107,5 +108,6 @@ class NoteEditorViewModel : ViewModel() {
         }
 
         // TODO: Location here
+
     }
 }

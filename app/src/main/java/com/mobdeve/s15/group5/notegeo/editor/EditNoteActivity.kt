@@ -1,6 +1,7 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
 import android.Manifest
+import android.annotation.TargetApi
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -31,6 +32,8 @@ import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_TU
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.location.MapsActivity
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -143,19 +146,12 @@ class EditNoteActivity : AppCompatActivity() {
 
         // TODO: setup location listener
         binding.setLocationBtn.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
+            if (foregroundAndBackgroundLocationPermissionApproved()){
                 checkLocationSettings()
-                launchMaps()
-            } else {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
-                    MapsActivity.REQUEST_LOCATION_PERMISSION
-                )
+            }
+            else{
+                Toast.makeText(this, "Background Access is needed for Geofencing", Toast.LENGTH_LONG).show()
+                requestForegroundAndBackgroundLocationPermissions()
             }
         }
         binding.locationTv.visibility = View.GONE
@@ -181,7 +177,7 @@ class EditNoteActivity : AppCompatActivity() {
 
             labelTv.setOnRemoveListener { model.assignLabel(null) }
             alarmTv.setOnRemoveListener { model.setDateAlarm(null) }
-            locationTv.setOnRemoveListener { /* TODO: Clear Location */ }
+            locationTv.setOnRemoveListener { model.noteAndLabel.note.coordinates = null }
         }
     }
 
@@ -269,13 +265,14 @@ class EditNoteActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isEmpty() ||
             grantResults[MapsActivity.LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
-            (requestCode == MapsActivity.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
+            (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
                     grantResults[MapsActivity.BACKGROUND_LOCATION_PERMISSION_INDEX] ==
                     PackageManager.PERMISSION_DENIED)
         ) {
             Log.d("MapsActivity", "Permission needed")
         } else {
             Toast.makeText(this, "You have all the permission needed", Toast.LENGTH_SHORT).show()
+            checkLocationSettings()
         }
     }
 
@@ -313,6 +310,7 @@ class EditNoteActivity : AppCompatActivity() {
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(this, "Location can be accessed", Toast.LENGTH_SHORT).show()
+                launchMaps()
             }
         }
     }
@@ -322,6 +320,50 @@ class EditNoteActivity : AppCompatActivity() {
         if (requestCode == REQUEST_TURN_DEVICE_LOCATION_ON) {
             checkLocationSettings(false)
         }
+    }
+
+    @TargetApi(29)
+    private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
+        val foregroundLocationApproved = (
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION))
+        val backgroundPermissionApproved =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(
+                            this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        )
+            } else {
+                true
+            }
+        return foregroundLocationApproved && backgroundPermissionApproved
+    }
+
+    @TargetApi(29 )
+    private fun requestForegroundAndBackgroundLocationPermissions() {
+        if (foregroundAndBackgroundLocationPermissionApproved())
+            return
+
+        // Else request the permission
+        // this provides the result[LOCATION_PERMISSION_INDEX]
+        var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        val resultCode = when {
+            android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q -> {
+                // this provides the result[BACKGROUND_LOCATION_PERMISSION_INDEX]
+                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+            }
+            else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+        }
+
+        Log.d("MapsActivity", "Request foreground only location permission")
+        ActivityCompat.requestPermissions(
+            this@EditNoteActivity,
+            permissionsArray,
+            resultCode
+        )
     }
 
 
