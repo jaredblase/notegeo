@@ -55,19 +55,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             noteId = getLongExtra(NOTE_ID, 0)
             coordinates = getParcelableExtra(LAT_LNG)
             radius = getDoubleExtra(RADIUS, 1.0)
-        }
-        geofence = coordinates?.let { getGeofence(it, radius+50) }
 
-        geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent).run {
-            addOnSuccessListener {
-                Log.d("MapsActivity", "Geofence Added")
-            }
-            addOnFailureListener {
-                Log.d("MapsActivity", "ERRORRRR " + it.stackTraceToString())
-            }
-            addOnCompleteListener {
-                Log.d("MapsActivity", "GEOFENCE ACTIVATED")
-            }
         }
     }
 
