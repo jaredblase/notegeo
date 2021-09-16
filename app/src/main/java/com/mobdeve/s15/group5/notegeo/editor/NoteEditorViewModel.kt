@@ -108,6 +108,5 @@ class NoteEditorViewModel : ViewModel() {
         }
 
         // TODO: Location here
-
     }
 }
