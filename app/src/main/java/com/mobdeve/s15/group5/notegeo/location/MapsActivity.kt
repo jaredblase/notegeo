@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -24,17 +23,13 @@ import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMapsBinding
 import com.mobdeve.s15.group5.notegeo.editor.NoteEditorViewModel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
+import com.mobdeve.s15.group5.notegeo.toast
 import kotlinx.coroutines.Dispatchers
 
 @SuppressLint("UnspecifiedImmutableFlag")
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private val model by viewModels<NoteEditorViewModel> {
-        ViewModelFactory(
-            (application as NoteGeoApplication).repo,
-            Dispatchers.IO
-        )
-    }
+    private val model by viewModels<NoteEditorViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.IO) }
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var geofencingClient: GeofencingClient
@@ -43,12 +38,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var marker: Marker? = null
     private var geofence: Geofence? = null
 
-
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(this, GeofenceReceiver::class.java)
         PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,11 +57,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
-
     //Initializes google maps on current location
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         val zoomLevel = 15f
+
         if (model.noteAndLabel.note.coordinates == null) {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
@@ -84,39 +78,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
         } else {
             Log.d("MapsActivity", "onMapReady: COORDINATES SAVED ")
-            map.moveCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    model.noteAndLabel.note.coordinates,
-                    zoomLevel+30
+
+            model.noteAndLabel.note.coordinates?.let {
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(it, zoomLevel + 30))
+                map.addMarker(MarkerOptions().position(it))
+                map.addCircle(
+                    CircleOptions().center(it)
+                        .radius(model.noteAndLabel.note.radius + 50)
+                        .fillColor(ContextCompat.getColor(this, R.color.transparent))
+                        .strokeColor(ContextCompat.getColor(this, R.color.note_color_7))
                 )
-            )
-            map.addMarker(MarkerOptions().position(model.noteAndLabel.note.coordinates))
-            map.addCircle(
-                CircleOptions().center(model.noteAndLabel.note.coordinates)
-                    .radius(model.noteAndLabel.note.radius + 50)
-                    .fillColor(ContextCompat.getColor(this, R.color.transparent))
-                    .strokeColor(ContextCompat.getColor(this, R.color.note_color_7))
-            )
+            }
+
         }
         setMarker(map)
         enableMyLocation()
     }
 
-    private fun isPermissionGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-    }
+    private fun isPermissionGranted() =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     //Shows user's location on map
+    @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         if (isPermissionGranted()) {
             map.isMyLocationEnabled = true
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )
         }
@@ -127,6 +117,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isEmpty() ||
             grantResults[LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
             (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
@@ -135,7 +126,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         ) {
             Log.d("MapsActivity", "Permission needed")
         } else {
-            Toast.makeText(this, "You have all the permission needed", Toast.LENGTH_SHORT).show()
+            toast("You have all the permission needed")
         }
     }
 
@@ -147,16 +138,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             addCircle(latLng, model.noteAndLabel.note.radius + 50)
             addGeofence(latLng, model.noteAndLabel.note.radius + 50)
             model.noteAndLabel.note.coordinates = latLng
-
         }
     }
 
     private fun addMarker(latLng: LatLng) {
-        marker = map.addMarker(
-            MarkerOptions()
-                .position(latLng)
-        )
-
+        marker = map.addMarker(MarkerOptions().position(latLng))
     }
 
     private fun addCircle(latLng: LatLng, radius: Double) {
@@ -170,14 +156,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
-
+    @SuppressLint("MissingPermission")
     private fun addGeofence(latLng: LatLng, radius: Double) {
-        if (model.noteAndLabel.note.coordinates != null) {
-            removeGeofence()
-        }
+        model.noteAndLabel.note.coordinates?.run { removeGeofence() }
 
         geofence = getGeofence(latLng, radius)
-        val geoRequest: GeofencingRequest = getGeofencingRequest()
+        val geoRequest = getGeofencingRequest()
 
         geofencingClient.addGeofences(geoRequest, geofencePendingIntent).run {
             addOnSuccessListener {
@@ -194,34 +178,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun removeGeofence() {
-        geofencingClient.removeGeofences(geofencePendingIntent).run {
+        geofencingClient.removeGeofences(geofencePendingIntent).apply {
             addOnSuccessListener {
                 Log.d("MapsActivity", "Geofence Deleted")
             }
         }
     }
 
-
     private fun getGeofence(latLng: LatLng, radius: Double): Geofence {
         return Geofence.Builder()
-            .setCircularRegion(
-                latLng.latitude, latLng.longitude, radius.toFloat()
-            )
+            .setCircularRegion(latLng.latitude, latLng.longitude, radius.toFloat())
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
             .setRequestId(model.noteAndLabel.note._id.toString())
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .build()
     }
 
+    private fun getGeofencingRequest() = GeofencingRequest.Builder().apply {
+        setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+        geofence?.let { addGeofence(it) }
+    }.build()
 
-    private fun getGeofencingRequest(): GeofencingRequest {
-        return GeofencingRequest.Builder().apply {
-            setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            addGeofence(geofence)
-        }.build()
-
-    }
-
+    // TODO: Intent going back to the note editor assigning the keys at lines 213, 214
 
     companion object {
         const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
@@ -232,7 +210,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         const val GEOFENCE_RADIUS = 100.0
         const val REQUEST_LOCATION_PERMISSION = 1
         const val NEVER_EXPIRE = -1
+        const val RADIUS = "RADIUS"
+        const val LAT_LNG = "LAT_LNG"
     }
-
-
 }

@@ -15,12 +15,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -47,6 +47,24 @@ class EditNoteActivity : AppCompatActivity() {
             Dispatchers.IO
         )
     }
+    private val mapResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            // data was passed
+            result.data?.run {
+                if (result.resultCode == RESULT_OK) {
+                    val rad = getDoubleExtra(MapsActivity.RADIUS, 1.0)
+                    val latLng = getParcelableExtra<LatLng>(MapsActivity.LAT_LNG)
+
+                    updateTags(binding.locationTv, latLng.toString()) // TODO: How would you like to format the label?
+
+                    // save to note in model
+                    model.noteAndLabel.note.apply {
+                        coordinates = latLng
+                        radius = rad
+                    }
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,11 +164,10 @@ class EditNoteActivity : AppCompatActivity() {
 
         // TODO: setup location listener
         binding.setLocationBtn.setOnClickListener {
-            if (foregroundAndBackgroundLocationPermissionApproved()){
+            if (foregroundAndBackgroundLocationPermissionApproved()) {
                 checkLocationSettings()
-            }
-            else{
-                Toast.makeText(this, "Background Access is needed for Geofencing", Toast.LENGTH_LONG).show()
+            } else {
+                toast("Background Access is needed for Geofencing")
                 requestForegroundAndBackgroundLocationPermissions()
             }
         }
@@ -241,16 +258,6 @@ class EditNoteActivity : AppCompatActivity() {
         }
     }
 
-    private val mapResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                // a note was passed
-                result.data?.getParcelableExtra<NoteAndLabel>(NOTE_AND_LABEL)?.let {
-                    when (result.resultCode) {
-                        else -> this.toast("Blank note deleted!")
-                    }
-            }
-        }
-
     private fun launchMaps(note: NoteAndLabel = model.noteAndLabel) {
         mapResultLauncher.launch(Intent(this, MapsActivity::class.java).apply {
             putExtra(NOTE_AND_LABEL, note)
@@ -304,12 +311,12 @@ class EditNoteActivity : AppCompatActivity() {
                 ).setAction(android.R.string.ok) {
                     checkLocationSettings()
                 }.show()
-
             }
         }
+
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {
-                Toast.makeText(this, "Location can be accessed", Toast.LENGTH_SHORT).show()
+                toast("Location can be accessed")
                 launchMaps()
             }
         }
@@ -326,21 +333,21 @@ class EditNoteActivity : AppCompatActivity() {
     private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
         val foregroundLocationApproved = (
                 PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION))
+                        ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ))
         val backgroundPermissionApproved =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                 PackageManager.PERMISSION_GRANTED ==
                         ActivityCompat.checkSelfPermission(
                             this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
                         )
-            } else {
-                true
-            }
+            } else true
         return foregroundLocationApproved && backgroundPermissionApproved
     }
 
-    @TargetApi(29 )
+    @TargetApi(29)
     private fun requestForegroundAndBackgroundLocationPermissions() {
         if (foregroundAndBackgroundLocationPermissionApproved())
             return
@@ -359,13 +366,8 @@ class EditNoteActivity : AppCompatActivity() {
         }
 
         Log.d("MapsActivity", "Request foreground only location permission")
-        ActivityCompat.requestPermissions(
-            this@EditNoteActivity,
-            permissionsArray,
-            resultCode
-        )
+        ActivityCompat.requestPermissions(this@EditNoteActivity, permissionsArray, resultCode)
     }
-
 
     companion object {
         private const val FRAGMENT_TAG = "Editor Menu"
