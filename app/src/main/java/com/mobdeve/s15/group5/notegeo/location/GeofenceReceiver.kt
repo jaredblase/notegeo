@@ -14,14 +14,15 @@ class GeofenceReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         //Toast.makeText(context, "Geofence Triggered", Toast.LENGTH_LONG).show()
         //Log.d("Maps", "onReceive: HELOOOOOOO")
-        val id = intent.getLongExtra(ID_KEY, 0)
         var reminder = ""
 
         val notificationUtils = NotificationUtils(context)
         val manager = notificationUtils.getManager()
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
-        Log.d("Maps",id.toString())
+        val id = geofencingEvent.triggeringGeofences[0].requestId
+
+        Log.d("MapsActivity", "ONRECEIVE: $id")
         when(geofencingEvent.geofenceTransition){
             Geofence.GEOFENCE_TRANSITION_ENTER -> reminder = "You have entered a Geofenced area"
             Geofence.GEOFENCE_TRANSITION_EXIT -> reminder = "You have exited a Geofenced area"
