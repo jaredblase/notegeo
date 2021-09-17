@@ -5,12 +5,8 @@
 
     <!--For geofencing -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
-
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/google_maps_key" />
 
     <application
         android:name=".NoteGeoApplication"
@@ -20,6 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteGeo">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <service
             android:name=".alarms.UpdateService"
             android:enabled="true"
@@ -49,11 +50,16 @@
         <activity
             android:name=".home.MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".location.MapsActivity"
+            android:exported="true" />
 
         <receiver
             android:name=".alarms.AlarmReceiver"
             android:enabled="true" />
-        <!--  <receiver android:name=".GeofenceReceiver"/>   -->
+        <receiver
+            android:name=".location.GeofenceReceiver"
+            android:enabled="true" />
     </application>
 
 </manifest>

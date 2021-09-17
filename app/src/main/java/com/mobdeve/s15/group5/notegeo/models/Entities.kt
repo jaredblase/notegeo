@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.databinding.ObservableBoolean
 import androidx.room.*
+import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
 @Entity(indices = [Index(value = ["name"], unique = true)])
@@ -12,8 +13,10 @@ data class Label(
     var name: String = "",
 ) : Parcelable {
     /** Used for the label activity */
-    @Ignore var isChecked = ObservableBoolean()
-    @Ignore val isBeingEdited = ObservableBoolean()
+    @Ignore
+    var isChecked = ObservableBoolean()
+    @Ignore
+    val isBeingEdited = ObservableBoolean()
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -48,13 +51,16 @@ data class Note(
     var isPinned: Boolean = false,
     var dateEdited: Date = Date(),
     var dateDeleted: Date? = null,
-    var dateAlarm: Date? = null
+    var dateAlarm: Date? = null,
+    var coordinates: LatLng? = null,
+    var radius: Double = 10.0,
+    var locName: String = ""
 ) : Parcelable {
     val isBlank
         get() = title.isBlank() && body.isBlank()
 
     val hasReminders
-        get() = dateAlarm != null // TODO: add "or has geo reminder"
+        get() = dateAlarm != null || coordinates != null
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -65,33 +71,33 @@ data class Note(
         parcel.readInt() == 1,
         Date(parcel.readLong()),
         (parcel.readSerializable() as? Long)?.let { Date(it) },
-        (parcel.readSerializable() as? Long)?.let { Date(it) }
+        (parcel.readSerializable() as? Long)?.let { Date(it) },
+        parcel.readParcelable(LatLng::class.java.classLoader),
+        parcel.readDouble(),
+        parcel.readString() ?: ""
     )
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(_id)
-        parcel.writeString(title)
-        parcel.writeString(body)
-        parcel.writeInt(color)
-        parcel.writeSerializable(label)
-        parcel.writeInt(if (isPinned) 1 else 0)
-        parcel.writeLong(dateEdited.time)
-        parcel.writeSerializable(dateDeleted?.time)
-        parcel.writeSerializable(dateAlarm?.time)
+    override fun writeToParcel(parcel: Parcel, flags: Int) = with(parcel) {
+        writeLong(_id)
+        writeString(title)
+        writeString(body)
+        writeInt(color)
+        writeSerializable(label)
+        writeInt(if (isPinned) 1 else 0)
+        writeLong(dateEdited.time)
+        writeSerializable(dateDeleted?.time)
+        writeSerializable(dateAlarm?.time)
+        writeParcelable(coordinates, flags)
+        writeDouble(radius)
+        writeString(locName)
     }
 
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<Note> {
         const val DEFAULT_COLOR = -15262682
-
-        override fun createFromParcel(parcel: Parcel): Note {
-            return Note(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Note?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = Note(parcel)
+        override fun newArray(size: Int) = arrayOfNulls<Note?>(size)
     }
 }
 
@@ -116,13 +122,7 @@ data class NoteAndLabel(
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<NoteAndLabel> {
-        override fun createFromParcel(parcel: Parcel): NoteAndLabel {
-            return NoteAndLabel(parcel)
-        }
-
-        override fun newArray(size: Int): Array<NoteAndLabel?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = NoteAndLabel(parcel)
+        override fun newArray(size: Int) = arrayOfNulls<NoteAndLabel?>(size)
     }
-
 }

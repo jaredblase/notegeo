@@ -35,7 +35,7 @@ fun ImageView.setPinned(item: NoteAndLabel) {
 
 @BindingAdapter("bindItem")
 fun FlexboxLayout.setItem(item: NoteAndLabel) {
-    visibility = if (item.label == null && item.note.dateAlarm == null) View.GONE else View.VISIBLE
+    visibility = if (item.label == null && item.note.dateAlarm == null && item.note.coordinates == null) View.GONE else View.VISIBLE
 }
 
 @BindingAdapter("noteLabel")
@@ -57,5 +57,14 @@ fun TextView.setDateAlarm(item: NoteAndLabel) {
         paintFlags = if (item.note.dateAlarm!!.time <= System.currentTimeMillis()) Paint.STRIKE_THRU_TEXT_FLAG else 0
     } else {
         visibility = View.GONE
+    }
+}
+
+@BindingAdapter("noteLocation")
+fun TextView.setLocation(item: NoteAndLabel) {
+    if (item.note.coordinates == null) {
+        visibility = View.GONE
+    } else {
+        text = item.note.locName
     }
 }

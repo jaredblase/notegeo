@@ -1,21 +1,40 @@
 package com.mobdeve.s15.group5.notegeo.editor
 
+import android.Manifest
+import android.annotation.TargetApi
 import android.content.Intent
+import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.view.updateLayoutParams
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.mobdeve.s15.group5.notegeo.*
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
+import com.mobdeve.s15.group5.notegeo.databinding.InputDialogBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +42,43 @@ import java.util.*
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
-    private val model by viewModels<NoteEditorViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.IO) }
+    private val model by viewModels<NoteEditorViewModel> {
+        ViewModelFactory(
+            (application as NoteGeoApplication).repo,
+            Dispatchers.IO
+        )
+    }
+    private val mapResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            // data was passed
+            result.data?.let {
+                if (result.resultCode == RESULT_OK) {
+                    val rad = it.getDoubleExtra(MapsActivity.RADIUS, 1.0)
+                    var latLng = it.getParcelableExtra<LatLng>(MapsActivity.LAT_LNG)
+
+                    // dialog pop up to get label
+                    if (latLng != null) {
+                        val mBinding = InputDialogBinding.inflate(layoutInflater)
+
+                        AlertDialog.Builder(this)
+                            .setView(mBinding.root)
+                            .setPositiveButton("Set") { _, _ ->
+                                val location = mBinding.input.text.toString().ifBlank { "Unlabeled Location" }
+                                updateTags(binding.locationTv, location)
+
+                                // save to note in model
+                                model.noteAndLabel.note.apply {
+                                    coordinates = latLng
+                                    radius = rad
+                                    locName = location
+                                }
+                            }
+                            .setNegativeButton("Cancel") { _, _ -> latLng = null }
+                            .create().show()
+                    }
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +130,11 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
+        // setup location label
+        with(model.noteAndLabel.note) {
+            updateTags(binding.locationTv, coordinates?.run { locName })
+        }
+
         binding.setAlarmBtn.setOnClickListener {
             // today forward constraint
             val constraintsBuilder = CalendarConstraints.Builder()
@@ -121,11 +181,14 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
-        // TODO: setup location listener
-        binding.setLocationBtn.setOnClickListener{
-            startActivity(Intent(this, MapsActivity::class.java))
+        binding.setLocationBtn.setOnClickListener {
+            if (foregroundAndBackgroundLocationPermissionApproved()) {
+                checkLocationSettings()
+            } else {
+                toast("Background Access is needed for Geofencing")
+                requestForegroundAndBackgroundLocationPermissions()
+            }
         }
-        binding.locationTv.visibility = View.GONE
 
         val watcher = MyWatcher { model.isEditing.value = true }
 
@@ -148,7 +211,10 @@ class EditNoteActivity : AppCompatActivity() {
 
             labelTv.setOnRemoveListener { model.assignLabel(null) }
             alarmTv.setOnRemoveListener { model.setDateAlarm(null) }
-            locationTv.setOnRemoveListener { /* TODO: Clear Location */ }
+            locationTv.setOnRemoveListener {
+                model.noteAndLabel.note.coordinates = null
+                updateTags(locationTv, null)
+            }
         }
     }
 
@@ -210,6 +276,113 @@ class EditNoteActivity : AppCompatActivity() {
             toast("Blank note deleted!")
             super.onBackPressed()
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isEmpty() ||
+            grantResults[MapsActivity.LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
+            (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
+                    grantResults[MapsActivity.BACKGROUND_LOCATION_PERMISSION_INDEX] ==
+                    PackageManager.PERMISSION_DENIED)
+        ) {
+            Log.d("MapsActivity", "Permission needed")
+        } else {
+            toast("You have all the permission needed")
+            checkLocationSettings()
+        }
+    }
+
+    private fun checkLocationSettings(resolve: Boolean = true) {
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(this)
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                try {
+                    exception.startResolutionForResult(this, REQUEST_TURN_DEVICE_LOCATION_ON)
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Log.d(
+                        "EDITNOTE",
+                        "Error getting location settings resolution: ${sendEx.message}"
+                    )
+                }
+            } else {
+                Snackbar.make(
+                    binding.root,
+                    "Location must be enabled", Snackbar.LENGTH_INDEFINITE
+                ).setAction(android.R.string.ok) {
+                    checkLocationSettings()
+                }.show()
+            }
+        }
+
+        locationSettingsResponseTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                toast("Location can be accessed")
+                mapResultLauncher.launch(Intent(this, MapsActivity::class.java).apply {
+                    with (model.noteAndLabel.note) {
+                        putExtra(MapsActivity.NOTE_ID, _id)
+                        putExtra(MapsActivity.LAT_LNG, coordinates)
+                        putExtra(MapsActivity.RADIUS, radius)
+                    }
+                })
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_TURN_DEVICE_LOCATION_ON) {
+            checkLocationSettings(false)
+        }
+    }
+
+    @TargetApi(29)
+    private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
+        val foregroundLocationApproved = (
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ))
+        val backgroundPermissionApproved =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(
+                            this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        )
+            } else true
+        return foregroundLocationApproved && backgroundPermissionApproved
+    }
+
+    @TargetApi(29)
+    private fun requestForegroundAndBackgroundLocationPermissions() {
+        if (foregroundAndBackgroundLocationPermissionApproved()) return
+
+        // Else request the permission
+        // this provides the result[LOCATION_PERMISSION_INDEX]
+        var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        val resultCode = when {
+            android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q -> {
+                // this provides the result[BACKGROUND_LOCATION_PERMISSION_INDEX]
+                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+            }
+            else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+        }
+
+        Log.d("MapsActivity", "Request foreground only location permission")
+        ActivityCompat.requestPermissions(this@EditNoteActivity, permissionsArray, resultCode)
     }
 
     companion object {

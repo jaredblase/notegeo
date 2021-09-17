@@ -183,8 +183,9 @@
         <com.mobdeve.s15.group5.notegeo.editor.RemovableItemView
             android:id="@+id/location_tv"
             style="@style/tag"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!" />
+            android:text="Hello World!"
+            tools:layout_editor_absoluteY="40dp" />
     </com.google.android.flexbox.FlexboxLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
