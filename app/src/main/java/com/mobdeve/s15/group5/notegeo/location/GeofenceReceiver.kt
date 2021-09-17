@@ -12,8 +12,6 @@ import com.mobdeve.s15.group5.notegeo.alarms.NotificationUtils
 class GeofenceReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        //Toast.makeText(context, "Geofence Triggered", Toast.LENGTH_LONG).show()
-        //Log.d("Maps", "onReceive: HELOOOOOOO")
         var reminder = ""
 
         val notificationUtils = NotificationUtils(context)
@@ -44,11 +42,4 @@ class GeofenceReceiver : BroadcastReceiver() {
             return
         }
     }
-
-    companion object {
-        const val ID_KEY = "ID_KEY"
-    }
-
-
-
 }

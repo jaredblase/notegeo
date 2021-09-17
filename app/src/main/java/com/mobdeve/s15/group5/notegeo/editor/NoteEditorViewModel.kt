@@ -107,6 +107,5 @@ class NoteEditorViewModel : ViewModel() {
             alarmReceiver.setAlarm(context, this)
         }
 
-        // TODO: Location here
     }
 }
