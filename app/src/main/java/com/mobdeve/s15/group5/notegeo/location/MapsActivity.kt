@@ -37,8 +37,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var noteId = 0L
 
     private val geofencePendingIntent: PendingIntent by lazy {
-        val intent = Intent(this, GeofenceReceiver::class.java)
-        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(applicationContext, GeofenceReceiver::class.java)
+        PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     @SuppressLint("MissingPermission")
@@ -184,6 +184,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getGeofence(latLng: LatLng, radius: Double): Geofence {
+        Log.d("MapsActivity", "GET GEOFENCE: $noteId")
         return Geofence.Builder()
             .setCircularRegion(latLng.latitude, latLng.longitude, radius.toFloat())
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
