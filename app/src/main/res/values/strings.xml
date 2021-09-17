@@ -9,6 +9,8 @@
     <string name="confirm_singular_note_delete">Delete this note?</string>
     <string name="confirm_selection_delete">Delete selection?</string>
     <string name="confirm_all_delete">Delete everything here?</string>
+    <string name="location_name">Location Name</string>
+    <string name="input_radius">Input Radius</string>
 
     <!--  Content Descriptions  -->
     <string name="desc.menu">menu</string>
@@ -61,6 +63,6 @@
     <string name="label.edit">Edit entry</string>
     <string name="label.cancel">Cancel edit</string>
 
-    <!--- Google API Key -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDrtyQDzVlh6_7bYOegT0rksslYCbqkDk0</string>
+
+
 </resources>

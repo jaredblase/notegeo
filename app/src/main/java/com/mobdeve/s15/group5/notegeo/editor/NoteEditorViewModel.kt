@@ -93,6 +93,7 @@ class NoteEditorViewModel : ViewModel() {
         }
     }
 
+
     /**
      * other attribute aside from text are saved here.
      */
@@ -106,6 +107,5 @@ class NoteEditorViewModel : ViewModel() {
             alarmReceiver.setAlarm(context, this)
         }
 
-        // TODO: Location here
     }
 }
