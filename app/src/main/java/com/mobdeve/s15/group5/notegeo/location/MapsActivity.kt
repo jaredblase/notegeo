@@ -215,7 +215,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         geofence?.let { addGeofence(it) }
     }.build()
 
-    // TODO: Intent going back to the note editor assigning the keys at lines 213, 214
 
     override fun onBackPressed() {
 
