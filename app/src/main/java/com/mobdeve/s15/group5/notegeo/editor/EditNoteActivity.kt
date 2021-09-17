@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.view.updateLayoutParams
 import com.google.android.gms.common.api.ResolvableApiException
@@ -29,6 +30,7 @@ import com.google.android.material.timepicker.TimeFormat
 import com.mobdeve.s15.group5.notegeo.*
 import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityEditNoteBinding
+import com.mobdeve.s15.group5.notegeo.databinding.InputDialogBinding
 import com.mobdeve.s15.group5.notegeo.home.MainActivity
 import com.mobdeve.s15.group5.notegeo.location.MapsActivity
 import com.mobdeve.s15.group5.notegeo.location.MapsActivity.Companion.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
@@ -49,17 +51,30 @@ class EditNoteActivity : AppCompatActivity() {
     private val mapResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             // data was passed
-            result.data?.run {
+            result.data?.let {
                 if (result.resultCode == RESULT_OK) {
-                    val rad = getDoubleExtra(MapsActivity.RADIUS, 1.0)
-                    val latLng = getParcelableExtra<LatLng>(MapsActivity.LAT_LNG)
+                    val rad = it.getDoubleExtra(MapsActivity.RADIUS, 1.0)
+                    var latLng = it.getParcelableExtra<LatLng>(MapsActivity.LAT_LNG)
 
-                    updateTags(binding.locationTv, latLng?.formatString(rad))
+                    // dialog pop up to get label
+                    if (latLng != null) {
+                        val mBinding = InputDialogBinding.inflate(layoutInflater)
 
-                    // save to note in model
-                    model.noteAndLabel.note.apply {
-                        coordinates = latLng
-                        radius = rad
+                        AlertDialog.Builder(this)
+                            .setView(mBinding.root)
+                            .setPositiveButton("Set") { _, _ ->
+                                val location = mBinding.input.text.toString().ifBlank { "Unlabeled Location" }
+                                updateTags(binding.locationTv, location)
+
+                                // save to note in model
+                                model.noteAndLabel.note.apply {
+                                    coordinates = latLng
+                                    radius = rad
+                                    locName = location
+                                }
+                            }
+                            .setNegativeButton("Cancel") { _, _ -> latLng = null }
+                            .create().show()
                     }
                 }
             }
@@ -117,7 +132,7 @@ class EditNoteActivity : AppCompatActivity() {
 
         // setup location label
         with(model.noteAndLabel.note) {
-            updateTags(binding.locationTv, coordinates?.formatString(radius))
+            updateTags(binding.locationTv, coordinates?.run { locName })
         }
 
         binding.setAlarmBtn.setOnClickListener {
@@ -166,7 +181,6 @@ class EditNoteActivity : AppCompatActivity() {
             }
         }
 
-        // TODO: setup location listener
         binding.setLocationBtn.setOnClickListener {
             if (foregroundAndBackgroundLocationPermissionApproved()) {
                 checkLocationSettings()
@@ -298,7 +312,7 @@ class EditNoteActivity : AppCompatActivity() {
                 } catch (sendEx: IntentSender.SendIntentException) {
                     Log.d(
                         "EDITNOTE",
-                        "Error getting location settings resolution: " + sendEx.message
+                        "Error getting location settings resolution: ${sendEx.message}"
                     )
                 }
             } else {

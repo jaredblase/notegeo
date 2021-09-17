@@ -80,9 +80,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.d("MapsActivity", "onMapReady: COORDINATES SAVED ")
 
             coordinates!!.let {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(it, zoomLevel + 30))
-                map.addMarker(MarkerOptions().position(it))
-                map.addCircle(
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(it, zoomLevel))
+                marker = map.addMarker(MarkerOptions().position(it))
+                circle = map.addCircle(
                     CircleOptions().center(it)
                         .radius(radius + 50)
                         .fillColor(ContextCompat.getColor(this, R.color.transparent))
