@@ -59,3 +59,12 @@ fun TextView.setDateAlarm(item: NoteAndLabel) {
         visibility = View.GONE
     }
 }
+
+@BindingAdapter("noteLocation")
+fun TextView.setLocation(item: NoteAndLabel) {
+    if (item.note.coordinates == null) {
+        visibility = View.GONE
+    } else {
+        text = item.note.locName
+    }
+}

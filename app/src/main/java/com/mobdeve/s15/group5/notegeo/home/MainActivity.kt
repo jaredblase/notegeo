@@ -146,14 +146,9 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.notes_menu_btn -> model.filterReminders.value = false
                 R.id.reminders_menu_btn -> model.filterReminders.value = true
-                R.id.deleted_menu_btn -> {
-                    startActivity(Intent(this, RecycleBinActivity::class.java))
-                }
-                R.id.labels_menu_btn -> {
-                    startActivity(Intent(this, LabelActivity::class.java))
-                }
+                R.id.deleted_menu_btn -> startActivity(Intent(this, RecycleBinActivity::class.java))
+                R.id.labels_menu_btn -> startActivity(Intent(this, LabelActivity::class.java))
             }
-
             binding.mainDl.closeDrawers()
             true
         }
