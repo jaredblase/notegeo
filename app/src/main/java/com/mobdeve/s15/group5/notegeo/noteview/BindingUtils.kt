@@ -35,7 +35,7 @@ fun ImageView.setPinned(item: NoteAndLabel) {
 
 @BindingAdapter("bindItem")
 fun FlexboxLayout.setItem(item: NoteAndLabel) {
-    visibility = if (item.label == null && item.note.dateAlarm == null) View.GONE else View.VISIBLE
+    visibility = if (item.label == null && item.note.dateAlarm == null && item.note.coordinates == null) View.GONE else View.VISIBLE
 }
 
 @BindingAdapter("noteLabel")
