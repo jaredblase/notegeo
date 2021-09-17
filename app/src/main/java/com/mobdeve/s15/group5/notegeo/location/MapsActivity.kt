@@ -2,6 +2,7 @@ package com.mobdeve.s15.group5.notegeo.location
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMapsBinding
+import com.mobdeve.s15.group5.notegeo.databinding.InputRadiusBinding
 import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
 import com.mobdeve.s15.group5.notegeo.toast
 
@@ -82,11 +84,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.d("MapsActivity", "onMapReady: COORDINATES SAVED ")
 
             coordinates!!.let {
+                toast("RADIUS: $radius")
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(it, zoomLevel))
                 marker = map.addMarker(MarkerOptions().position(it))
                 circle = map.addCircle(
                     CircleOptions().center(it)
-                        .radius(radius + 50)
+                        .radius(radius)
                         .fillColor(ContextCompat.getColor(this, R.color.transparent))
                         .strokeColor(ContextCompat.getColor(this, R.color.note_color_7))
                 )
@@ -134,11 +137,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //Adds a marker and its geofence circle
     private fun setMarker(map: GoogleMap) {
         map.setOnMapLongClickListener {
-            marker?.remove()
-            addMarker(it)
-            addCircle(it, radius + 50)
-            addGeofence(it, radius + 50)
-            coordinates = it
+
+            val radiBinding = InputRadiusBinding.inflate(layoutInflater)
+
+            AlertDialog.Builder(this)
+                .setView(radiBinding.root)
+                .setPositiveButton("Set") { _, _ ->
+                    val radiInput = radiBinding.editRadius.text.toString().toDouble()
+
+                    // save to note in model
+                    radius = radiInput
+                    marker?.remove()
+                    addMarker(it)
+                    addCircle(it, radius)
+                    addGeofence(it, radius)
+                    coordinates = it
+                    toast("Radius: $radius")
+                }
+                .setNegativeButton("Cancel") { _, _ -> radius = 10.0 }
+                .create().show()
         }
     }
 
@@ -215,9 +232,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
         const val LOCATION_PERMISSION_INDEX = 0
         const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
-        const val GEOFENCE_RADIUS = 100.0
         const val REQUEST_LOCATION_PERMISSION = 1
-        const val NEVER_EXPIRE = -1
         const val RADIUS = "RADIUS"
         const val LAT_LNG = "LAT_LNG"
         const val NOTE_ID = "NOTE_ID"
