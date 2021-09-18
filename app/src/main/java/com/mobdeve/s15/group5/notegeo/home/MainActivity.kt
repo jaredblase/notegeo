@@ -1,8 +1,12 @@
 package com.mobdeve.s15.group5.notegeo.home
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
@@ -15,6 +19,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.gms.location.*
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
 import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
 import com.mobdeve.s15.group5.notegeo.label.LabelActivity
@@ -34,6 +39,9 @@ import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+
     private val model by viewModels<HomeViewModel> {
         ViewModelFactory(
             (application as NoteGeoApplication).repo,
@@ -80,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         // get data from db
         model.savedNotes.observeForever {
@@ -183,6 +192,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val locationRequest = LocationRequest.create().apply {
+        interval = 10000 //30 seconds
+        fastestInterval = 5000 //10 seconds
+        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+    }
+
     /**
      * get saved layout style
      */
@@ -192,6 +216,22 @@ class MainActivity : AppCompatActivity() {
         with(PreferenceManager.getDefaultSharedPreferences(this)) {
             model.isGridView.value = getBoolean(IS_GRID_VIEW, true)
         }
+        if (checkLocationSettings()) {
+            locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult?) {
+                    locationResult ?: return
+                }
+            }
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            startLocationUpdates()
+        }
+
+    }
+
+    private fun checkLocationSettings(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
     /**

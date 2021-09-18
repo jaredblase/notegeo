@@ -4,10 +4,13 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -39,9 +42,32 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var noteId = 0L
 
     private val geofencePendingIntent: PendingIntent by lazy {
-        val intent = Intent(applicationContext, GeofenceReceiver::class.java)
-        PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(this, GeofenceReceiver::class.java)
+        PendingIntent.getBroadcast(
+            this.applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
+
+    private val locationRequest = LocationRequest.create().apply {
+        interval = 10000 //30 seconds
+        fastestInterval = 5000 //10 seconds
+        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    private lateinit var locationCallback: LocationCallback
+
+    @SuppressLint("MissingPermission")
+    private fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+    }
+
 
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +76,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         (supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment).getMapAsync(this)
-        geofencingClient = LocationServices.getGeofencingClient(this)
+        geofencingClient = LocationServices.getGeofencingClient(applicationContext)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         with(intent) {
@@ -58,6 +84,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             coordinates = getParcelableExtra(LAT_LNG)
             radius = getDoubleExtra(RADIUS, 1.0)
 
+        }
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (checkLocationSettings()) {
+            startLocationUpdates()
         }
     }
 
@@ -100,7 +138,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun isPermissionGranted() =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
     // Shows user's location on map
     @SuppressLint("MissingPermission")
@@ -224,6 +265,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
         finish()
     }
+
+    private fun checkLocationSettings(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
 
     companion object {
         const val REQUEST_TURN_DEVICE_LOCATION_ON = 29

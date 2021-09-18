@@ -14,9 +14,10 @@ class GeofenceReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         var reminder = ""
 
+        val geofencingEvent = GeofencingEvent.fromIntent(intent)
         val notificationUtils = NotificationUtils(context)
         val manager = notificationUtils.getManager()
-        val geofencingEvent = GeofencingEvent.fromIntent(intent)
+
 
         val id = geofencingEvent.triggeringGeofences[0].requestId
 
