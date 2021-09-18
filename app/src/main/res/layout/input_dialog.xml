@@ -6,7 +6,7 @@
     android:padding="20dp">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/location_name"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/edit_note_hint"
         android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_title"
         android:layout_marginTop="20dp"
         android:inputType="text"
         android:importantForAutofill="no" />

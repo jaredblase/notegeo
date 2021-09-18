@@ -7,10 +7,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.text.InputType
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,7 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMapsBinding
-import com.mobdeve.s15.group5.notegeo.databinding.InputRadiusBinding
+import com.mobdeve.s15.group5.notegeo.databinding.InputDialogBinding
 import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
 import com.mobdeve.s15.group5.notegeo.toast
 
@@ -107,19 +107,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if (coordinates == null) {
             fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        val currLatLng = LatLng(location.latitude, location.longitude)
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currLatLng, zoomLevel))
-                    } else {
-                        Log.d("MapsActivity", "Location is null")
-                    }
+                .addOnSuccessListener { location ->
+                    val currLatLng = LatLng(location.latitude, location.longitude)
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(currLatLng, zoomLevel))
                 }
                 .addOnFailureListener {
-                    Log.d("MapsActivity", "onFailure " + it.localizedMessage)
+                    Log.d("MapsActivity", "onFailure ${it.localizedMessage}")
                 }
         } else {
-            Log.d("MapsActivity", "onMapReady: COORDINATES SAVED ")
+            Log.d("MapsActivity", "onMapReady: COORDINATES SAVED")
 
             coordinates!!.let {
                 toast("RADIUS: $radius")
@@ -138,10 +134,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun isPermissionGranted() =
-        ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     // Shows user's location on map
     @SuppressLint("MissingPermission")
@@ -178,16 +171,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //Adds a marker and its geofence circle
     private fun setMarker(map: GoogleMap) {
         map.setOnMapLongClickListener {
-
-            val radiBinding = InputRadiusBinding.inflate(layoutInflater)
+            val radBinding = InputDialogBinding.inflate(layoutInflater).apply {
+                dialogTitle.text = getString(R.string.input_radius)
+                input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            }
 
             AlertDialog.Builder(this)
-                .setView(radiBinding.root)
+                .setView(radBinding.root)
                 .setPositiveButton("Set") { _, _ ->
-                    val radiInput = radiBinding.editRadius.text.toString().toDouble()
-
-                    // save to note in model
-                    radius = radiInput
+                    radius = try {
+                        radBinding.input.text.toString().toDouble()
+                    } catch (e: NumberFormatException) {
+                        10.0
+                    }
                     marker?.remove()
                     addMarker(it)
                     addCircle(it, radius)
@@ -221,35 +217,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         geofence = getGeofence(latLng, radius)
 
         geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent).run {
-            addOnSuccessListener {
-                Log.d("MapsActivity", "Geofence Added")
-            }
-            addOnFailureListener {
-                Log.d("MapsActivity", it.stackTraceToString())
-            }
-            addOnCompleteListener {
-                Log.d("MapsActivity", "GEOFENCE ACTIVATED")
-            }
+            addOnSuccessListener { Log.d("MapsActivity", "Geofence Added") }
+            addOnFailureListener { Log.d("MapsActivity", it.stackTraceToString()) }
+            addOnCompleteListener { Log.d("MapsActivity", "GEOFENCE ACTIVATED") }
         }
     }
 
-    private fun removeGeofence() {
-        geofencingClient.removeGeofences(geofencePendingIntent).apply {
-            addOnSuccessListener {
-                Log.d("MapsActivity", "Geofence Deleted")
-            }
-        }
+    private fun removeGeofence() = geofencingClient.removeGeofences(geofencePendingIntent).run {
+        addOnSuccessListener { Log.d("MapsActivity", "Geofence Deleted") }
     }
 
-    private fun getGeofence(latLng: LatLng, radius: Double): Geofence {
-        Log.d("MapsActivity", "GET GEOFENCE: $noteId")
-        return Geofence.Builder()
-            .setCircularRegion(latLng.latitude, latLng.longitude, radius.toFloat())
-            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
-            .setRequestId(noteId.toString())
-            .setExpirationDuration(Geofence.NEVER_EXPIRE)
-            .build()
-    }
+    private fun getGeofence(latLng: LatLng, radius: Double) = Geofence.Builder()
+        .setCircularRegion(latLng.latitude, latLng.longitude, radius.toFloat())
+        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
+        .setRequestId(noteId.toString())
+        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+        .build()
 
     private fun getGeofencingRequest() = GeofencingRequest.Builder().apply {
         setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
@@ -258,7 +241,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     override fun onBackPressed() {
-
         setResult(RESULT_OK, Intent(this, EditNoteActivity::class.java).apply {
             putExtra(LAT_LNG, coordinates)
             putExtra(RADIUS, radius)

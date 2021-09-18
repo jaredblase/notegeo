@@ -28,7 +28,6 @@
             android:exported="true"
             tools:ignore="ExportedService" />
 
-
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"

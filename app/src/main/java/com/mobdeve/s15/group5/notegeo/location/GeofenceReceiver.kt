@@ -22,12 +22,12 @@ class GeofenceReceiver : BroadcastReceiver() {
         val id = geofencingEvent.triggeringGeofences[0].requestId
 
         Log.d("MapsActivity", "ONRECEIVE: $id")
-        when(geofencingEvent.geofenceTransition){
+        when (geofencingEvent.geofenceTransition) {
             Geofence.GEOFENCE_TRANSITION_ENTER -> reminder = "You have entered a Geofenced area"
             Geofence.GEOFENCE_TRANSITION_EXIT -> reminder = "You have exited a Geofenced area"
         }
-        val notification = notificationUtils.getNotificationBuilder(reminder).build()
-        manager.notify(id.hashCode(), notification)
+
+        manager.notify(id.hashCode(), notificationUtils.getNotificationBuilder(reminder).build())
 
         val count = manager.activeNotifications.size
         val summary = notificationUtils.getNotificationBuilder()
@@ -37,10 +37,8 @@ class GeofenceReceiver : BroadcastReceiver() {
         manager.notify(0, summary)
 
         if (geofencingEvent.hasError()) {
-            val errorMessage = GeofenceStatusCodes
-                .getStatusCodeString(geofencingEvent.errorCode)
-            Log.e("MapsActivity", errorMessage + "BROADCAST FAIL")
-            return
+            val errorMessage = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)
+            Log.e("MapsActivity", "$errorMessage BROADCAST FAIL")
         }
     }
 }
