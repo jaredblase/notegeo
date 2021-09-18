@@ -1,12 +1,15 @@
 package com.mobdeve.s15.group5.notegeo.home
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.os.SystemClock
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
@@ -27,6 +30,8 @@ import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.buildConfirmationDialog
 import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
+import com.mobdeve.s15.group5.notegeo.location.GeofenceReceiver
+import com.mobdeve.s15.group5.notegeo.location.LocationUpdates
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
 import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
@@ -41,6 +46,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private var alarmMgr: AlarmManager? = null
+    private lateinit var alarmIntent: PendingIntent
 
     private val model by viewModels<HomeViewModel> {
         ViewModelFactory(
@@ -237,6 +244,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * write preferred layout style
      */
+    @SuppressLint("UnspecifiedImmutableFlag")
     override fun onStop() {
         super.onStop()
 
@@ -246,6 +254,16 @@ class MainActivity : AppCompatActivity() {
                 apply()
             }
         }
+
+        alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmIntent = PendingIntent.getService(this,0,Intent(this,LocationUpdates::class.java),0)
+
+        alarmMgr?.setInexactRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 10000,
+            10000,
+            alarmIntent
+        )
     }
 
     companion object {

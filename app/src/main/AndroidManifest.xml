@@ -28,6 +28,13 @@
             android:exported="true"
             tools:ignore="ExportedService" />
 
+        <service
+            android:name=".location.LocationUpdates"
+            android:foregroundServiceType="location"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedService" />
+
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
