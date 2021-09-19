@@ -20,8 +20,24 @@ import kotlinx.coroutines.Dispatchers
 
 class RecycleBinActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecycleBinBinding
-    private val model by viewModels<RecycleBinViewModel> { ViewModelFactory((application as NoteGeoApplication).repo, Dispatchers.Default) }
-    private val adapter = NoteAdapter { this.toast("Cannot open recycled note. Please restore first.") }
+    private val model by viewModels<RecycleBinViewModel> {
+        ViewModelFactory(
+            (application as NoteGeoApplication).repo,
+            Dispatchers.Default
+        )
+    }
+    private val adapter =
+        NoteAdapter({ this.toast("Cannot open recycled note. Please restore first.") }) {
+            with(binding) {
+                if (it.isEmpty()) {
+                    emptyIv.visibility = View.VISIBLE
+                    recycleBinMnuBtn.visibility = View.GONE
+                } else {
+                    emptyIv.visibility = View.GONE
+                    recycleBinMnuBtn.visibility = View.VISIBLE
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,16 +48,6 @@ class RecycleBinActivity : AppCompatActivity() {
         model.deletedNotes.observe(this) {
             adapter.submitList(it)
             binding.progressIndicator.visibility = View.GONE
-
-            with(binding) {
-                if (it.isEmpty()) {
-                    emptyIv.visibility = View.VISIBLE
-                    recycleBinMnuBtn.visibility = View.GONE
-                } else {
-                    emptyIv.visibility = View.GONE
-                    recycleBinMnuBtn.visibility = View.VISIBLE
-                }
-            }
         }
 
         // setup recycler view
@@ -68,17 +74,15 @@ class RecycleBinActivity : AppCompatActivity() {
         val popup = PopupMenu(this, binding.recycleBinMnuBtn)
         menuInflater.inflate(R.menu.recycle_bin_menu, popup.menu)
         popup.setOnMenuItemClickListener {
+            val list = adapter.tracker?.selection?.toList()
+
             when (it.itemId) {
                 R.id.rb_delete_selected_btn -> {
-                    buildConfirmationDialog(getString(R.string.confirm_selection_delete)) { _, _ ->
-                        model.delete(adapter.tracker?.selection?.toList())
-                    }.show()
+                    buildConfirmationDialog(getString(R.string.confirm_selection_delete)) { _, _ -> model.delete(list) }.show()
                 }
-                R.id.rb_restore_selected_btn -> model.restore(adapter.tracker?.selection?.toList())
+                R.id.rb_restore_selected_btn -> model.restore(list)
                 R.id.delete_all_btn -> {
-                    buildConfirmationDialog(getString(R.string.confirm_all_delete)) { _, _ ->
-                        model.deleteAll()
-                    }.show()
+                    buildConfirmationDialog(getString(R.string.confirm_all_delete)) { _, _ -> model.deleteAll() }.show()
                 }
                 R.id.restore_all_btn -> model.restoreAll()
             }
@@ -87,7 +91,7 @@ class RecycleBinActivity : AppCompatActivity() {
         }
 
         adapter.tracker = tracker.apply {
-            addObserver(object: SelectionTracker.SelectionObserver<Long>() {
+            addObserver(object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
                     super.onSelectionChanged()
 

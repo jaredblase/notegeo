@@ -10,13 +10,22 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 fun View.dpToPx(dp: Int): Int {
     val scale = resources.displayMetrics.density
     return (dp * scale + 0.5F).toInt()
 }
 
-fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+fun Context.toast(message: String) {
+    val context = this
+    GlobalScope.launch(Dispatchers.Main) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+}
 
 fun Context.buildConfirmationDialog(message: String, posAction: DialogInterface.OnClickListener) =
     AlertDialog.Builder(this)

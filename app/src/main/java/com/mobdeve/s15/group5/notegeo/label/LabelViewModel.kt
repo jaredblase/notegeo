@@ -33,9 +33,12 @@ class LabelViewModel(
             val (toDelete, toSave) = partition { it.isChecked.get() }
 
             repository.deleteLabels(toDelete.map { it._id })
-            allLabels.value = toSave
+
+            launch(Dispatchers.Main) {
+                allLabels.value = toSave
+                numSelected.value = 0
+            }
         }
-        numSelected.value = 0
     }
 
     fun addLabel(binding: ActivityLabelBinding, context: Context) =
@@ -43,17 +46,19 @@ class LabelViewModel(
             val text = binding.addLabelEt.text.toString()
             // checks
             when {
-                text.isBlank() -> {
-                    context.toast("Cannot add blank label!")
-                }
+                text.isBlank() -> context.toast("Cannot add blank label!")
+
                 allLabels.value?.any { it.name.equals(text, true) } == true -> {
                     context.toast("Label already exists!")
                 }
                 else -> {
                     val label = Label(name = text)
                     val id = repository.addLabel(label)
-                    allLabels.value = allLabels.value?.plus(label.apply { _id = id.toInt() })
-                    binding.labelCancelBtn.performClick()
+
+                    launch(Dispatchers.Main) {
+                        allLabels.value = allLabels.value?.plus(label.apply { _id = id.toInt() })
+                        binding.labelCancelBtn.performClick()
+                    }
                 }
             }
         }

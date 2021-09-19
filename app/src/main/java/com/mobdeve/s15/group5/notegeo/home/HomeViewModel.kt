@@ -60,12 +60,12 @@ class HomeViewModel(
 
     fun filterNotes(adapter: NoteAdapter, query: CharSequence?) =
         viewModelScope.launch(dispatcher) {
-            val temp = savedNotes.value?.run {
+            var temp = savedNotes.value?.run {
                 if (filterReminders.value!!) savedNotes.value!!.filter { it.note.hasReminders } else this
             }
 
             if (!query.isNullOrEmpty()) {
-                temp?.filter {
+                temp = temp?.filter {
                     it.note.title.contains(query, true) ||
                     it.note.body.contains(query, true) ||
                     it.label?.name?.contains(query, true) == true

@@ -1,7 +1,5 @@
 package com.mobdeve.s15.group5.notegeo.recyclebin
 
-import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -19,14 +17,11 @@ class RecycleBinViewModel(
         repository.cleanOldNotes()
     }
 
-    fun delete(ids: List<Long>?) {
-        if (ids != null) {
-            viewModelScope.launch(dispatcher) { repository.deleteNotes(ids) }
-        }
+    fun delete(ids: List<Long>?) = viewModelScope.launch(dispatcher) {
+        ids?.let { repository.deleteNotes(it) }
     }
 
     fun restore(ids: List<Long>?) = viewModelScope.launch(dispatcher) {
-        Log.d("IS IN MAIN", (Looper.myLooper() == Looper.getMainLooper()).toString())
         if (ids != null) {
             deletedNotes.value?.run {
                 forEach { if (it.note._id in ids) it.note.dateDeleted = null }

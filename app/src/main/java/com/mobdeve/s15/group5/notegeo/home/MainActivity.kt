@@ -6,13 +6,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.os.SystemClock
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.preference.PreferenceManager
@@ -24,13 +24,11 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.gms.location.*
 import com.mobdeve.s15.group5.notegeo.NoteGeoApplication
-import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
-import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.R
 import com.mobdeve.s15.group5.notegeo.buildConfirmationDialog
-import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.databinding.ActivityMainBinding
-import com.mobdeve.s15.group5.notegeo.location.GeofenceReceiver
+import com.mobdeve.s15.group5.notegeo.editor.EditNoteActivity
+import com.mobdeve.s15.group5.notegeo.label.LabelActivity
 import com.mobdeve.s15.group5.notegeo.location.LocationUpdates
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 import com.mobdeve.s15.group5.notegeo.models.ViewModelFactory
@@ -38,24 +36,22 @@ import com.mobdeve.s15.group5.notegeo.noteview.ItemOffsetDecoration
 import com.mobdeve.s15.group5.notegeo.noteview.NoteAdapter
 import com.mobdeve.s15.group5.notegeo.noteview.NoteDetailsLookup
 import com.mobdeve.s15.group5.notegeo.noteview.NoteKeyProvider
+import com.mobdeve.s15.group5.notegeo.recyclebin.RecycleBinActivity
 import com.mobdeve.s15.group5.notegeo.toast
 import kotlinx.coroutines.Dispatchers
-import java.util.Date
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
-    private var alarmMgr: AlarmManager? = null
-    private lateinit var alarmIntent: PendingIntent
-
     private val model by viewModels<HomeViewModel> {
         ViewModelFactory(
             (application as NoteGeoApplication).repo,
             Dispatchers.Default
         )
     }
-    private val adapter = NoteAdapter { launchEditor(it) }
+    private val adapter = NoteAdapter({ launchEditor(it) }) {
+        binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+    }
     private val smoothScroller by lazy {
         object : LinearSmoothScroller(this) {
             override fun getVerticalSnapPreference() = SNAP_TO_ANY
@@ -101,7 +97,6 @@ class MainActivity : AppCompatActivity() {
         model.savedNotes.observeForever {
             binding.progressIndicator.visibility = View.GONE
             model.filterNotes(adapter, binding.homeSv.query)
-            binding.emptyIv.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         }
 
         // setup layout managers
@@ -205,41 +200,31 @@ class MainActivity : AppCompatActivity() {
         priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
-    @SuppressLint("MissingPermission")
-    private fun startLocationUpdates() {
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
-    }
-
     /**
      * get saved layout style
      */
+    @SuppressLint("MissingPermission")
     override fun onResume() {
         super.onResume()
 
         with(PreferenceManager.getDefaultSharedPreferences(this)) {
             model.isGridView.value = getBoolean(IS_GRID_VIEW, true)
         }
-        if (checkLocationSettings()) {
-            locationCallback = object : LocationCallback() {
-                override fun onLocationResult(locationResult: LocationResult?) {
-                    locationResult ?: return
-                }
-            }
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-            startLocationUpdates()
+
+        if (isProviderEnabled()) {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                object : LocationCallback() { },
+                Looper.getMainLooper()
+            )
         }
-
     }
 
-    private fun checkLocationSettings(): Boolean {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
+    private fun isProviderEnabled() =
+        (getSystemService(Context.LOCATION_SERVICE) as LocationManager)
+            .isProviderEnabled(LocationManager.GPS_PROVIDER)
 
     /**
      * write preferred layout style
@@ -255,14 +240,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmIntent = PendingIntent.getService(this,0,Intent(this,LocationUpdates::class.java),0)
+        val alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        alarmMgr?.setInexactRepeating(
+        alarmMgr.setInexactRepeating(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime() + 10000,
             10000,
-            alarmIntent
+            PendingIntent.getService(this, 0, Intent(this, LocationUpdates::class.java), 0)
         )
     }
 

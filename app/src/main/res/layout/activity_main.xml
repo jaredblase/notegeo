@@ -122,13 +122,15 @@
             android:id="@+id/emptyIv"
             android:layout_width="@dimen/leaf_img_size"
             android:layout_height="@dimen/leaf_img_size"
+            android:layout_marginTop="264dp"
             android:contentDescription="@string/desc.empty"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/app_title"
-            app:srcCompat="@drawable/ic_leaf" />
+            app:srcCompat="@drawable/ic_leaf"
+            tools:visibility="visible" />
 
         <ImageButton
             android:id="@+id/home_delete_btn"

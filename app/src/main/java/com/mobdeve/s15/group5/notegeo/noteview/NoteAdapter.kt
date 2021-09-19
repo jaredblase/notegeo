@@ -11,12 +11,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s15.group5.notegeo.databinding.NoteItemBinding
 import com.mobdeve.s15.group5.notegeo.models.NoteAndLabel
 
-class NoteAdapter(private val onItemClick: (NoteAndLabel) -> Unit) :
+class NoteAdapter(
+    private val onItemClick: (NoteAndLabel) -> Unit,
+    private val onListChanged: (MutableList<NoteAndLabel>) -> Unit
+) :
     ListAdapter<NoteAndLabel, NoteAdapter.ViewHolder>(NoteComparator()) {
     var tracker: SelectionTracker<Long>? = null
     private lateinit var context: Context
 
-    init { setHasStableIds(true) }
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
@@ -29,6 +34,14 @@ class NoteAdapter(private val onItemClick: (NoteAndLabel) -> Unit) :
         tracker?.let {
             holder.bind(item, it.isSelected(item.note._id))
         }
+    }
+
+    override fun onCurrentListChanged(
+        previousList: MutableList<NoteAndLabel>,
+        currentList: MutableList<NoteAndLabel>
+    ) {
+        super.onCurrentListChanged(previousList, currentList)
+        onListChanged(currentList)
     }
 
     override fun getItemId(position: Int) = getItem(position).note._id
